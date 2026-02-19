@@ -152,11 +152,13 @@ THE SOFTWARE.
     <!-- Sortable library used in drag & drop -->
     <script src="${resURL}/jsbundles/sortable-drag-drop.js" type="text/javascript"/>
     <script src="${resURL}/jsbundles/app.js" type="text/javascript" defer="true" />
+    <script src="${resURL}/jsbundles/main.js" type="module"></script>
   </head>
   <body id="jenkins" class="${layoutType} jenkins-${h.version}" data-version="${h.version}" data-model-type="${it.class.name}"
         data-search-url="${rootURL + '/search/suggest'}"
         data-search-help-url="${%searchBox.url}">
     <l:command-palette />
+    <div id="react-root" data-view-type="" data-model-url=""></div>
 
     <j:if test="${layoutType!='full-screen'}">
       <!-- for accessibility, skip the entire navigation bar and etc and go straight to the head of the content -->
