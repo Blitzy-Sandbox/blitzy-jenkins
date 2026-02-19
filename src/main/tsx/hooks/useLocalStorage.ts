@@ -58,7 +58,6 @@ function getStorage(): Storage {
     storage.removeItem('__jenkins_storage_test__');
     return storage;
   } catch {
-    // eslint-disable-next-line no-console
     console.warn('HTML5 localStorage not supported by this browser.');
     return createMockStorage();
   }

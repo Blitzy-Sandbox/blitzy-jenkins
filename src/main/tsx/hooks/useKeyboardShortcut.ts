@@ -204,7 +204,9 @@ export function useKeyboardShortcut(
   // Store the latest callback in a ref so that the event handler always calls
   // the most recent version without re-registering the listener on every render.
   const callbackRef = useRef(callback);
-  callbackRef.current = callback;
+  useEffect(() => {
+    callbackRef.current = callback;
+  });
 
   useEffect(() => {
     if (!enabled) {

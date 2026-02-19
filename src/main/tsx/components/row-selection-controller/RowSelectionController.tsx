@@ -215,8 +215,9 @@ function RowSelectionController({
       cb.addEventListener("change", handleChange);
     });
 
-    // Compute initial selection state on mount
-    recalculateSelection();
+    // Compute initial selection state on mount — deferred via queueMicrotask
+    // to avoid synchronous setState within the effect body (react-hooks/set-state-in-effect)
+    queueMicrotask(recalculateSelection);
 
     // Cleanup: remove change listeners
     return () => {
