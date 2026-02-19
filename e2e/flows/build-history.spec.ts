@@ -283,6 +283,9 @@ test.describe("Build History User Flows", () => {
     );
     const contentBefore = await buildHistoryContents.innerHTML();
 
+    // Verify the build history has content before searching
+    expect(contentBefore).toBeTruthy();
+
     // Type a search term into the search input.
     // builds-card.js uses lodash debounce with 150ms delay before firing
     // the load() function to fetch filtered results.
