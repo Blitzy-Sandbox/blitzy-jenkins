@@ -35,7 +35,7 @@ THE SOFTWARE.
   <packaging>war</packaging>
 
   <name>Jenkins war</name>
-  <description>Creates a war file. Also includes additional static web resources, such as images, CSS, JavaScript, and some HTML files.</description>
+  <description>Creates a war file. Also includes additional static web resources, such as images, CSS, React/TypeScript frontend bundles, and some HTML files.</description>
   <url>https://github.com/jenkinsci/jenkins</url>
 
   <properties>
