@@ -46,6 +46,7 @@ THE SOFTWARE.
     </l:app-bar>
 
     <j:set var="it" value="${it.object}" />
+    <div id="react-root" data-view-type="console-output" data-model-url="${rootURL}/${it.url}api/json"></div>
     <st:include page="console-log.jelly" />
   </l:run-subpage>
 </j:jelly>
