@@ -30,5 +30,6 @@ THE SOFTWARE.
         ${%UpdatePageLegend(rootURL+'/updateCenter/')}
       </div>
     </j:if>
+    <div id="react-root" data-view-type="plugin-manager" data-model-url="${rootURL}/pluginManager/api/json"></div>
   </local:updates>
 </j:jelly>
