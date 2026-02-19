@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
@@ -242,6 +243,20 @@ export default defineConfig({
     },
     // Enable CSS source maps in development for style debugging
     devSourcemap: true,
+  },
+
+  /**
+   * Vitest unit test configuration.
+   *
+   * Configures Vitest to run component and utility unit tests in a
+   * jsdom environment. E2E tests in e2e/ are excluded — they are run
+   * separately via Playwright (`yarn test:e2e`).
+   */
+  test: {
+    include: ["src/**/*.{test,spec}.{ts,tsx}"],
+    exclude: ["e2e/**", "node_modules/**", "**/dist/**"],
+    environment: "jsdom",
+    globals: true,
   },
 
   /**
