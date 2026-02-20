@@ -450,8 +450,8 @@ export default function JobConfigure({
   /*  Description change handler                                             */
   /* ---------------------------------------------------------------------- */
   const handleDescriptionChange = useCallback(
-    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setDescription(e.target.value);
+    (value: string) => {
+      setDescription(value);
     },
     [setDescription],
   );
