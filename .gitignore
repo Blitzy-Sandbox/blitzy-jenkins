@@ -16,7 +16,7 @@ out
 .classpath
 .project
 .factorypath
-build
+/build
 
 # VSCode workspace file
 *.code-workspace
