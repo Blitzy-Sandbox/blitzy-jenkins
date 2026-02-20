@@ -266,7 +266,9 @@ export default function SetupWizard(): React.JSX.Element {
    * for quick lookup during selection.
    */
   const availablePluginsMap = useMemo<Record<string, PluginInfo>>(() => {
-    if (!categories.length) return {};
+    if (!categories.length) {
+      return {};
+    }
     const map: Record<string, PluginInfo> = {};
     for (const cat of categories) {
       for (const plugin of cat.plugins) {
@@ -426,11 +428,15 @@ export default function SetupWizard(): React.JSX.Element {
         },
       );
 
-      if (!response.ok) return false;
+      if (!response.ok) {
+        return false;
+      }
 
       const data: { data?: ConnectionStatusData } = await response.json();
       const connStatus = data.data;
-      if (!connStatus) return false;
+      if (!connStatus) {
+        return false;
+      }
 
       // Source lines 1326-1333: check if either updatesite or internet is OK
       const updatesiteOk = connStatus.updatesite === "OK";
@@ -563,7 +569,9 @@ export default function SetupWizard(): React.JSX.Element {
    * Source: lines 1157-1161.
    */
   const handleRetryFailedPlugins = useCallback(async (): Promise<void> => {
-    if (failedPluginNames.length === 0) return;
+    if (failedPluginNames.length === 0) {
+      return;
+    }
     await installPlugins(failedPluginNames);
   }, [failedPluginNames, installPlugins]);
 
@@ -759,7 +767,9 @@ export default function SetupWizard(): React.JSX.Element {
    * Source: lines 1176-1187.
    */
   const handleResumeInstallation = useCallback(async (): Promise<void> => {
-    if (incompletePlugins.length === 0) return;
+    if (incompletePlugins.length === 0) {
+      return;
+    }
     const pluginNames = incompletePlugins.map((p) => p.name);
     await installPlugins(pluginNames);
   }, [incompletePlugins, installPlugins]);
@@ -843,7 +853,9 @@ export default function SetupWizard(): React.JSX.Element {
    * 7. Route to appropriate initial step
    */
   useEffect(() => {
-    if (initStarted) return;
+    if (initStarted) {
+      return;
+    }
 
     let cancelled = false;
 
@@ -856,13 +868,17 @@ export default function SetupWizard(): React.JSX.Element {
         const bundle = await loadBundle(
           "jenkins.install.pluginSetupWizard",
         );
-        if (cancelled) return;
+        if (cancelled) {
+          return;
+        }
         setTranslations(bundle);
 
         // Step 2: Test connectivity
         // Source: lines 1322-1335
         const isOnline = await testConnectivity();
-        if (cancelled) return;
+        if (cancelled) {
+          return;
+        }
 
         if (!isOnline) {
           setCurrentStep("offline");
@@ -878,7 +894,9 @@ export default function SetupWizard(): React.JSX.Element {
         // If not yet loaded, manually refetch and wait
         if (!pluginCategories) {
           const refetchResult = await pluginListQuery.refetch();
-          if (cancelled) return;
+          if (cancelled) {
+            return;
+          }
           pluginCategories = refetchResult.data;
         }
 
@@ -893,14 +911,18 @@ export default function SetupWizard(): React.JSX.Element {
         // Step 4: Initialize plugin data
         // Source: lines 1338-1341
         const data = initPluginData(pluginCategories);
-        if (cancelled) return;
+        if (cancelled) {
+          return;
+        }
         setPluginData(data);
         setCategories(pluginCategories);
 
         // Step 5: Check current install status
         // Source: lines 1345-1373
         const statusResult = await installStatusQuery.refetch();
-        if (cancelled) return;
+        if (cancelled) {
+          return;
+        }
         const installStatus = statusResult.data;
 
         if (installStatus && installStatus.jobs && installStatus.jobs.length > 0) {
@@ -934,7 +956,9 @@ export default function SetupWizard(): React.JSX.Element {
         // Step 6: Check for incomplete installations
         // Source: lines 1376-1428
         const incompleteResult = await incompleteInstallQuery.refetch();
-        if (cancelled) return;
+        if (cancelled) {
+          return;
+        }
         const incompleteStatus = incompleteResult.data;
 
         if (

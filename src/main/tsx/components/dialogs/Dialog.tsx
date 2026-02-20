@@ -9,7 +9,14 @@
  * Exposes window.dialog compatibility interface for the plugin ecosystem.
  */
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+/* eslint-disable react-refresh/only-export-components --
+   This module intentionally exports both the Dialog component and imperative
+   helper functions (showDialog, initDialogGlobals, renderOnDemandDialog,
+   initDialogOpeners) that form the public API of the Jenkins dialog system.
+   These utility exports are tightly coupled to the component and must reside
+   in the same module for cohesion. */
+
+import React, { useState, useEffect, useRef, useCallback, useId } from "react";
 import { createRoot } from "react-dom/client";
 import { CLOSE } from "@/utils/symbols";
 import { useI18n } from "@/hooks/useI18n";
@@ -134,9 +141,11 @@ const Dialog: React.FC<DialogProps> = ({
   // Refs for DOM elements
   const dialogRef = useRef<HTMLDialogElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const formIdRef = useRef<string>(
-    `dialog-form-${Date.now()}-${Math.random().toString(36).slice(2)}`,
-  );
+  const generatedId = useId();
+  // Form ID used during render for the OK button's `form` attribute.
+  // Derived directly from props: use the form element's existing ID if present,
+  // otherwise fall back to a React-generated stable identifier.
+  const formId = options.form?.id || `dialog-form-${generatedId}`;
 
   // Merge caller options with defaults
   const cancel = options.cancel ?? DEFAULT_OPTIONS.cancel;
@@ -311,17 +320,14 @@ const Dialog: React.FC<DialogProps> = ({
     }
   }, [open]);
 
-  // For form type: assign an ID to the form element so the external submit
-  // button can reference it via the HTML form attribute
+  // For form type: ensure the form DOM element has the computed formId so
+  // the OK button's `form` attribute can target it for native submission.
+  const formElement = options.form;
   useEffect(() => {
-    if (dialogType === "form" && options.form) {
-      if (!options.form.id) {
-        options.form.id = formIdRef.current;
-      } else {
-        formIdRef.current = options.form.id;
-      }
+    if (dialogType === "form" && formElement && !formElement.id) {
+      formElement.setAttribute("id", formId);
     }
-  }, [dialogType, options.form]);
+  }, [dialogType, formElement, formId]);
 
   // -----------------------------------------------------------------------
   // Ref callbacks for imperative DOM content
@@ -371,7 +377,7 @@ const Dialog: React.FC<DialogProps> = ({
 
   // Determine OK button form association for native submit
   const okFormAttr =
-    dialogType === "form" && submitButton ? formIdRef.current : undefined;
+    dialogType === "form" && submitButton ? formId : undefined;
 
   // Source line 220: skip click handler when form + submitButton
   const okClickHandler =

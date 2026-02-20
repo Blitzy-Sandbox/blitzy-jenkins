@@ -565,6 +565,7 @@ type JenkinsFixtures = {
 export const test = base.extend<JenkinsFixtures>({
   jenkinsPage: async ({ page }, use) => {
     const jenkinsPage = new JenkinsPage(page);
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- Playwright's `use()` fixture callback is not a React hook
     await use(jenkinsPage);
   },
 });

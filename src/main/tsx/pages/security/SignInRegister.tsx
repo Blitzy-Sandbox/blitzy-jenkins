@@ -25,6 +25,11 @@
  * @module SignInRegister
  */
 
+/* eslint-disable react-refresh/only-export-components --
+   This module exports the SignInRegister component alongside pure utility
+   functions (passwordScore, getPasswordStrengthLabel, getPasswordStrengthColor)
+   that are part of its public API and are also consumed by unit tests. */
+
 import { useState, useCallback } from 'react';
 
 import { useI18n } from '@/hooks/useI18n';

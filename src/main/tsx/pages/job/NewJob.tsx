@@ -248,9 +248,6 @@ function NewJob({
   const [showNameRequired, setShowNameRequired] = useState(false);
   /** Whether the itemtype-required message should be shown */
   const [showItemTypeRequired, setShowItemTypeRequired] = useState(false);
-  /** Whether the data has been loaded and the panel is visible */
-  const [panelVisible, setPanelVisible] = useState(false);
-
   /* ----------------------------------------------------------------
      Data Fetching — Item Categories
      ---------------------------------------------------------------- */
@@ -265,12 +262,8 @@ function NewJob({
     queryKey: ['itemCategories', normalizedUrl],
   });
 
-  // Show panel once categories have loaded (mirrors add-item.js line 250)
-  useEffect(() => {
-    if (categoriesData && !isLoading && !isError) {
-      setPanelVisible(true);
-    }
-  }, [categoriesData, isLoading, isError]);
+  // Derive panel visibility from query state (mirrors add-item.js line 250)
+  const panelVisible = Boolean(categoriesData && !isLoading && !isError);
 
   // Auto-focus name input after data loads (mirrors add-item.js line 259)
   useEffect(() => {
