@@ -22,14 +22,14 @@
  * @module pages/plugin-manager/PluginAvailable
  */
 
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
-import { usePluginSearch, usePluginInstall } from '@/api/pluginManager';
-import type { PluginInfo, PluginSearchResult } from '@/api/types';
-import { useI18n } from '@/hooks/useI18n';
-import { useCrumb } from '@/hooks/useCrumb';
-import { useJenkinsNavigation } from '@/hooks/useJenkinsNavigation';
-import Dropdown from '@/components/dropdowns/Dropdown';
-import type { DropdownItem } from '@/components/dropdowns/Dropdown';
+import React, { useState, useCallback, useMemo, useEffect } from "react";
+import { usePluginSearch, usePluginInstall } from "@/api/pluginManager";
+import type { PluginInfo, PluginSearchResult } from "@/api/types";
+import { useI18n } from "@/hooks/useI18n";
+import { useCrumb } from "@/hooks/useCrumb";
+import { useJenkinsNavigation } from "@/hooks/useJenkinsNavigation";
+import Dropdown from "@/components/dropdowns/Dropdown";
+import type { DropdownItem } from "@/components/dropdowns/Dropdown";
 
 // ---------------------------------------------------------------------------
 // Extended Plugin Type
@@ -116,15 +116,15 @@ function formatReleaseDate(iso8601: string): string {
   try {
     const date = new Date(iso8601);
     if (isNaN(date.getTime())) {
-      return '';
+      return "";
     }
     return new Intl.DateTimeFormat(undefined, {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     }).format(date);
   } catch {
-    return '';
+    return "";
   }
 }
 
@@ -156,23 +156,27 @@ export default function PluginAvailable({
   // -------------------------------------------------------------------------
 
   /** Current search input value — updated on every keystroke for immediate UI feedback. */
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   /** Debounced search query — updated 150ms after last keystroke for API calls. */
-  const [debouncedQuery, setDebouncedQuery] = useState<string>('');
+  const [debouncedQuery, setDebouncedQuery] = useState<string>("");
 
   /**
    * Set of currently selected plugin identifiers (`plugin.{name}.{sourceId}`).
    * Preserves selections across search result updates, matching the original
    * behavior from plugin-manager-ui.js lines 22-38.
    */
-  const [selectedPlugins, setSelectedPlugins] = useState<Set<string>>(new Set());
+  const [selectedPlugins, setSelectedPlugins] = useState<Set<string>>(
+    new Set(),
+  );
 
   /**
    * Tracks the most recent data snapshot so we can preserve previously loaded
    * plugins when preserving selections across searches.
    */
-  const [previousPlugins, setPreviousPlugins] = useState<AvailablePluginInfo[]>([]);
+  const [previousPlugins, setPreviousPlugins] = useState<AvailablePluginInfo[]>(
+    [],
+  );
 
   // -------------------------------------------------------------------------
   // API Hooks
@@ -193,10 +197,8 @@ export default function PluginAvailable({
    * React Query mutation for plugin installation.
    * POST /pluginManager/installPlugins with { dynamicLoad: true, plugins: [...] }
    */
-  const {
-    mutate: installPlugins,
-    isPending: isInstalling,
-  } = usePluginInstall();
+  const { mutate: installPlugins, isPending: isInstalling } =
+    usePluginInstall();
 
   // -------------------------------------------------------------------------
   // 150ms Debounce Effect
@@ -214,7 +216,8 @@ export default function PluginAvailable({
   // -------------------------------------------------------------------------
   useEffect(() => {
     if (searchData) {
-      const plugins = (searchData as PluginSearchResult).plugins as AvailablePluginInfo[];
+      const plugins = (searchData as PluginSearchResult)
+        .plugins as AvailablePluginInfo[];
       setPreviousPlugins(plugins);
     }
   }, [searchData]);
@@ -260,8 +263,8 @@ export default function PluginAvailable({
   const installDropdownItems = useMemo<DropdownItem[]>(
     () => [
       {
-        type: 'button' as const,
-        label: t('Install after restart') ?? 'Install after restart',
+        type: "button" as const,
+        label: t("Install after restart") ?? "Install after restart",
         onClick: () => handleInstallAfterRestart(),
       },
     ],
@@ -277,31 +280,25 @@ export default function PluginAvailable({
    * Handle search input changes.
    * Updates searchQuery immediately for UI; debouncedQuery updates after 150ms.
    */
-  const handleSearch = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchQuery(e.target.value);
-    },
-    [],
-  );
+  const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  }, []);
 
   /**
    * Toggle a plugin's checkbox selection state.
    * Preserves selections across search updates by using a Set.
    */
-  const handleCheckboxToggle = useCallback(
-    (pluginKey: string) => {
-      setSelectedPlugins((prev) => {
-        const next = new Set(prev);
-        if (next.has(pluginKey)) {
-          next.delete(pluginKey);
-        } else {
-          next.add(pluginKey);
-        }
-        return next;
-      });
-    },
-    [],
-  );
+  const handleCheckboxToggle = useCallback((pluginKey: string) => {
+    setSelectedPlugins((prev) => {
+      const next = new Set(prev);
+      if (next.has(pluginKey)) {
+        next.delete(pluginKey);
+      } else {
+        next.add(pluginKey);
+      }
+      return next;
+    });
+  }, []);
 
   /**
    * Check or uncheck all visible plugins.
@@ -345,7 +342,9 @@ export default function PluginAvailable({
    * the install on next restart.
    */
   const handleInstallAfterRestart = useCallback(() => {
-    const formEl = document.getElementById('available-plugins-form') as HTMLFormElement | null;
+    const formEl = document.getElementById(
+      "available-plugins-form",
+    ) as HTMLFormElement | null;
     if (formEl) {
       formEl.submit();
     }
@@ -356,7 +355,7 @@ export default function PluginAvailable({
    * Matches `<st:include page="check.jelly"/>` from available.jelly line 67.
    */
   const handleCheckNow = useCallback(() => {
-    const checkUrl = buildUrl('/pluginManager/checkUpdatesServer');
+    const checkUrl = buildUrl("/pluginManager/checkUpdatesServer");
     window.location.assign(checkUrl);
   }, [buildUrl]);
 
@@ -377,20 +376,24 @@ export default function PluginAvailable({
         <div className="jenkins-app-bar__content">
           <div
             className={
-              'jenkins-search jenkins-search--app-bar' +
-              (isSearchActive ? ' jenkins-search--loading' : '')
+              "jenkins-search jenkins-search--app-bar" +
+              (isSearchActive ? " jenkins-search--loading" : "")
             }
           >
             <input
               id="filter-box"
               type="search"
               className="jenkins-search__input"
-              placeholder={t('Search available plugins') ?? 'Search available plugins'}
+              placeholder={
+                t("Search available plugins") ?? "Search available plugins"
+              }
               value={searchQuery}
               onChange={handleSearch}
               autoComplete="off"
               role="searchbox"
-              aria-label={t('Search available plugins') ?? 'Search available plugins'}
+              aria-label={
+                t("Search available plugins") ?? "Search available plugins"
+              }
             />
           </div>
         </div>
@@ -406,7 +409,7 @@ export default function PluginAvailable({
                 disabled={!hasSelectedPlugins || isInstalling}
                 onClick={handleInstall}
               >
-                {t('Install') ?? 'Install'}
+                {t("Install") ?? "Install"}
               </button>
               <Dropdown
                 items={installDropdownItems}
@@ -417,10 +420,12 @@ export default function PluginAvailable({
                   type="button"
                   className="jenkins-button jenkins-button--primary jenkins-split-button__dropdown-trigger"
                   disabled={!hasSelectedPlugins || isInstalling}
-                  aria-label={t('More install options') ?? 'More install options'}
+                  aria-label={
+                    t("More install options") ?? "More install options"
+                  }
                 >
                   <span className="jenkins-visually-hidden">
-                    {t('More install options') ?? 'More install options'}
+                    {t("More install options") ?? "More install options"}
                   </span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -429,10 +434,7 @@ export default function PluginAvailable({
                     aria-hidden="true"
                     focusable="false"
                   >
-                    <path
-                      d="M256 368L64 176h384z"
-                      fill="currentColor"
-                    />
+                    <path d="M256 368L64 176h384z" fill="currentColor" />
                   </svg>
                 </button>
               </Dropdown>
@@ -445,7 +447,7 @@ export default function PluginAvailable({
             className="jenkins-button"
             onClick={handleCheckNow}
           >
-            {t('Check now') ?? 'Check now'}
+            {t("Check now") ?? "Check now"}
           </button>
         </div>
       </div>
@@ -457,7 +459,7 @@ export default function PluginAvailable({
       <form
         id="available-plugins-form"
         method="post"
-        action={buildUrl('/pluginManager/install')}
+        action={buildUrl("/pluginManager/install")}
       >
         {/* CSRF crumb hidden field */}
         {crumbFieldName && crumbValue && (
@@ -471,14 +473,17 @@ export default function PluginAvailable({
         <table
           id="plugins"
           className="jenkins-table sortable"
-          data-hasadmin={isAdmin ? 'true' : undefined}
-          data-health={healthScoresAvailable ? 'true' : undefined}
+          data-hasadmin={isAdmin ? "true" : undefined}
+          data-health={healthScoresAvailable ? "true" : undefined}
         >
           <thead>
             <tr>
               {/* Install checkbox header — available.jelly lines 78-82 */}
               {isAdmin && (
-                <th className="jenkins-table__cell--checkbox" data-sort-disable="true">
+                <th
+                  className="jenkins-table__cell--checkbox"
+                  data-sort-disable="true"
+                >
                   <div className="jenkins-checkbox">
                     <input
                       type="checkbox"
@@ -490,30 +495,36 @@ export default function PluginAvailable({
                           selectedPlugins.has(getPluginKey(p)),
                         )
                       }
-                      aria-label={t('Select all plugins') ?? 'Select all plugins'}
+                      aria-label={
+                        t("Select all plugins") ?? "Select all plugins"
+                      }
                     />
-                    <label htmlFor="select-all" className="jenkins-visually-hidden">
-                      {t('Select all') ?? 'Select all'}
+                    <label
+                      htmlFor="select-all"
+                      className="jenkins-visually-hidden"
+                    >
+                      {t("Select all") ?? "Select all"}
                     </label>
                   </div>
                 </th>
               )}
 
               {/* Name column header — available.jelly line 84 */}
-              <th data-sort-dir="down">
-                {t('Name') ?? 'Name'}
-              </th>
+              <th data-sort-dir="down">{t("Name") ?? "Name"}</th>
 
               {/* Released column header — available.jelly line 88 */}
-              <th>
-                {t('Released') ?? 'Released'}
-              </th>
+              <th>{t("Released") ?? "Released"}</th>
 
               {/* Health score column header — available.jelly lines 89-94 */}
               {healthScoresAvailable && (
                 <th>
-                  <span title={t('Popularity of the plugin') ?? 'Popularity of the plugin'}>
-                    {t('Popularity') ?? 'Popularity'}
+                  <span
+                    title={
+                      t("Popularity of the plugin") ??
+                      "Popularity of the plugin"
+                    }
+                  >
+                    {t("Popularity") ?? "Popularity"}
                   </span>
                 </th>
               )}
@@ -534,18 +545,21 @@ export default function PluginAvailable({
             ))}
 
             {/* Empty state when no results and not loading */}
-            {!isSearchActive && displayPlugins.length === 0 && debouncedQuery.length > 0 && (
-              <tr>
-                <td
-                  colSpan={
-                    (isAdmin ? 1 : 0) + 2 + (healthScoresAvailable ? 1 : 0)
-                  }
-                  className="jenkins-table__cell--no-results"
-                >
-                  {t('No available plugins match your search.') ?? 'No available plugins match your search.'}
-                </td>
-              </tr>
-            )}
+            {!isSearchActive &&
+              displayPlugins.length === 0 &&
+              debouncedQuery.length > 0 && (
+                <tr>
+                  <td
+                    colSpan={
+                      (isAdmin ? 1 : 0) + 2 + (healthScoresAvailable ? 1 : 0)
+                    }
+                    className="jenkins-table__cell--no-results"
+                  >
+                    {t("No available plugins match your search.") ??
+                      "No available plugins match your search."}
+                  </td>
+                </tr>
+              )}
           </tbody>
         </table>
       </form>
@@ -566,7 +580,7 @@ export default function PluginAvailable({
  * @returns Unique plugin key string.
  */
 function getPluginKey(plugin: AvailablePluginInfo): string {
-  const sourceId = plugin.sourceId ?? 'default';
+  const sourceId = plugin.sourceId ?? "default";
   return `plugin.${plugin.name}.${sourceId}`;
 }
 
@@ -581,9 +595,9 @@ function getPluginKey(plugin: AvailablePluginInfo): string {
 function extractPluginNames(selectedKeys: Set<string>): string[] {
   return Array.from(selectedKeys).map((key) => {
     // Key format: "plugin.{name}.{sourceId}"
-    const parts = key.split('.');
+    const parts = key.split(".");
     // Return the name portion (index 1) — everything between first and last dot
-    return parts.length >= 3 ? parts.slice(1, -1).join('.') : parts[1] ?? key;
+    return parts.length >= 3 ? parts.slice(1, -1).join(".") : (parts[1] ?? key);
   });
 }
 
@@ -621,7 +635,8 @@ function PluginRow({
 }: PluginRowProps): React.JSX.Element {
   const pluginKey = getPluginKey(plugin);
   const displayName = plugin.displayName ?? plugin.title ?? plugin.name;
-  const categories = plugin.categories ?? (plugin.category ? [plugin.category] : []);
+  const categories =
+    plugin.categories ?? (plugin.category ? [plugin.category] : []);
 
   return (
     <tr data-plugin-id={plugin.name} data-plugin-version={plugin.version}>
@@ -669,7 +684,7 @@ function PluginRow({
           {plugin.version && (
             <span className="jenkins-label jenkins-label--tertiary">
               <span className="jenkins-visually-hidden">
-                {t('Version') ?? 'Version'}:{' '}
+                {t("Version") ?? "Version"}:{" "}
               </span>
               {plugin.version}
             </span>
@@ -709,8 +724,8 @@ function PluginRow({
         {plugin.newerCoreRequired && (
           <div className="jenkins-alert jenkins-alert-danger" role="alert">
             <span>
-              {t('This plugin version requires a newer version of Jenkins.') ??
-                'This plugin version requires a newer version of Jenkins.'}
+              {t("This plugin version requires a newer version of Jenkins.") ??
+                "This plugin version requires a newer version of Jenkins."}
             </span>
           </div>
         )}
@@ -720,8 +735,10 @@ function PluginRow({
           plugin.unresolvedSecurityWarnings.length > 0 && (
             <div className="jenkins-alert jenkins-alert-danger" role="alert">
               <span>
-                {t('Warning: This plugin has unresolved security vulnerabilities.') ??
-                  'Warning: This plugin has unresolved security vulnerabilities.'}
+                {t(
+                  "Warning: This plugin has unresolved security vulnerabilities.",
+                ) ??
+                  "Warning: This plugin has unresolved security vulnerabilities."}
               </span>
               <ul>
                 {plugin.unresolvedSecurityWarnings.map((warning, idx) => (
@@ -743,8 +760,8 @@ function PluginRow({
         {plugin.deprecated && (
           <div className="jenkins-alert jenkins-alert-warning" role="alert">
             <span>
-              {t('Deprecated: This plugin has been marked as deprecated.') ??
-                'Deprecated: This plugin has been marked as deprecated.'}
+              {t("Deprecated: This plugin has been marked as deprecated.") ??
+                "Deprecated: This plugin has been marked as deprecated."}
             </span>
           </div>
         )}
@@ -753,8 +770,10 @@ function PluginRow({
         {plugin.adoptMe && (
           <div className="jenkins-alert jenkins-alert-warning" role="alert">
             <span>
-              {t('This plugin is up for adoption! Volunteer to be a maintainer.') ??
-                'This plugin is up for adoption! Volunteer to be a maintainer.'}
+              {t(
+                "This plugin is up for adoption! Volunteer to be a maintainer.",
+              ) ??
+                "This plugin is up for adoption! Volunteer to be a maintainer."}
             </span>
           </div>
         )}
@@ -769,7 +788,7 @@ function PluginRow({
             {formatReleaseDate(plugin.releaseTimestamp.iso8601)}
           </time>
         ) : (
-          <span>{t('N/A') ?? 'N/A'}</span>
+          <span>{t("N/A") ?? "N/A"}</span>
         )}
       </td>
 
@@ -780,9 +799,9 @@ function PluginRow({
         <td className="jenkins-table__cell--tight">
           {plugin.healthScore != null ? (
             <a
-              href={plugin.wiki ? `${plugin.wiki}/healthScore` : '#'}
-              className={`jenkins-healthScore--badge jenkins-healthScore--${plugin.healthScoreClass ?? 'unknown'}`}
-              title={`${plugin.healthScore} out of 100 (${plugin.healthScoreClass ?? 'unknown'})`}
+              href={plugin.wiki ? `${plugin.wiki}/healthScore` : "#"}
+              className={`jenkins-healthScore--badge jenkins-healthScore--${plugin.healthScoreClass ?? "unknown"}`}
+              title={`${plugin.healthScore} out of 100 (${plugin.healthScoreClass ?? "unknown"})`}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -791,7 +810,9 @@ function PluginRow({
           ) : (
             <span
               className="jenkins-healthScore--badge jenkins-healthScore--na"
-              title={t('Health score not available') ?? 'Health score not available'}
+              title={
+                t("Health score not available") ?? "Health score not available"
+              }
               dangerouslySetInnerHTML={{ __html: ABORTED_ICON_SVG }}
             />
           )}

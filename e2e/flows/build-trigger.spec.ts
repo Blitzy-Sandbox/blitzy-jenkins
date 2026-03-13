@@ -70,9 +70,8 @@ async function createFreestyleJob(
   shellCommand: string = 'echo "Build completed successfully"',
 ): Promise<void> {
   // Retrieve CSRF crumb for POST requests — Jenkins requires it for API calls
-  const crumbResponse = await jenkinsPage.page.request.get(
-    `crumbIssuer/api/json`,
-  );
+  const crumbResponse =
+    await jenkinsPage.page.request.get(`crumbIssuer/api/json`);
 
   let crumbHeader = "";
   let crumbValue = "";
@@ -141,9 +140,8 @@ async function triggerBuildViaApi(
   jenkinsPage: { page: import("@playwright/test").Page },
   jobName: string,
 ): Promise<void> {
-  const crumbResponse = await jenkinsPage.page.request.get(
-    `crumbIssuer/api/json`,
-  );
+  const crumbResponse =
+    await jenkinsPage.page.request.get(`crumbIssuer/api/json`);
 
   let crumbHeader = "";
   let crumbValue = "";
@@ -225,9 +223,8 @@ async function deleteJob(
   jobName: string,
 ): Promise<void> {
   try {
-    const crumbResponse = await jenkinsPage.page.request.get(
-      `crumbIssuer/api/json`,
-    );
+    const crumbResponse =
+      await jenkinsPage.page.request.get(`crumbIssuer/api/json`);
 
     let crumbHeader = "";
     let crumbValue = "";
@@ -309,9 +306,9 @@ test.describe("Build Trigger User Flows", () => {
     const buildQueuePanel = jenkinsPage.page.locator("#buildQueue");
 
     // Wait for either the builds card to show content or queue to update
-    await expect(
-      buildsCard.or(buildQueuePanel),
-    ).toBeVisible({ timeout: BUILD_WAIT_TIMEOUT });
+    await expect(buildsCard.or(buildQueuePanel)).toBeVisible({
+      timeout: BUILD_WAIT_TIMEOUT,
+    });
 
     // Allow time for the build to appear — the builds card auto-refreshes
     // every 5 seconds per builds-card.js line 22
@@ -555,9 +552,8 @@ test.describe("Build Trigger User Flows", () => {
 
     // Cleanup — abort the build before deleting
     try {
-      const crumbResponse = await jenkinsPage.page.request.get(
-        `crumbIssuer/api/json`,
-      );
+      const crumbResponse =
+        await jenkinsPage.page.request.get(`crumbIssuer/api/json`);
       let crumbHeader = "";
       let crumbValue = "";
       if (crumbResponse.ok()) {

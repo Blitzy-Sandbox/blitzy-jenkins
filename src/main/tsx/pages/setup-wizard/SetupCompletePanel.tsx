@@ -65,13 +65,9 @@ export default function SetupCompletePanel({
         <div className="jumbotron welcome-panel success-panel">
           {/* Banner heading — conditional on restartRequired flag */}
           {restartRequired ? (
-            <h1>
-              {translations.installWizard_installComplete_bannerRestart}
-            </h1>
+            <h1>{translations.installWizard_installComplete_bannerRestart}</h1>
           ) : (
-            <h1>
-              {translations.installWizard_installComplete_banner}
-            </h1>
+            <h1>{translations.installWizard_installComplete_banner}</h1>
           )}
 
           {/*
@@ -108,9 +104,7 @@ export default function SetupCompletePanel({
             )
           ) : (
             <>
-              <p>
-                {translations.installWizard_installComplete_message}
-              </p>
+              <p>{translations.installWizard_installComplete_message}</p>
               <button
                 type="button"
                 className="btn btn-primary install-done"

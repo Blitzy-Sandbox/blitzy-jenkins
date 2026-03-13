@@ -712,10 +712,7 @@ function PluginInstalled({
       const allDependentsDisabled = realDependents.every(
         (d) => !enabledState[d],
       );
-      if (
-        realDependents.length > 0 &&
-        allDependentsDisabled
-      ) {
+      if (realDependents.length > 0 && allDependentsDisabled) {
         classes.push("has-dependents-but-disabled");
       }
       return classes.join(" ");
@@ -746,8 +743,7 @@ function PluginInstalled({
         );
         if (!canEnable && disabledDependencies.length > 0) {
           return {
-            title:
-              t("cannot-enable") || "This plugin cannot be enabled",
+            title: t("cannot-enable") || "This plugin cannot be enabled",
             subtitle:
               t("disabled-dependencies") ||
               "It has one or more unsatisfied dependencies",
@@ -765,8 +761,7 @@ function PluginInstalled({
         );
         if (!canDisable && enabledDependents.length > 0) {
           return {
-            title:
-              t("cannot-disable") || "This plugin cannot be disabled",
+            title: t("cannot-disable") || "This plugin cannot be disabled",
             subtitle:
               t("enabled-dependents") ||
               "It has one or more enabled dependents",
@@ -809,8 +804,7 @@ function PluginInstalled({
         );
         if (!canUninstall && installedDependents.length > 0) {
           return {
-            title:
-              t("cannot-uninstall") || "This plugin cannot be uninstalled",
+            title: t("cannot-uninstall") || "This plugin cannot be uninstalled",
             subtitle:
               t("installed-dependents") ||
               "It has one or more installed dependents",
@@ -846,13 +840,7 @@ function PluginInstalled({
 
       return null;
     },
-    [
-      t,
-      pluginsByShortName,
-      dependencyMap,
-      dependentMap,
-      enabledState,
-    ],
+    [t, pluginsByShortName, dependencyMap, dependentMap, enabledState],
   );
 
   /**
@@ -892,7 +880,10 @@ function PluginInstalled({
   if (isLoading) {
     return (
       <div className="jenkins-spinner-wrapper">
-        <div className="jenkins-spinner" aria-label="Loading installed plugins" />
+        <div
+          className="jenkins-spinner"
+          aria-label="Loading installed plugins"
+        />
       </div>
     );
   }
@@ -904,9 +895,7 @@ function PluginInstalled({
   if (isError) {
     return (
       <div className="jenkins-alert jenkins-alert-danger" role="alert">
-        <p>
-          {t("error-loading") || "Failed to load installed plugins."}
-        </p>
+        <p>{t("error-loading") || "Failed to load installed plugins."}</p>
         {error && <p>{error.message}</p>}
         <button
           type="button"
@@ -927,17 +916,41 @@ function PluginInstalled({
     <div id="plugins">
       {/* i18n template element — provides data attributes for legacy DOM-based i18n reads.
           Mirrors installed.jelly lines 60-70 */}
-      <template id="i18n"
-        data-cannot-enable={t("cannot-enable") || "This plugin cannot be enabled"}
-        data-cannot-disable={t("cannot-disable") || "This plugin cannot be disabled"}
-        data-cannot-uninstall={t("cannot-uninstall") || "This plugin cannot be uninstalled"}
-        data-disabled-dependencies={t("disabled-dependencies") || "It has one or more unsatisfied dependencies"}
-        data-enabled-dependents={t("enabled-dependents") || "It has one or more enabled dependents"}
-        data-installed-dependents={t("installed-dependents") || "It has one or more installed dependents"}
-        data-detached-disable={t("detached-disable") || "This is a plugin protocol-compatible plugin"}
-        data-detached-uninstall={t("detached-uninstall") || "This is a plugin protocol-compatible plugin"}
-        data-detached-possible-dependents={t("detached-possible-dependents") || "These plugins may depend on it"}
-        data-uninstall-description={t("uninstall-description") || "Are you sure you want to uninstall this plugin?"}
+      <template
+        id="i18n"
+        data-cannot-enable={
+          t("cannot-enable") || "This plugin cannot be enabled"
+        }
+        data-cannot-disable={
+          t("cannot-disable") || "This plugin cannot be disabled"
+        }
+        data-cannot-uninstall={
+          t("cannot-uninstall") || "This plugin cannot be uninstalled"
+        }
+        data-disabled-dependencies={
+          t("disabled-dependencies") ||
+          "It has one or more unsatisfied dependencies"
+        }
+        data-enabled-dependents={
+          t("enabled-dependents") || "It has one or more enabled dependents"
+        }
+        data-installed-dependents={
+          t("installed-dependents") || "It has one or more installed dependents"
+        }
+        data-detached-disable={
+          t("detached-disable") || "This is a plugin protocol-compatible plugin"
+        }
+        data-detached-uninstall={
+          t("detached-uninstall") ||
+          "This is a plugin protocol-compatible plugin"
+        }
+        data-detached-possible-dependents={
+          t("detached-possible-dependents") || "These plugins may depend on it"
+        }
+        data-uninstall-description={
+          t("uninstall-description") ||
+          "Are you sure you want to uninstall this plugin?"
+        }
       />
 
       {/* Restart required indicator — hidden element for DOM-based detection.
@@ -959,9 +972,7 @@ function PluginInstalled({
             id="filter-box"
             type="search"
             className="jenkins-input"
-            placeholder={
-              t("search-installed") || "Search installed plugins"
-            }
+            placeholder={t("search-installed") || "Search installed plugins"}
             value={filterQuery}
             onChange={(e) => setFilterQuery(e.target.value)}
             autoFocus
@@ -1037,17 +1048,12 @@ function PluginInstalled({
               )}
 
               {/* Enabled column */}
-              <th
-                className="jenkins-table__cell--tight"
-                role="columnheader"
-              >
+              <th className="jenkins-table__cell--tight" role="columnheader">
                 {t("enabled") || "Enabled"}
               </th>
 
               {/* Version column (always shown) */}
-              <th role="columnheader">
-                {t("version") || "Version"}
-              </th>
+              <th role="columnheader">{t("version") || "Version"}</th>
 
               {/* Admin-only columns */}
               {!readOnlyMode && (
@@ -1105,8 +1111,7 @@ function PluginInstalled({
                 : undefined;
 
               // Determine if uninstall is blocked due to installed dependents.
-              const isUninstallDisabled =
-                !canUninstall || plugin.deleted;
+              const isUninstallDisabled = !canUninstall || plugin.deleted;
               const uninstallTitle =
                 !canUninstall && installedDependents.length > 0
                   ? `${t("cannot-uninstall") || "Cannot uninstall"}: ${installedDependents.map((d) => getPluginDisplayName(d, pluginsByShortName)).join(", ")}`
@@ -1160,7 +1165,10 @@ function PluginInstalled({
                             key={dep.shortName}
                             data-plugin-id={dep.shortName}
                           >
-                            {getPluginDisplayName(dep.shortName, pluginsByShortName)}
+                            {getPluginDisplayName(
+                              dep.shortName,
+                              pluginsByShortName,
+                            )}
                           </span>
                         ))}
                       </div>
@@ -1181,21 +1189,18 @@ function PluginInstalled({
                       {plugin.activeWarnings &&
                         plugin.activeWarnings.length > 0 && (
                           <div className="jenkins-alert jenkins-alert-danger">
-                            {plugin.activeWarnings.map(
-                              (warning, idx) => (
-                                <div key={idx}>
-                                  <a
-                                    href={warning.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
-                                    {t("security-warning") ||
-                                      "Security Warning"}
-                                    : {warning.message}
-                                  </a>
-                                </div>
-                              ),
-                            )}
+                            {plugin.activeWarnings.map((warning, idx) => (
+                              <div key={idx}>
+                                <a
+                                  href={warning.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  {t("security-warning") || "Security Warning"}:{" "}
+                                  {warning.message}
+                                </a>
+                              </div>
+                            ))}
                           </div>
                         )}
 
@@ -1318,10 +1323,7 @@ function PluginInstalled({
                       <td
                         className="uninstall jenkins-table__cell--tight"
                         onMouseEnter={() =>
-                          handleCellMouseEnter(
-                            plugin.shortName,
-                            "uninstall",
-                          )
+                          handleCellMouseEnter(plugin.shortName, "uninstall")
                         }
                         onMouseLeave={handleCellMouseLeave}
                       >
@@ -1341,10 +1343,7 @@ function PluginInstalled({
                                 ...(plugin.mandatoryDependents || []),
                                 ...(plugin.impliedDependents || []),
                               ].map((depName) => (
-                                <span
-                                  key={depName}
-                                  data-plugin-id={depName}
-                                >
+                                <span key={depName} data-plugin-id={depName}>
                                   {getPluginDisplayName(
                                     depName,
                                     pluginsByShortName,
@@ -1379,7 +1378,8 @@ function PluginInstalled({
                   {/* Dependency info row — shown on hover after 1-second delay.
                       Mirrors _table.js lines 400-452 */}
                   {depInfoState &&
-                    depInfoState.pluginId === plugin.shortName && (() => {
+                    depInfoState.pluginId === plugin.shortName &&
+                    (() => {
                       const info = getDependencyInfoContent(
                         plugin.shortName,
                         depInfoState.type,
@@ -1399,9 +1399,7 @@ function PluginInstalled({
                               style={{ display: "inherit" }}
                             >
                               <div className="title">{info.title}</div>
-                              <div className="subtitle">
-                                {info.subtitle}.
-                              </div>
+                              <div className="subtitle">{info.subtitle}.</div>
                               {info.items.length > 0 && (
                                 <div className="dependency-item-list">
                                   {info.items.map((item) => (

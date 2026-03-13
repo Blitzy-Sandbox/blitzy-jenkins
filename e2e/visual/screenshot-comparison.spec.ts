@@ -25,8 +25,8 @@
  * @see AAP Section 0.8.2 — Visual Symmetry Validation (Hard Gate)
  */
 
-import type { Page, Locator } from '@playwright/test';
-import { test, expect } from '../fixtures/jenkins';
+import type { Page, Locator } from "@playwright/test";
+import { test, expect } from "../fixtures/jenkins";
 
 // ---------------------------------------------------------------------------
 // Configuration constants — aligned with playwright.config.ts defaults
@@ -66,14 +66,14 @@ const DEFAULT_THRESHOLD = 0.2;
  */
 function getDynamicMasks(page: Page): Locator[] {
   return [
-    page.locator('.timestamp'),
-    page.locator('time'),
-    page.locator('[data-timestamp]'),
-    page.locator('.build-link .display-name'),
-    page.locator('.queue-id'),
-    page.locator('.progress-bar'),
-    page.locator('.jenkins-update-available'),
-    page.locator('.node-monitoring'),
+    page.locator(".timestamp"),
+    page.locator("time"),
+    page.locator("[data-timestamp]"),
+    page.locator(".build-link .display-name"),
+    page.locator(".queue-id"),
+    page.locator(".progress-bar"),
+    page.locator(".jenkins-update-available"),
+    page.locator(".node-monitoring"),
   ];
 }
 
@@ -81,7 +81,7 @@ function getDynamicMasks(page: Page): Locator[] {
 // Authenticated view tests
 // ===========================================================================
 
-test.describe('Visual Regression - Screenshot Comparison', () => {
+test.describe("Visual Regression - Screenshot Comparison", () => {
   /**
    * Authenticate before each screenshot test so that all captures reflect the
    * logged-in admin experience. The JenkinsPage POM handles credential entry
@@ -105,11 +105,11 @@ test.describe('Visual Regression - Screenshot Comparison', () => {
    * - JS bootstrap: `src/main/js/app.js` (initialises Dropdowns, CommandPalette,
    *   SearchBar, Notifications, Header, Tooltips, StopButtonLink, etc.)
    */
-  test('dashboard - main view', async ({ jenkinsPage, page }) => {
+  test("dashboard - main view", async ({ jenkinsPage, page }) => {
     await jenkinsPage.navigateToDashboard();
     await jenkinsPage.waitForPageLoad();
 
-    await expect(page).toHaveScreenshot('dashboard.png', {
+    await expect(page).toHaveScreenshot("dashboard.png", {
       maxDiffPixels: DEFAULT_MAX_DIFF_PIXELS,
       threshold: DEFAULT_THRESHOLD,
       mask: getDynamicMasks(page),
@@ -132,11 +132,11 @@ test.describe('Visual Regression - Screenshot Comparison', () => {
    * - React target: `src/main/tsx/pages/job/JobIndex.tsx`
    * - Stapler endpoint: `GET /job/{name}/api/json`
    */
-  test('job-index - job detail page', async ({ jenkinsPage, page }) => {
-    await jenkinsPage.goto('/job/test-freestyle-job/');
+  test("job-index - job detail page", async ({ jenkinsPage, page }) => {
+    await jenkinsPage.goto("/job/test-freestyle-job/");
     await jenkinsPage.waitForPageLoad();
 
-    await expect(page).toHaveScreenshot('job-index.png', {
+    await expect(page).toHaveScreenshot("job-index.png", {
       maxDiffPixels: DEFAULT_MAX_DIFF_PIXELS,
       threshold: DEFAULT_THRESHOLD,
       mask: getDynamicMasks(page),
@@ -158,11 +158,11 @@ test.describe('Visual Regression - Screenshot Comparison', () => {
    * - React target: `src/main/tsx/pages/job/JobConfigure.tsx`
    * - Stapler URL: `/job/{name}/configure`
    */
-  test('job-configure - configuration form', async ({ jenkinsPage, page }) => {
-    await jenkinsPage.goto('/job/test-freestyle-job/configure');
+  test("job-configure - configuration form", async ({ jenkinsPage, page }) => {
+    await jenkinsPage.goto("/job/test-freestyle-job/configure");
     await jenkinsPage.waitForPageLoad();
 
-    await expect(page).toHaveScreenshot('job-configure.png', {
+    await expect(page).toHaveScreenshot("job-configure.png", {
       maxDiffPixels: 150,
       threshold: DEFAULT_THRESHOLD,
       mask: getDynamicMasks(page),
@@ -184,17 +184,14 @@ test.describe('Visual Regression - Screenshot Comparison', () => {
    * - React target: `src/main/tsx/pages/build/ConsoleOutput.tsx`
    * - Stapler endpoint: `GET /job/{name}/{buildNumber}/logText/progressiveText`
    */
-  test('build-console - console output', async ({ jenkinsPage, page }) => {
-    await jenkinsPage.goto('/job/test-freestyle-job/1/console');
+  test("build-console - console output", async ({ jenkinsPage, page }) => {
+    await jenkinsPage.goto("/job/test-freestyle-job/1/console");
     await jenkinsPage.waitForPageLoad();
 
-    await expect(page).toHaveScreenshot('build-console.png', {
+    await expect(page).toHaveScreenshot("build-console.png", {
       maxDiffPixels: 200,
       threshold: DEFAULT_THRESHOLD,
-      mask: [
-        ...getDynamicMasks(page),
-        page.locator('.console-output'),
-      ],
+      mask: [...getDynamicMasks(page), page.locator(".console-output")],
     });
   });
 
@@ -215,17 +212,17 @@ test.describe('Visual Regression - Screenshot Comparison', () => {
    * - API endpoints: `/pluginManager/available`, `/pluginManager/installPlugins`,
    *   `/pluginManager/installStatus` (from `src/main/js/api/pluginManager.js`)
    */
-  test('plugin-manager - main view', async ({ jenkinsPage, page }) => {
+  test("plugin-manager - main view", async ({ jenkinsPage, page }) => {
     await jenkinsPage.navigateToPluginManager();
     await jenkinsPage.waitForPageLoad();
 
-    await expect(page).toHaveScreenshot('plugin-manager.png', {
+    await expect(page).toHaveScreenshot("plugin-manager.png", {
       maxDiffPixels: DEFAULT_MAX_DIFF_PIXELS,
       threshold: DEFAULT_THRESHOLD,
       mask: [
         ...getDynamicMasks(page),
-        page.locator('.plugin-version'),
-        page.locator('.update-center-message'),
+        page.locator(".plugin-version"),
+        page.locator(".update-center-message"),
       ],
     });
   });
@@ -249,17 +246,14 @@ test.describe('Visual Regression - Screenshot Comparison', () => {
    * - React target: `src/main/tsx/pages/manage-jenkins/ManageJenkins.tsx`
    * - Stapler URL: `/manage/`
    */
-  test('manage-jenkins - admin page', async ({ jenkinsPage, page }) => {
+  test("manage-jenkins - admin page", async ({ jenkinsPage, page }) => {
     await jenkinsPage.navigateToManageJenkins();
     await jenkinsPage.waitForPageLoad();
 
-    await expect(page).toHaveScreenshot('manage-jenkins.png', {
+    await expect(page).toHaveScreenshot("manage-jenkins.png", {
       maxDiffPixels: DEFAULT_MAX_DIFF_PIXELS,
       threshold: DEFAULT_THRESHOLD,
-      mask: [
-        ...getDynamicMasks(page),
-        page.locator('.jenkins-admin-monitor'),
-      ],
+      mask: [...getDynamicMasks(page), page.locator(".jenkins-admin-monitor")],
     });
   });
 
@@ -282,11 +276,11 @@ test.describe('Visual Regression - Screenshot Comparison', () => {
    *   `saveConfigureInstance` mutations via `jenkins.staplerPost()`
    * - React target: `src/main/tsx/pages/setup-wizard/SetupWizard.tsx`
    */
-  test('setup-wizard - welcome panel', async ({ jenkinsPage, page }) => {
+  test("setup-wizard - welcome panel", async ({ jenkinsPage, page }) => {
     await jenkinsPage.navigateToSetupWizard();
     await jenkinsPage.waitForPageLoad();
 
-    await expect(page).toHaveScreenshot('setup-wizard.png', {
+    await expect(page).toHaveScreenshot("setup-wizard.png", {
       maxDiffPixels: DEFAULT_MAX_DIFF_PIXELS,
       threshold: DEFAULT_THRESHOLD,
       mask: getDynamicMasks(page),
@@ -309,17 +303,14 @@ test.describe('Visual Regression - Screenshot Comparison', () => {
    * - React target: `src/main/tsx/pages/computer/ComputerSet.tsx`
    * - Stapler endpoint: `GET /computer/api/json`
    */
-  test('computer-set - nodes management', async ({ jenkinsPage, page }) => {
+  test("computer-set - nodes management", async ({ jenkinsPage, page }) => {
     await jenkinsPage.navigateToComputerSet();
     await jenkinsPage.waitForPageLoad();
 
-    await expect(page).toHaveScreenshot('computer-set.png', {
+    await expect(page).toHaveScreenshot("computer-set.png", {
       maxDiffPixels: DEFAULT_MAX_DIFF_PIXELS,
       threshold: DEFAULT_THRESHOLD,
-      mask: [
-        ...getDynamicMasks(page),
-        page.locator('.computer-monitoring'),
-      ],
+      mask: [...getDynamicMasks(page), page.locator(".computer-monitoring")],
     });
   });
 
@@ -337,11 +328,11 @@ test.describe('Visual Regression - Screenshot Comparison', () => {
    * - React target: `src/main/tsx/pages/cloud/CloudSet.tsx`
    * - Stapler URL: `/cloud/`
    */
-  test('cloud-set - cloud configuration', async ({ jenkinsPage, page }) => {
-    await jenkinsPage.goto('/cloud/');
+  test("cloud-set - cloud configuration", async ({ jenkinsPage, page }) => {
+    await jenkinsPage.goto("/cloud/");
     await jenkinsPage.waitForPageLoad();
 
-    await expect(page).toHaveScreenshot('cloud-set.png', {
+    await expect(page).toHaveScreenshot("cloud-set.png", {
       maxDiffPixels: DEFAULT_MAX_DIFF_PIXELS,
       threshold: DEFAULT_THRESHOLD,
       mask: getDynamicMasks(page),
@@ -353,7 +344,7 @@ test.describe('Visual Regression - Screenshot Comparison', () => {
 // Unauthenticated view tests
 // ===========================================================================
 
-test.describe('Visual Regression - Unauthenticated Views', () => {
+test.describe("Visual Regression - Unauthenticated Views", () => {
   // -------------------------------------------------------------------------
   // 10. Sign-in / Register — login page
   // -------------------------------------------------------------------------
@@ -373,11 +364,11 @@ test.describe('Visual Regression - Unauthenticated Views', () => {
    * - React target: `src/main/tsx/pages/security/SignInRegister.tsx`
    * - Stapler URL: `/login`
    */
-  test('sign-in-register - login page', async ({ jenkinsPage, page }) => {
-    await jenkinsPage.goto('/login');
+  test("sign-in-register - login page", async ({ jenkinsPage, page }) => {
+    await jenkinsPage.goto("/login");
     await jenkinsPage.waitForPageLoad();
 
-    await expect(page).toHaveScreenshot('sign-in-register.png', {
+    await expect(page).toHaveScreenshot("sign-in-register.png", {
       maxDiffPixels: DEFAULT_MAX_DIFF_PIXELS,
       threshold: DEFAULT_THRESHOLD,
     });

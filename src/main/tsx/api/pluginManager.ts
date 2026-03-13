@@ -154,9 +154,7 @@ export function installStatusQueryOptions(correlationId?: string) {
 
       // Guard: source lines 132–134
       if (response.status !== "ok") {
-        throw new Error(
-          response.message ?? "Failed to fetch install status",
-        );
+        throw new Error(response.message ?? "Failed to fetch install status");
       }
 
       return response.data;
@@ -230,9 +228,7 @@ export function restartStatusQueryOptions() {
       // Defensive guard — source passes response.data directly (line 250)
       // but we validate for safety
       if (response.status !== "ok") {
-        throw new Error(
-          response.message ?? "Failed to fetch restart status",
-        );
+        throw new Error(response.message ?? "Failed to fetch restart status");
       }
 
       return response.data;
@@ -272,9 +268,7 @@ export function pluginsSearchQueryOptions(query: string, limit: number) {
 
       // Guard: source lines 179–181
       if (response.status !== "ok") {
-        throw new Error(
-          response.message ?? "Failed to search plugins",
-        );
+        throw new Error(response.message ?? "Failed to search plugins");
       }
 
       return response.data;
@@ -403,11 +397,7 @@ export function usePluginSearch(query: string, limit: number = 50) {
  */
 export function usePluginInstall() {
   return useMutation({
-    mutationFn: async ({
-      plugins,
-    }: {
-      plugins: string[];
-    }): Promise<string> => {
+    mutationFn: async ({ plugins }: { plugins: string[] }): Promise<string> => {
       const response = await jenkinsPost<
         StaplerResponse<InstallPluginsResponse>
       >(
@@ -418,9 +408,7 @@ export function usePluginInstall() {
 
       // Guard: source lines 103–105
       if (response.status !== "ok") {
-        throw new Error(
-          response.message ?? "Failed to install plugins",
-        );
+        throw new Error(response.message ?? "Failed to install plugins");
       }
 
       // Return correlation ID: source line 108

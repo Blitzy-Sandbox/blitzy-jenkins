@@ -205,22 +205,24 @@ export function TextBox({
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Determine the current effective value (controlled vs uncontrolled)
-  const currentValue =
-    valueProp !== undefined ? valueProp : internalValue;
+  const currentValue = valueProp !== undefined ? valueProp : internalValue;
 
   // ---------------------------------------------------------------------------
   // Autocomplete query token
   // ---------------------------------------------------------------------------
   const activeToken = getActiveToken(currentValue, autoCompleteDelimChar);
   const shouldFetchSuggestions =
-    !!autoCompleteUrl &&
-    showSuggestions &&
-    activeToken.length > 0;
+    !!autoCompleteUrl && showSuggestions && activeToken.length > 0;
 
   const { data: suggestionsData, isLoading: suggestionsLoading } =
     useStaplerQuery<AutocompleteSuggestion[]>({
       url: `${autoCompleteUrl}?value=${encodeURIComponent(activeToken)}`,
-      queryKey: ["textbox-autocomplete", autoCompleteUrl, resolvedAutoCompleteField, activeToken],
+      queryKey: [
+        "textbox-autocomplete",
+        autoCompleteUrl,
+        resolvedAutoCompleteField,
+        activeToken,
+      ],
       enabled: shouldFetchSuggestions,
       staleTime: 30_000, // cache suggestions briefly
     });
@@ -390,7 +392,9 @@ export function TextBox({
         autoComplete={autoCompleteUrl ? "off" : undefined}
         aria-autocomplete={autoCompleteUrl ? "list" : undefined}
         aria-expanded={
-          autoCompleteUrl ? showSuggestions && suggestions.length > 0 : undefined
+          autoCompleteUrl
+            ? showSuggestions && suggestions.length > 0
+            : undefined
         }
         aria-haspopup={autoCompleteUrl ? "listbox" : undefined}
         /* AJAX validation data attributes */
@@ -423,7 +427,10 @@ export function TextBox({
           {suggestionsLoading && (
             <div
               className="jenkins-textbox-autocomplete__loading"
-              style={{ padding: "0.5rem 0.75rem", color: "var(--text-color-secondary)" }}
+              style={{
+                padding: "0.5rem 0.75rem",
+                color: "var(--text-color-secondary)",
+              }}
             >
               Loading…
             </div>
@@ -432,7 +439,10 @@ export function TextBox({
           {!suggestionsLoading && suggestions.length === 0 && (
             <div
               className="jenkins-textbox-autocomplete__empty"
-              style={{ padding: "0.5rem 0.75rem", color: "var(--text-color-secondary)" }}
+              style={{
+                padding: "0.5rem 0.75rem",
+                color: "var(--text-color-secondary)",
+              }}
             >
               No suggestions
             </div>

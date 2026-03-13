@@ -20,8 +20,8 @@
  *
  * @module useCrumb
  */
-import { useState, useCallback, useEffect } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState, useCallback, useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -114,7 +114,7 @@ export interface UseCrumbReturn {
  * React Query cache key for the crumb issuer endpoint.
  * Used for both fetching and cache invalidation via `refreshCrumb()`.
  */
-const CRUMB_QUERY_KEY = ['crumbIssuer'] as const;
+const CRUMB_QUERY_KEY = ["crumbIssuer"] as const;
 
 /**
  * Stale time for the crumb query: 5 minutes (300 000 ms).
@@ -180,8 +180,8 @@ export function useCrumb(): UseCrumbReturn {
   // `document.head.dataset.crumbrequestfield` (not `crumbRequestField`).
   // -------------------------------------------------------------------------
   const initialFieldName: string =
-    document.head.dataset.crumbrequestfield ?? '';
-  const initialValue: string = document.head.dataset.crumb ?? '';
+    document.head.dataset.crumbrequestfield ?? "";
+  const initialValue: string = document.head.dataset.crumb ?? "";
 
   // -------------------------------------------------------------------------
   // Manual override state — set exclusively by updateCrumb().
@@ -218,11 +218,11 @@ export function useCrumb(): UseCrumbReturn {
     queryKey: CRUMB_QUERY_KEY,
 
     queryFn: async (): Promise<CrumbIssuerResponse> => {
-      const baseUrl: string = document.head.dataset.rooturl ?? '';
+      const baseUrl: string = document.head.dataset.rooturl ?? "";
       const response = await fetch(`${baseUrl}/crumbIssuer/api/json`, {
-        method: 'GET',
-        cache: 'no-cache',
-        headers: { Accept: 'application/json' },
+        method: "GET",
+        cache: "no-cache",
+        headers: { Accept: "application/json" },
       });
 
       if (!response.ok) {
@@ -255,14 +255,12 @@ export function useCrumb(): UseCrumbReturn {
   //   3. DOM initial values (from Jelly <l:layout> data attributes)
   // -------------------------------------------------------------------------
   const crumbFieldName: string =
-    manualCrumb?.fieldName
-    ?? crumbQuery.data?.crumbRequestField
-    ?? initialFieldName;
+    manualCrumb?.fieldName ??
+    crumbQuery.data?.crumbRequestField ??
+    initialFieldName;
 
   const crumbValue: string =
-    manualCrumb?.value
-    ?? crumbQuery.data?.crumb
-    ?? initialValue;
+    manualCrumb?.value ?? crumbQuery.data?.crumb ?? initialValue;
 
   // -------------------------------------------------------------------------
   // Sync fetched crumb data to global window.crumb (external system sync).
@@ -314,20 +312,17 @@ export function useCrumb(): UseCrumbReturn {
   // CRITICAL: Updates BOTH React state AND window.crumb.init() — dual update
   // is mandatory for plugin ecosystem backward compatibility.
   // -------------------------------------------------------------------------
-  const updateCrumb = useCallback(
-    (fieldName: string, value: string): void => {
-      // Store as manual override — takes priority over query data and DOM
-      setManualCrumb({ fieldName, value });
+  const updateCrumb = useCallback((fieldName: string, value: string): void => {
+    // Store as manual override — takes priority over query data and DOM
+    setManualCrumb({ fieldName, value });
 
-      // CRITICAL: Maintain window.crumb for plugin backward compatibility.
-      // Mirrors securityConfig.js lines 18–19 and 34–35:
-      //   getWindow().crumb.init(crumbRequestField, response.data.crumb);
-      if (window.crumb) {
-        window.crumb.init(fieldName, value);
-      }
-    },
-    [],
-  );
+    // CRITICAL: Maintain window.crumb for plugin backward compatibility.
+    // Mirrors securityConfig.js lines 18–19 and 34–35:
+    //   getWindow().crumb.init(crumbRequestField, response.data.crumb);
+    if (window.crumb) {
+      window.crumb.init(fieldName, value);
+    }
+  }, []);
 
   // -------------------------------------------------------------------------
   // Return crumb state and management functions

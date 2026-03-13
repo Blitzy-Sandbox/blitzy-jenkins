@@ -57,8 +57,8 @@
  * ```
  */
 
-import { useMutation, type UseMutationResult } from '@tanstack/react-query';
-import { jenkinsPost, jenkinsStaplerPost } from '@/api/client';
+import { useMutation, type UseMutationResult } from "@tanstack/react-query";
+import { jenkinsPost, jenkinsStaplerPost } from "@/api/client";
 
 /**
  * Configuration options for the {@link useStaplerMutation} hook.
@@ -111,7 +111,7 @@ export interface UseStaplerMutationOptions<TData = unknown> {
    *
    * @default 'json'
    */
-  contentType?: 'json' | 'form-urlencoded';
+  contentType?: "json" | "form-urlencoded";
 
   /**
    * Expected response type from the server.
@@ -126,7 +126,7 @@ export interface UseStaplerMutationOptions<TData = unknown> {
    *
    * @default 'json'
    */
-  responseType?: 'json' | 'text';
+  responseType?: "json" | "text";
 
   /**
    * React Query `onSuccess` callback fired when the mutation succeeds.
@@ -208,8 +208,8 @@ export function useStaplerMutation<TData = unknown, TVariables = unknown>(
   const {
     url,
     timeout,
-    contentType = 'json',
-    responseType = 'json',
+    contentType = "json",
+    responseType = "json",
     onSuccess,
     onError,
     onSettled,
@@ -230,7 +230,7 @@ export function useStaplerMutation<TData = unknown, TVariables = unknown>(
      * @returns Typed response promise resolving to `TData`
      */
     mutationFn: async (variables: TVariables): Promise<TData> => {
-      if (contentType === 'form-urlencoded') {
+      if (contentType === "form-urlencoded") {
         // Form-urlencoded POST: delegates to jenkinsStaplerPost which handles
         // CSRF crumb injection in headers and form fields, and supports both
         // FormData objects and URL-encoded string payloads.

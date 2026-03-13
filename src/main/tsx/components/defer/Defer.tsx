@@ -103,9 +103,9 @@ function Defer({
    * When no `lazyFactory` is provided the value is `null` and the component
    * falls back to rendering `children` directly.
    */
-  const [LazyComponent] = useState<ComponentType<Record<string, unknown>> | null>(
-    () => (lazyFactory ? lazy(lazyFactory) : null),
-  );
+  const [LazyComponent] = useState<ComponentType<
+    Record<string, unknown>
+  > | null>(() => (lazyFactory ? lazy(lazyFactory) : null));
 
   /**
    * Post-render effect mirroring the original source's completion callback:

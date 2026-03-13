@@ -96,7 +96,7 @@ test.describe("Job Configuration User Flows", () => {
     // into collapsible sections with headers. The React `FormSection.tsx`
     // component renders these with `.jenkins-section` or section header elements.
     const formSections = jenkinsPage.page.locator(
-      '.jenkins-section, .jenkins-form-section, [data-section-id], .section-header, .jenkins-section__header, tr.section-header-row',
+      ".jenkins-section, .jenkins-form-section, [data-section-id], .section-header, .jenkins-section__header, tr.section-header-row",
     );
 
     // A freestyle job configuration should have at minimum the General section.
@@ -109,7 +109,7 @@ test.describe("Job Configuration User Flows", () => {
       // Fallback: if section elements use different markup, verify the form
       // has substantial content indicating multiple configuration areas.
       const formContent = jenkinsPage.page.locator(
-        '#main-panel form .config-table, #main-panel form table.setting',
+        "#main-panel form .config-table, #main-panel form table.setting",
       );
       await expect(formContent.first()).toBeVisible();
     }
@@ -181,10 +181,7 @@ test.describe("Job Configuration User Flows", () => {
       // No select fields found — this is acceptable for a minimal freestyle
       // job configuration without plugins providing select-based options.
       // The test still passes as there is no requirement that selects exist.
-      test.skip(
-        true,
-        "No select fields found in job configuration — skipping",
-      );
+      test.skip(true, "No select fields found in job configuration — skipping");
     }
   });
 
@@ -295,7 +292,7 @@ test.describe("Job Configuration User Flows", () => {
         // block content that appears after the checkbox is checked.
         const blockContent = parentContainer
           .locator(
-            '.optionalBlock-content, .optional-block-content, [data-optional-content]',
+            ".optionalBlock-content, .optional-block-content, [data-optional-content]",
           )
           .first();
         const contentCount = await blockContent.count();
@@ -371,10 +368,9 @@ test.describe("Job Configuration User Flows", () => {
       );
 
       // Count initial entries
-      const initialEntries = repeatableContainer
-        .locator(
-          '.repeated-chunk, .repeatable-item, [data-repeatable-item]',
-        );
+      const initialEntries = repeatableContainer.locator(
+        ".repeated-chunk, .repeatable-item, [data-repeatable-item]",
+      );
       const initialCount = await initialEntries.count();
 
       // Click "Add" to create a new entry
@@ -384,10 +380,9 @@ test.describe("Job Configuration User Flows", () => {
       await jenkinsPage.page.waitForTimeout(500);
 
       // Verify entry count increased
-      const afterAddEntries = repeatableContainer
-        .locator(
-          '.repeated-chunk, .repeatable-item, [data-repeatable-item]',
-        );
+      const afterAddEntries = repeatableContainer.locator(
+        ".repeated-chunk, .repeatable-item, [data-repeatable-item]",
+      );
       const afterAddCount = await afterAddEntries.count();
       expect(afterAddCount).toBeGreaterThan(initialCount);
 
@@ -405,10 +400,9 @@ test.describe("Job Configuration User Flows", () => {
         await jenkinsPage.page.waitForTimeout(500);
 
         // Verify entry count returned to original
-        const afterDeleteEntries = repeatableContainer
-          .locator(
-            '.repeated-chunk, .repeatable-item, [data-repeatable-item]',
-          );
+        const afterDeleteEntries = repeatableContainer.locator(
+          ".repeated-chunk, .repeatable-item, [data-repeatable-item]",
+        );
         const afterDeleteCount = await afterDeleteEntries.count();
         expect(afterDeleteCount).toBeLessThan(afterAddCount);
       }
@@ -492,7 +486,7 @@ test.describe("Job Configuration User Flows", () => {
         // Newly added hetero-list entries appear as `.repeated-chunk` or
         // `.hetero-list-item` elements within the hetero-list container.
         const addedSections = jenkinsPage.page.locator(
-          '.repeated-chunk, .hetero-list-item, [data-hetero-list-item]',
+          ".repeated-chunk, .hetero-list-item, [data-hetero-list-item]",
         );
         const sectionCount = await addedSections.count();
         expect(sectionCount).toBeGreaterThan(0);
@@ -518,7 +512,7 @@ test.describe("Job Configuration User Flows", () => {
     // "Advanced" that toggles visibility of the advanced options container.
     const advancedButton = jenkinsPage.page
       .locator(
-        'button.advanced-button, .advancedLink button, button.jenkins-button--tertiary, input.advanced-button',
+        "button.advanced-button, .advancedLink button, button.jenkins-button--tertiary, input.advanced-button",
       )
       .or(
         jenkinsPage.page
@@ -543,7 +537,7 @@ test.describe("Job Configuration User Flows", () => {
       // Verify that the form now contains additional visible fields within
       // the advanced container.
       const advancedContainer = jenkinsPage.page.locator(
-        '.advanced-body, .jenkins-advanced-body, [data-advanced-content]',
+        ".advanced-body, .jenkins-advanced-body, [data-advanced-content]",
       );
       const containerCount = await advancedContainer.count();
 
@@ -569,7 +563,7 @@ test.describe("Job Configuration User Flows", () => {
     // from `/help/...` HTML fragments. The React `FormEntry.tsx` component
     // replaces the help toggle in `entry.jelly`.
     const helpIcons = jenkinsPage.page.locator(
-      'a.jenkins-help-button, button.help-button, .jenkins-help-button, a[helpURL], a[data-help-url], .setting-help a',
+      "a.jenkins-help-button, button.help-button, .jenkins-help-button, a[helpURL], a[data-help-url], .setting-help a",
     );
 
     const helpCount = await helpIcons.count();
@@ -584,7 +578,7 @@ test.describe("Job Configuration User Flows", () => {
       // Wait for help content to appear. Jenkins loads help asynchronously
       // from the server, so we wait for the help content container.
       const helpContent = jenkinsPage.page.locator(
-        '.help, .jenkins-help-content, .help-area, [data-help-content], .setting-help .help',
+        ".help, .jenkins-help-content, .help-area, [data-help-content], .setting-help .help",
       );
 
       await helpContent
@@ -599,10 +593,7 @@ test.describe("Job Configuration User Flows", () => {
         await expect(helpContent.first()).toBeVisible();
       }
     } else {
-      test.skip(
-        true,
-        "No help icons found in job configuration — skipping",
-      );
+      test.skip(true, "No help icons found in job configuration — skipping");
     }
   });
 
@@ -625,9 +616,7 @@ test.describe("Job Configuration User Flows", () => {
     // Click the "Save" button. Jenkins configuration forms place the Save
     // button in the bottom-sticker area with `type="submit"`.
     const saveButton = jenkinsPage.page
-      .locator(
-        'button[type="submit"], input[type="submit"]',
-      )
+      .locator('button[type="submit"], input[type="submit"]')
       .filter({ hasText: /Save/i })
       .or(
         jenkinsPage.page.locator(
@@ -705,16 +694,13 @@ test.describe("Job Configuration User Flows", () => {
       // Notification may be transient — we verify the page stayed on configure
       // which confirms the apply succeeded without redirect.
       const notification = jenkinsPage.page.locator(
-        '#notification-bar, .notif-alert-default, .jenkins-notification, [data-notification]',
+        "#notification-bar, .notif-alert-default, .jenkins-notification, [data-notification]",
       );
       if ((await notification.count()) > 0) {
         await expect(notification.first()).toBeVisible();
       }
     } else {
-      test.skip(
-        true,
-        "No Apply button found in job configuration — skipping",
-      );
+      test.skip(true, "No Apply button found in job configuration — skipping");
     }
   });
 

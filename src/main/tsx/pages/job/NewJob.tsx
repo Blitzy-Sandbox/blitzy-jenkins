@@ -16,13 +16,13 @@
  * createItem endpoint — no AJAX form submission.
  */
 
-import React, { useState, useCallback, useRef, useEffect } from 'react';
-import type { FormEvent } from 'react';
-import Layout from '@/layout/Layout';
-import { useStaplerQuery } from '@/hooks/useStaplerQuery';
-import { useStaplerMutation } from '@/hooks/useStaplerMutation';
-import { useI18n } from '@/hooks/useI18n';
-import { useJenkinsNavigation } from '@/hooks/useJenkinsNavigation';
+import React, { useState, useCallback, useRef, useEffect } from "react";
+import type { FormEvent } from "react";
+import Layout from "@/layout/Layout";
+import { useStaplerQuery } from "@/hooks/useStaplerQuery";
+import { useStaplerMutation } from "@/hooks/useStaplerMutation";
+import { useI18n } from "@/hooks/useI18n";
+import { useJenkinsNavigation } from "@/hooks/useJenkinsNavigation";
 
 /* ================================================================
    Type Definitions
@@ -90,7 +90,7 @@ interface CategoriesResponse {
  * Mirrors add-item.js line 31: className.replace(/\./g, '_')
  */
 function cleanClassName(className: string): string {
-  return className.replace(/\./g, '_');
+  return className.replace(/\./g, "_");
 }
 
 /**
@@ -101,7 +101,7 @@ function checkForLink(desc: string): string {
   if (desc.indexOf('&lt;a href="') === -1) {
     return desc;
   }
-  return desc.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+  return desc.replace(/&lt;/g, "<").replace(/&gt;/g, ">");
 }
 
 /**
@@ -111,7 +111,7 @@ function checkForLink(desc: string): string {
  */
 function parseResponseFromCheckJobName(data: string): string | undefined {
   const parser = new DOMParser();
-  const doc = parser.parseFromString(data, 'text/html');
+  const doc = parser.parseFromString(data, "text/html");
   const element = doc.body.firstChild;
   if (element && element.textContent) {
     return element.textContent.trim();
@@ -125,13 +125,13 @@ function parseResponseFromCheckJobName(data: string): string | undefined {
  */
 function normalizeViewUrl(viewUrl: string | undefined): string {
   if (!viewUrl) {
-    return '';
+    return "";
   }
   let normalized = viewUrl;
-  if (!normalized.startsWith('/')) {
-    normalized = '/' + normalized;
+  if (!normalized.startsWith("/")) {
+    normalized = "/" + normalized;
   }
-  if (normalized.endsWith('/')) {
+  if (normalized.endsWith("/")) {
     normalized = normalized.slice(0, -1);
   }
   return normalized;
@@ -178,7 +178,7 @@ function ItemIcon({
   // Case 3: Icon file path pattern with :size placeholder
   if (item.iconFilePathPattern) {
     const resolvedUrl =
-      baseUrl + '/' + item.iconFilePathPattern.replace(':size', '48x48');
+      baseUrl + "/" + item.iconFilePathPattern.replace(":size", "48x48");
     return (
       <div className="icon">
         <img src={resolvedUrl} alt="" />
@@ -188,15 +188,15 @@ function ItemIcon({
 
   // Case 4: Default initials-based icon
   // Mirrors add-item.js lines 231-245
-  const name = item.displayName || '';
+  const name = item.displayName || "";
   const words = name.split(/\s+/);
-  const firstLetter = words[0] ? words[0].charAt(0).toUpperCase() : '';
+  const firstLetter = words[0] ? words[0].charAt(0).toUpperCase() : "";
   const secondLetter =
     words.length > 1
       ? words[1].charAt(0).toUpperCase()
       : name.length > 1
         ? name.charAt(1).toLowerCase()
-        : '';
+        : "";
 
   return (
     <div className="default-icon">
@@ -219,7 +219,7 @@ function ItemIcon({
  */
 function NewJob({
   viewUrl,
-  newPronoun = 'Item',
+  newPronoun = "Item",
   hasExistingItems = false,
 }: NewJobProps): React.JSX.Element {
   const { t } = useI18n();
@@ -256,10 +256,8 @@ function NewJob({
     isLoading,
     isError,
   } = useStaplerQuery<CategoriesResponse>({
-    url: buildUrl(
-      `${normalizedUrl}/itemCategories?depth=3&iconStyle=icon-xlg`,
-    ),
-    queryKey: ['itemCategories', normalizedUrl],
+    url: buildUrl(`${normalizedUrl}/itemCategories?depth=3&iconStyle=icon-xlg`),
+    queryKey: ["itemCategories", normalizedUrl],
   });
 
   // Derive panel visibility from query state (mirrors add-item.js line 250)
@@ -285,8 +283,8 @@ function NewJob({
     isError: isNameValidationError,
   } = useStaplerMutation<string, string>({
     url: buildUrl(`${normalizedUrl}/checkJobName`),
-    contentType: 'form-urlencoded',
-    responseType: 'text',
+    contentType: "form-urlencoded",
+    responseType: "text",
     onSuccess: (responseData: string) => {
       const message = parseResponseFromCheckJobName(responseData);
       if (message) {
@@ -305,10 +303,9 @@ function NewJob({
    * Uses `nameValidationData` (the mutation's `data` property) directly
    * to parse and display server-side name validation errors.
    */
-  const nameValidationMessage: string =
-    nameValidationData
-      ? (parseResponseFromCheckJobName(nameValidationData) ?? '')
-      : '';
+  const nameValidationMessage: string = nameValidationData
+    ? (parseResponseFromCheckJobName(nameValidationData) ?? "")
+    : "";
 
   /* ----------------------------------------------------------------
      Event Handlers
@@ -319,14 +316,18 @@ function NewJob({
    * Mirrors add-item.js nameFieldEvent() lines 262-290.
    */
   const handleNameEvent = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement>) => {
+    (
+      e:
+        | React.ChangeEvent<HTMLInputElement>
+        | React.FocusEvent<HTMLInputElement>,
+    ) => {
       const value = e.target.value.trim();
-      if (value === '') {
+      if (value === "") {
         setShowNameRequired(true);
         setNameValid(false);
         // Update data-valid attribute for CSS
         if (nameInputRef.current) {
-          nameInputRef.current.setAttribute('data-valid', 'false');
+          nameInputRef.current.setAttribute("data-valid", "false");
         }
       } else {
         setShowNameRequired(false);
@@ -347,8 +348,8 @@ function NewJob({
         copyRadioRef.current.checked = false;
       }
       if (copyFromInputRef.current) {
-        copyFromInputRef.current.value = '';
-        copyFromInputRef.current.setAttribute('data-valid', 'false');
+        copyFromInputRef.current.value = "";
+        copyFromInputRef.current.setAttribute("data-valid", "false");
       }
       setFromValid(false);
 
@@ -359,7 +360,7 @@ function NewJob({
 
       // Update name data-valid if name is valid
       if (nameInputRef.current && nameValid) {
-        nameInputRef.current.setAttribute('data-valid', 'true');
+        nameInputRef.current.setAttribute("data-valid", "true");
       }
     },
     [nameValid],
@@ -371,7 +372,7 @@ function NewJob({
    */
   const handleItemKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLLIElement>, itemClass: string) => {
-      if (e.key === ' ' || e.key === 'Enter') {
+      if (e.key === " " || e.key === "Enter") {
         e.preventDefault();
         handleItemSelect(itemClass);
       }
@@ -384,9 +385,13 @@ function NewJob({
    * Mirrors add-item.js copyFromFieldEvent() lines 296-323.
    */
   const handleCopyFromEvent = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement>) => {
+    (
+      e:
+        | React.ChangeEvent<HTMLInputElement>
+        | React.FocusEvent<HTMLInputElement>,
+    ) => {
       const value = e.target.value.trim();
-      if (value === '') {
+      if (value === "") {
         // Uncheck copy radio
         if (copyRadioRef.current) {
           copyRadioRef.current.checked = false;
@@ -404,7 +409,7 @@ function NewJob({
         setFromValid(true);
 
         if (copyFromInputRef.current) {
-          copyFromInputRef.current.setAttribute('data-valid', 'true');
+          copyFromInputRef.current.setAttribute("data-valid", "true");
         }
       }
     },
@@ -431,8 +436,8 @@ function NewJob({
       e.preventDefault();
 
       // Show validation messages for missing fields
-      const nameValue = nameInputRef.current?.value.trim() ?? '';
-      if (nameValue === '') {
+      const nameValue = nameInputRef.current?.value.trim() ?? "";
+      if (nameValue === "") {
         setShowNameRequired(true);
       }
       if (!itemsValid && !fromValid) {
@@ -459,7 +464,7 @@ function NewJob({
       <li
         key={item.class}
         tabIndex={0}
-        className={`${cleanedClass}${isSelected ? ' active' : ''}`}
+        className={`${cleanedClass}${isSelected ? " active" : ""}`}
         role="radio"
         aria-checked={isSelected}
         onClick={() => handleItemSelect(item.class)}
@@ -493,11 +498,7 @@ function NewJob({
   const renderCategory = (category: ItemCategory): React.JSX.Element => {
     const categoryClassName = `j-add-item-type-${cleanClassName(category.id)}`;
     return (
-      <div
-        key={category.id}
-        className="category"
-        id={categoryClassName}
-      >
+      <div key={category.id} className="category" id={categoryClassName}>
         <div className="header">
           <h2>{category.name}</h2>
           <p>{category.description}</p>
@@ -516,10 +517,10 @@ function NewJob({
     <Layout type="one-column" title={`New ${newPronoun}`}>
       <div
         id="add-item-panel"
-        style={panelVisible ? undefined : { display: 'none' }}
+        style={panelVisible ? undefined : { display: "none" }}
       >
         <h1>
-          {'New '}
+          {"New "}
           {newPronoun}
         </h1>
         <form
@@ -533,14 +534,14 @@ function NewJob({
           <div className="header">
             <div className="add-item-name">
               <label htmlFor="name" className="jenkins-form-label">
-                {t('Item name') ?? 'Item name'}
+                {t("Item name") ?? "Item name"}
               </label>
               <input
                 ref={nameInputRef}
                 name="name"
                 className="jenkins-input"
                 id="name"
-                data-valid={nameValid ? 'true' : 'false'}
+                data-valid={nameValid ? "true" : "false"}
                 type="text"
                 tabIndex={0}
                 onBlur={handleNameEvent}
@@ -549,33 +550,40 @@ function NewJob({
               />
               <div
                 id="itemname-required"
-                className={`input-validation-message${showNameRequired ? '' : ' input-message-disabled'}`}
+                className={`input-validation-message${showNameRequired ? "" : " input-message-disabled"}`}
               >
-                {'» '}
-                {t('ItemName.validation.required') ?? 'This field cannot be empty, please enter a valid name'}
+                {"» "}
+                {t("ItemName.validation.required") ??
+                  "This field cannot be empty, please enter a valid name"}
               </div>
               <div
                 id="itemname-invalid"
                 className={`input-validation-message${
-                  nameValidationMessage || isNameValidationError || isNameValidating
-                    ? ''
-                    : ' input-message-disabled'
+                  nameValidationMessage ||
+                  isNameValidationError ||
+                  isNameValidating
+                    ? ""
+                    : " input-message-disabled"
                 }`}
               >
-                {isNameValidating && '» Validating...'}
+                {isNameValidating && "» Validating..."}
                 {isNameValidationError && !isNameValidating && (
-                  <>{'» '}{t('Validation failed') ?? 'Validation request failed'}</>
+                  <>
+                    {"» "}
+                    {t("Validation failed") ?? "Validation request failed"}
+                  </>
                 )}
-                {nameValidationMessage && !isNameValidating && !isNameValidationError && (
-                  <>{`» ${nameValidationMessage}`}</>
-                )}
+                {nameValidationMessage &&
+                  !isNameValidating &&
+                  !isNameValidationError && <>{`» ${nameValidationMessage}`}</>}
               </div>
               <div
                 id="itemtype-required"
-                className={`input-validation-message${showItemTypeRequired ? '' : ' input-message-disabled'}`}
+                className={`input-validation-message${showItemTypeRequired ? "" : " input-message-disabled"}`}
               >
-                {'» '}
-                {t('ItemType.validation.required') ?? 'Please select an item type'}
+                {"» "}
+                {t("ItemType.validation.required") ??
+                  "Please select an item type"}
               </div>
             </div>
           </div>
@@ -583,14 +591,14 @@ function NewJob({
           {/* ── Item Type Selection Section ── */}
           <div>
             <div className="jenkins-form-label">
-              {t('Item type') ?? 'Item type'}
+              {t("Item type") ?? "Item type"}
             </div>
             <div
               id="items"
               className="categories flat"
               role="radiogroup"
               aria-label="Item type"
-              data-valid={itemsValid ? 'true' : 'false'}
+              data-valid={itemsValid ? "true" : "false"}
             >
               {categories.map((category) => renderCategory(category))}
             </div>
@@ -600,7 +608,7 @@ function NewJob({
           {hasExistingItems && (
             <div className="item-copy">
               <p className="jenkins-form-label">
-                {t('Copy from') ?? 'Copy from'}
+                {t("Copy from") ?? "Copy from"}
               </p>
               <div className="add-item-copy">
                 <input
@@ -610,15 +618,15 @@ function NewJob({
                   value="copy"
                   readOnly
                 />
-                <label htmlFor="from">
-                  {t('Copy from') ?? 'Copy from'}
-                </label>
+                <label htmlFor="from">{t("Copy from") ?? "Copy from"}</label>
                 <input
                   ref={copyFromInputRef}
                   id="from"
-                  data-valid={fromValid ? 'true' : 'false'}
+                  data-valid={fromValid ? "true" : "false"}
                   name="from"
-                  placeholder={t('Type to autocomplete') ?? 'Type to autocomplete'}
+                  placeholder={
+                    t("Type to autocomplete") ?? "Type to autocomplete"
+                  }
                   className="jenkins-input"
                   type="text"
                   autoComplete="off"
@@ -637,7 +645,7 @@ function NewJob({
               disabled={!isSubmitEnabled}
               className="jenkins-button jenkins-button--primary"
             >
-              {t('OK') ?? 'OK'}
+              {t("OK") ?? "OK"}
             </button>
           </div>
         </form>
@@ -647,7 +655,7 @@ function NewJob({
       {isLoading && !panelVisible && (
         <div className="add-item-panel-loading">
           <h1>
-            {'New '}
+            {"New "}
             {newPronoun}
           </h1>
           <div className="spinner-container">
@@ -660,11 +668,12 @@ function NewJob({
       {isError && !panelVisible && (
         <div className="add-item-panel-error">
           <h1>
-            {'New '}
+            {"New "}
             {newPronoun}
           </h1>
           <div className="error">
-            {t('Unable to load item categories') ?? 'Unable to load item categories. Please try again.'}
+            {t("Unable to load item categories") ??
+              "Unable to load item categories. Please try again."}
           </div>
         </div>
       )}

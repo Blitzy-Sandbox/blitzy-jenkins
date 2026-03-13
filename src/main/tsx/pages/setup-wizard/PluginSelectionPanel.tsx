@@ -5,8 +5,8 @@ import {
   useMemo,
   useEffect,
   Fragment,
-} from 'react';
-import type { PluginInfo } from '../../api/types';
+} from "react";
+import type { PluginInfo } from "../../api/types";
 
 /**
  * Converts a string to a CSS-safe ID by replacing non-word characters
@@ -14,7 +14,7 @@ import type { PluginInfo } from '../../api/types';
  * handlebars-helpers/id.js.
  */
 function idify(str: string): string {
-  return String(str).replace(/\W+/g, '_');
+  return String(str).replace(/\W+/g, "_");
 }
 
 /**
@@ -23,7 +23,7 @@ function idify(str: string): string {
  * that contain HTML markup (triple-mustache pattern).
  */
 function stripHtmlTags(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
+  return html.replace(/<[^>]*>/g, "");
 }
 
 /**
@@ -96,8 +96,10 @@ export default function PluginSelectionPanel({
   onGoBack,
 }: PluginSelectionPanelProps): React.JSX.Element {
   // ─── State ───────────────────────────────────────────────────
-  const [searchText, setSearchText] = useState('');
-  const [visibleDependencies, setVisibleDependencies] = useState<Record<string, boolean>>({});
+  const [searchText, setSearchText] = useState("");
+  const [visibleDependencies, setVisibleDependencies] = useState<
+    Record<string, boolean>
+  >({});
 
   // ─── Refs ────────────────────────────────────────────────────
   const pluginListRef = useRef<HTMLDivElement>(null);
@@ -164,7 +166,7 @@ export default function PluginSelectionPanel({
     const pluginMatches = new Set<string>();
     const catMatches = new Set<string>();
 
-    if (searchText === 'show:selected') {
+    if (searchText === "show:selected") {
       // Special search: show only selected plugins
       // Source: pluginSetupWizardGui.js lines 889-890
       for (const cat of Object.keys(categorizedPlugins)) {
@@ -181,10 +183,10 @@ export default function PluginSelectionPanel({
       const lowerQuery = searchText.toLowerCase();
       for (const cat of Object.keys(categorizedPlugins)) {
         for (const entry of categorizedPlugins[cat]) {
-          const titleMatch = (entry.plugin.title || '')
+          const titleMatch = (entry.plugin.title || "")
             .toLowerCase()
             .includes(lowerQuery);
-          const excerptText = stripHtmlTags(entry.plugin.excerpt || '');
+          const excerptText = stripHtmlTags(entry.plugin.excerpt || "");
           const excerptMatch = excerptText.toLowerCase().includes(lowerQuery);
           if (titleMatch || excerptMatch) {
             pluginMatches.add(entry.plugin.name);
@@ -327,7 +329,7 @@ export default function PluginSelectionPanel({
    */
   const handleClearSearch = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
-    setSearchText('');
+    setSearchText("");
   }, []);
 
   /**
@@ -337,10 +339,10 @@ export default function PluginSelectionPanel({
   const handleToggleSelectedSearch = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
-      if (isSearching && searchText === 'show:selected') {
-        setSearchText('');
+      if (isSearching && searchText === "show:selected") {
+        setSearchText("");
       } else {
-        setSearchText('show:selected');
+        setSearchText("show:selected");
       }
     },
     [isSearching, searchText],
@@ -353,13 +355,13 @@ export default function PluginSelectionPanel({
   const handleCategoryClick = useCallback(
     (e: React.MouseEvent, category: string) => {
       e.preventDefault();
-      setSearchText('');
+      setSearchText("");
       const pluginList = pluginListRef.current;
       if (pluginList) {
         const headingId = idify(category);
         const heading = pluginList.querySelector(`#${CSS.escape(headingId)}`);
-        if (heading && typeof heading.scrollIntoView === 'function') {
-          heading.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (heading && typeof heading.scrollIntoView === "function") {
+          heading.scrollIntoView({ behavior: "smooth", block: "start" });
         }
       }
     },
@@ -401,7 +403,7 @@ export default function PluginSelectionPanel({
     }
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') {
+      if (e.key !== "ArrowUp" && e.key !== "ArrowDown") {
         return;
       }
       e.preventDefault();
@@ -424,7 +426,7 @@ export default function PluginSelectionPanel({
       );
 
       let newIdx: number;
-      if (e.key === 'ArrowUp') {
+      if (e.key === "ArrowUp") {
         newIdx = focusedIdx > 0 ? focusedIdx - 1 : 0;
       } else {
         newIdx =
@@ -436,9 +438,9 @@ export default function PluginSelectionPanel({
       checkboxes[newIdx]?.focus();
     };
 
-    pluginList.addEventListener('keydown', handleKeyDown);
+    pluginList.addEventListener("keydown", handleKeyDown);
     return () => {
-      pluginList.removeEventListener('keydown', handleKeyDown);
+      pluginList.removeEventListener("keydown", handleKeyDown);
     };
   }, [isSearching]);
 
@@ -453,15 +455,15 @@ export default function PluginSelectionPanel({
     }
 
     requestAnimationFrame(() => {
-      const firstMatch = pluginList.querySelector('.plugin.match');
-      if (firstMatch && typeof firstMatch.scrollIntoView === 'function') {
-        firstMatch.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      const firstMatch = pluginList.querySelector(".plugin.match");
+      if (firstMatch && typeof firstMatch.scrollIntoView === "function") {
+        firstMatch.scrollIntoView({ block: "nearest", behavior: "smooth" });
       }
     });
   }, [isSearching, searchText]);
 
   // ─── Computed: Data attribute for selected plugin names ──────
-  const selectedPluginsDataAttr = selectedPluginNames.join(',');
+  const selectedPluginsDataAttr = selectedPluginNames.join(",");
 
   // ─── Render ──────────────────────────────────────────────────
   return (
@@ -469,7 +471,7 @@ export default function PluginSelectionPanel({
       {/* Modal Header — pluginSelectionPanel.hbs lines 1-3 */}
       <div className="modal-header closeable">
         <h4 className="modal-title">
-          {translations.installWizard_installCustom_title || ''}
+          {translations.installWizard_installCustom_title || ""}
         </h4>
       </div>
 
@@ -503,21 +505,22 @@ export default function PluginSelectionPanel({
                 className="plugin-select-all"
                 onClick={handleSelectAll}
               >
-                {translations.installWizard_installCustom_selectAll || ''}
+                {translations.installWizard_installCustom_selectAll || ""}
               </a>
               <a
                 href="#"
                 className="plugin-select-none"
                 onClick={handleSelectNone}
               >
-                {translations.installWizard_installCustom_selectNone || ''}
+                {translations.installWizard_installCustom_selectNone || ""}
               </a>
               <a
                 href="#"
                 className="plugin-select-recommended"
                 onClick={handleSelectRecommended}
               >
-                {translations.installWizard_installCustom_selectRecommended || ''}
+                {translations.installWizard_installCustom_selectRecommended ||
+                  ""}
               </a>
             </span>
 
@@ -530,11 +533,7 @@ export default function PluginSelectionPanel({
                 value={searchText}
                 onChange={handleSearchChange}
               />
-              <a
-                href="#"
-                className="clear-search"
-                onClick={handleClearSearch}
-              >
+              <a href="#" className="clear-search" onClick={handleClearSearch}>
                 &times;
               </a>
             </span>
@@ -550,8 +549,8 @@ export default function PluginSelectionPanel({
                 className="plugin-show-selected"
                 onClick={handleToggleSelectedSearch}
               >
-                {translations.installWizard_installCustom_selected || ''}
-              </a>{' '}
+                {translations.installWizard_installCustom_selected || ""}
+              </a>{" "}
               {totalPluginCount}
             </span>
           </div>
@@ -559,14 +558,14 @@ export default function PluginSelectionPanel({
           {/* Plugin List — pluginSelectionPanel.hbs lines 27-30 */}
           <div
             ref={pluginListRef}
-            className={`plugin-list${isSearching ? ' searching' : ''}`}
+            className={`plugin-list${isSearching ? " searching" : ""}`}
           >
             {/* Plugin list description — pluginSelectionPanel.hbs line 28 */}
             <div
               className="plugin-list-description"
               dangerouslySetInnerHTML={{
                 __html:
-                  translations.installWizard_installCustom_pluginListDesc || '',
+                  translations.installWizard_installCustom_pluginListDesc || "",
               }}
             />
 
@@ -578,7 +577,7 @@ export default function PluginSelectionPanel({
                   {/* Category heading — pluginSelectList.hbs line 2 */}
                   <h2
                     id={idify(cat)}
-                    className={`expanded${isSearching && isCatMatch ? ' match' : ''}`}
+                    className={`expanded${isSearching && isCatMatch ? " match" : ""}`}
                   >
                     {cat} {getPluginCountForCategory(cat)}
                   </h2>
@@ -588,27 +587,31 @@ export default function PluginSelectionPanel({
                     {categorizedPlugins[cat].map((entry) => {
                       const plugin = entry.plugin;
                       const pluginName = plugin.name;
-                      const isSelected = selectedPluginNames.includes(pluginName);
-                      const isMatch = !isSearching || matchingPluginNames.has(pluginName);
+                      const isSelected =
+                        selectedPluginNames.includes(pluginName);
+                      const isMatch =
+                        !isSearching || matchingPluginNames.has(pluginName);
                       const showDeps = visibleDependencies[pluginName] || false;
                       const pluginHasDeps = hasDeps(pluginName);
                       const depCount = getDependencyCount(pluginName);
-                      const deps = pluginHasDeps ? getDependencies(pluginName) : [];
+                      const deps = pluginHasDeps
+                        ? getDependencies(pluginName)
+                        : [];
                       // plugin.url or plugin.website for the website link
-                      const websiteUrl = plugin.url || plugin.website || '';
+                      const websiteUrl = plugin.url || plugin.website || "";
 
                       return (
                         <div
                           key={pluginName}
                           className={[
-                            'plugin',
+                            "plugin",
                             idify(pluginName),
-                            isSelected ? 'selected' : '',
-                            showDeps ? 'show-dependencies' : '',
-                            isSearching && isMatch ? 'match' : '',
+                            isSelected ? "selected" : "",
+                            showDeps ? "show-dependencies" : "",
+                            isSearching && isMatch ? "match" : "",
                           ]
                             .filter(Boolean)
-                            .join(' ')}
+                            .join(" ")}
                           id={`row-${pluginName}`}
                         >
                           <label>
@@ -620,7 +623,10 @@ export default function PluginSelectionPanel({
                                 name={pluginName}
                                 checked={isSelected}
                                 onChange={(e) =>
-                                  handleCheckboxChange(pluginName, e.target.checked)
+                                  handleCheckboxChange(
+                                    pluginName,
+                                    e.target.checked,
+                                  )
                                 }
                               />
                               {plugin.title || pluginName}
@@ -629,7 +635,7 @@ export default function PluginSelectionPanel({
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="website-link"
-                                title={`${plugin.title || pluginName} ${translations.installWizard_websiteLinkLabel || ''}`}
+                                title={`${plugin.title || pluginName} ${translations.installWizard_websiteLinkLabel || ""}`}
                               />
                             </span>
 
@@ -639,7 +645,7 @@ export default function PluginSelectionPanel({
                                 href="#"
                                 className="btn btn-link toggle-dependency-list"
                                 data-plugin-name={pluginName}
-                                title={`${plugin.title || pluginName} ${translations.installWizard_installIncomplete_dependenciesLabel || ''}`}
+                                title={`${plugin.title || pluginName} ${translations.installWizard_installIncomplete_dependenciesLabel || ""}`}
                                 onClick={(e) =>
                                   handleToggleDependencyList(e, pluginName)
                                 }
@@ -652,7 +658,7 @@ export default function PluginSelectionPanel({
                             <span
                               className="description"
                               dangerouslySetInnerHTML={{
-                                __html: plugin.excerpt || '',
+                                __html: plugin.excerpt || "",
                               }}
                             />
 
@@ -660,13 +666,14 @@ export default function PluginSelectionPanel({
                             {pluginHasDeps && (
                               <div className="dep-list">
                                 <h3 className="dep-title">
-                                  {translations.installWizard_installIncomplete_dependenciesLabel || ''}
+                                  {translations.installWizard_installIncomplete_dependenciesLabel ||
+                                    ""}
                                 </h3>
                                 {deps.map((dep) => (
                                   <a
                                     key={dep.name}
                                     className="dep badge"
-                                    href={dep.url || dep.website || ''}
+                                    href={dep.url || dep.website || ""}
                                     rel="noopener noreferrer"
                                     target="_blank"
                                   >
@@ -694,14 +701,14 @@ export default function PluginSelectionPanel({
           className="btn btn-link install-home"
           onClick={handleGoBack}
         >
-          {translations.installWizard_goBack || ''}
+          {translations.installWizard_goBack || ""}
         </button>
         <button
           type="button"
           className="btn btn-primary install-selected"
           onClick={handleInstall}
         >
-          {translations.installWizard_goInstall || ''}
+          {translations.installWizard_goInstall || ""}
         </button>
       </div>
     </>

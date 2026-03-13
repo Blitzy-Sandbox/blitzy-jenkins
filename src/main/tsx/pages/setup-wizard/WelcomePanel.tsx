@@ -77,9 +77,7 @@ export default function WelcomePanel({
               }}
             >
               <b>
-                {
-                  translations.installWizard_welcomePanel_recommendedActionTitle
-                }
+                {translations.installWizard_welcomePanel_recommendedActionTitle}
               </b>
               <sub>
                 {
@@ -100,9 +98,7 @@ export default function WelcomePanel({
                 {translations.installWizard_welcomePanel_customizeActionTitle}
               </b>
               <sub>
-                {
-                  translations.installWizard_welcomePanel_customizeActionDetails
-                }
+                {translations.installWizard_welcomePanel_customizeActionDetails}
               </sub>
             </a>
           </p>

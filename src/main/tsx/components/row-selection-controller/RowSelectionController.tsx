@@ -1,4 +1,10 @@
-import { useState, useCallback, useEffect, useRef, type RefObject } from "react";
+import {
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  type RefObject,
+} from "react";
 
 /**
  * Possible selection states for the header checkbox.

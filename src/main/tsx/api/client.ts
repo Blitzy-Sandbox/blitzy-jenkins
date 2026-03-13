@@ -193,7 +193,7 @@ export async function jenkinsGet<T>(
   const responseType = options?.responseType ?? "json";
 
   const headers: Record<string, string> = {
-    ...(options?.headers),
+    ...options?.headers,
   };
 
   const fetchOptions: RequestInit = {
@@ -275,7 +275,7 @@ export async function jenkinsPost<T>(
 
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
-    ...(options?.headers),
+    ...options?.headers,
   };
 
   // ---- CSRF Crumb Injection ----
@@ -292,7 +292,12 @@ export async function jenkinsPost<T>(
   // When data is a string, it is sent as-is (crumb only in header, not body).
   // When data is an array or null, it is JSON-serialized without crumb body injection.
   let body: string;
-  if (data !== null && data !== undefined && typeof data === "object" && !Array.isArray(data)) {
+  if (
+    data !== null &&
+    data !== undefined &&
+    typeof data === "object" &&
+    !Array.isArray(data)
+  ) {
     // Object data: inject crumb into body (source lines 69–72)
     const bodyData = crumb
       ? { ...(data as Record<string, unknown>), [crumb.fieldName]: crumb.value }
@@ -391,7 +396,7 @@ export async function jenkinsStaplerPost<T>(
   const responseType = options?.responseType ?? "json";
 
   const headers: Record<string, string> = {
-    ...(options?.headers),
+    ...options?.headers,
   };
 
   // ---- CSRF Crumb Injection ----
@@ -419,7 +424,9 @@ export async function jenkinsStaplerPost<T>(
 
     if (crumb) {
       const crumbParam =
-        encodeURIComponent(crumb.fieldName) + "=" + encodeURIComponent(crumb.value);
+        encodeURIComponent(crumb.fieldName) +
+        "=" +
+        encodeURIComponent(crumb.value);
       body = formData.length > 0 ? formData + "&" + crumbParam : crumbParam;
     } else {
       body = formData;

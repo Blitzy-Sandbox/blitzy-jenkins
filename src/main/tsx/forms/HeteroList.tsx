@@ -45,9 +45,15 @@
  * @see core/src/main/resources/lib/form/hetero-list.jelly
  */
 
-import { useState, useCallback, useMemo, type ReactNode, type DragEvent } from 'react';
-import { useI18n } from '@/hooks/useI18n';
-import { useStaplerQuery } from '@/hooks/useStaplerQuery';
+import {
+  useState,
+  useCallback,
+  useMemo,
+  type ReactNode,
+  type DragEvent,
+} from "react";
+import { useI18n } from "@/hooks/useI18n";
+import { useStaplerQuery } from "@/hooks/useStaplerQuery";
 
 /* ═══════════════════════════════════════════════════════════════════
    Public Interfaces
@@ -224,7 +230,11 @@ export interface HeteroListProps {
    * @param configHtml - Raw HTML from the descriptor's configPage URL
    * @returns React node to render inside the chunk's content area
    */
-  renderConfigPage?: (item: HeteroItem, index: number, configHtml: string) => ReactNode;
+  renderConfigPage?: (
+    item: HeteroItem,
+    index: number,
+    configHtml: string,
+  ) => ReactNode;
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -339,11 +349,15 @@ function ConfigPageContent({
 }: {
   item: HeteroItem;
   index: number;
-  renderConfigPage?: (item: HeteroItem, index: number, configHtml: string) => ReactNode;
+  renderConfigPage?: (
+    item: HeteroItem,
+    index: number,
+    configHtml: string,
+  ) => ReactNode;
 }): ReactNode {
   const { data, isLoading, isError } = useStaplerQuery<string>({
     url: item.descriptor.configPage,
-    queryKey: ['hetero-list-config', item.descriptor.id, index],
+    queryKey: ["hetero-list-config", item.descriptor.id, index],
     enabled: item.descriptor.configPage.length > 0,
   });
 
@@ -370,11 +384,7 @@ function ConfigPageContent({
   /* Default: render raw config page HTML via dangerouslySetInnerHTML,
      matching the Jelly <st:include> pattern that injects server-rendered
      HTML directly into the page. */
-  return (
-    <div
-      dangerouslySetInnerHTML={{ __html: data }}
-    />
-  );
+  return <div dangerouslySetInnerHTML={{ __html: data }} />;
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -421,7 +431,7 @@ export function HeteroList({
   targetType,
   hasHeader = false,
   oneEach = false,
-  menuAlign = 'tl-bl',
+  menuAlign = "tl-bl",
   honorOrder = false,
   capture,
   titleClassMethod,
@@ -461,17 +471,17 @@ export function HeteroList({
    * - `honor-order` when honorOrder is true
    */
   const containerClassName: string = useMemo(() => {
-    const classes = ['jenkins-form-item', 'hetero-list-container'];
+    const classes = ["jenkins-form-item", "hetero-list-container"];
     if (hasHeader) {
-      classes.push('with-drag-drop');
+      classes.push("with-drag-drop");
     }
     if (oneEach) {
-      classes.push('one-each');
+      classes.push("one-each");
     }
     if (honorOrder) {
-      classes.push('honor-order');
+      classes.push("honor-order");
     }
-    return classes.join(' ');
+    return classes.join(" ");
   }, [hasHeader, oneEach, honorOrder]);
 
   /**
@@ -495,7 +505,7 @@ export function HeteroList({
    * Matches the Jelly pattern: `${attrs.addCaption?:'%Add'}`
    */
   const addButtonLabel: string = useMemo(
-    () => addCaption ?? t('Add') ?? 'Add',
+    () => addCaption ?? t("Add") ?? "Add",
     [addCaption, t],
   );
 
@@ -504,7 +514,7 @@ export function HeteroList({
    * custom deleteCaption → localised 'Delete' → hardcoded 'Delete'.
    */
   const deleteButtonLabel: string = useMemo(
-    () => deleteCaption ?? t('Delete') ?? 'Delete',
+    () => deleteCaption ?? t("Delete") ?? "Delete",
     [deleteCaption, t],
   );
 
@@ -527,7 +537,11 @@ export function HeteroList({
         let next: TrackedEntry[];
         if (honorOrder) {
           const targetIdx = findInsertionIndex(prev, desc, descriptors);
-          next = [...prev.slice(0, targetIdx), newEntry, ...prev.slice(targetIdx)];
+          next = [
+            ...prev.slice(0, targetIdx),
+            newEntry,
+            ...prev.slice(targetIdx),
+          ];
         } else {
           next = [...prev, newEntry];
         }
@@ -558,7 +572,11 @@ export function HeteroList({
         let next: TrackedEntry[];
         if (honorOrder) {
           const targetIdx = findInsertionIndex(prev, desc, descriptors);
-          next = [...prev.slice(0, targetIdx), newEntry, ...prev.slice(targetIdx)];
+          next = [
+            ...prev.slice(0, targetIdx),
+            newEntry,
+            ...prev.slice(targetIdx),
+          ];
         } else {
           next = [...prev, newEntry];
         }
@@ -600,8 +618,8 @@ export function HeteroList({
   const handleDragStart = useCallback(
     (event: DragEvent<HTMLDivElement>, index: number) => {
       setDragIndex(index);
-      event.dataTransfer.effectAllowed = 'move';
-      event.dataTransfer.setData('text/plain', String(index));
+      event.dataTransfer.effectAllowed = "move";
+      event.dataTransfer.setData("text/plain", String(index));
     },
     [],
   );
@@ -611,7 +629,7 @@ export function HeteroList({
    */
   const handleDragOver = useCallback((event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    event.dataTransfer.dropEffect = 'move';
+    event.dataTransfer.dropEffect = "move";
   }, []);
 
   /**
@@ -673,18 +691,18 @@ export function HeteroList({
         const isDragging = dragIndex === index;
 
         const chunkClasses = [
-          'repeated-chunk',
-          isDragging ? 'repeated-chunk--sortable-chosen' : '',
+          "repeated-chunk",
+          isDragging ? "repeated-chunk--sortable-chosen" : "",
         ]
           .filter(Boolean)
-          .join(' ');
+          .join(" ");
 
         const headerClasses = [
-          'repeated-chunk__header',
-          disableDragAndDrop ? 'repeated-chunk__header--no-handle' : '',
+          "repeated-chunk__header",
+          disableDragAndDrop ? "repeated-chunk__header--no-handle" : "",
         ]
           .filter(Boolean)
-          .join(' ');
+          .join(" ");
 
         return (
           <div
@@ -714,7 +732,7 @@ export function HeteroList({
                   }
                   onDragEnd={handleDragEnd}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
+                    if (e.key === "Enter" || e.key === " ") {
                       e.preventDefault();
                     }
                   }}
@@ -748,7 +766,9 @@ export function HeteroList({
                 aria-label={`${deleteButtonLabel} ${item.descriptor.displayName}`}
               >
                 <DeleteIcon />
-                <span className="jenkins-visually-hidden">{deleteButtonLabel}</span>
+                <span className="jenkins-visually-hidden">
+                  {deleteButtonLabel}
+                </span>
               </button>
             </div>
 
@@ -796,9 +816,7 @@ export function HeteroList({
           aria-haspopup="true"
           disabled={oneEach && availableDescriptors.length === 0}
         >
-          <AddIcon />
-          {' '}
-          {addButtonLabel}
+          <AddIcon /> {addButtonLabel}
         </button>
 
         {/* Dropdown menu listing available descriptors */}
@@ -809,16 +827,16 @@ export function HeteroList({
               className="hetero-list-menu-backdrop"
               onClick={handleCloseMenu}
               onKeyDown={(e) => {
-                if (e.key === 'Escape') {
+                if (e.key === "Escape") {
                   handleCloseMenu();
                 }
               }}
               role="presentation"
               style={{
-                position: 'fixed',
+                position: "fixed",
                 inset: 0,
                 zIndex: 999,
-                background: 'transparent',
+                background: "transparent",
               }}
             />
             <div
@@ -833,7 +851,7 @@ export function HeteroList({
                   type="button"
                   className="jenkins-dropdown__item"
                   role="menuitem"
-                  title={desc.tooltip ?? ''}
+                  title={desc.tooltip ?? ""}
                   onClick={() => handleAddItem(desc)}
                 >
                   {desc.displayName}
@@ -872,7 +890,9 @@ function findInsertionIndex(
   newDescriptor: Descriptor,
   allDescriptors: Descriptor[],
 ): number {
-  const newDescriptorIndex = allDescriptors.findIndex((d) => d.id === newDescriptor.id);
+  const newDescriptorIndex = allDescriptors.findIndex(
+    (d) => d.id === newDescriptor.id,
+  );
 
   for (let i = 0; i < currentEntries.length; i++) {
     const existingDescriptorIndex = allDescriptors.findIndex(

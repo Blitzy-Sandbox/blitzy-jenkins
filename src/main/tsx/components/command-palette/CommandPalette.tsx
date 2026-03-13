@@ -1,7 +1,7 @@
-import type React from 'react';
-import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import { useKeyboardShortcut } from '@/hooks/useKeyboardShortcut';
-import { xmlEscape } from '@/utils/security';
+import type React from "react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import { useKeyboardShortcut } from "@/hooks/useKeyboardShortcut";
+import { xmlEscape } from "@/utils/security";
 
 // ---------------------------------------------------------------------------
 // SVG Constants (byte-for-byte from src/main/js/components/command-palette/symbols.js)
@@ -24,7 +24,7 @@ interface LinkResultData {
   /** Display text for the result */
   label: string;
   /** Determines how the icon is rendered: inline SVG vs &lt;img&gt; */
-  type: 'symbol' | 'image';
+  type: "symbol" | "image";
   /** Navigation URL activated on selection */
   url: string;
   /** Category grouping key; null items appear ungrouped */
@@ -38,7 +38,7 @@ interface SearchSuggestion {
   name: string;
   url: string;
   icon: string;
-  type: 'symbol' | 'image';
+  type: "symbol" | "image";
   group: string;
 }
 
@@ -77,10 +77,10 @@ function groupResultsByCategory(
  */
 function correctAddress(url: string, rootUrl: string): string {
   let normalised = url;
-  if (normalised.startsWith('/')) {
+  if (normalised.startsWith("/")) {
     normalised = normalised.substring(1);
   }
-  return rootUrl + '/' + normalised;
+  return rootUrl + "/" + normalised;
 }
 
 // ---------------------------------------------------------------------------
@@ -104,11 +104,11 @@ export default function CommandPalette(): React.JSX.Element | null {
   // Lazy initialiser: check DOM once at mount time — the trigger button is
   // rendered by the server-side Jelly shell before React hydrates.
   const [isActive] = useState(
-    () => document.getElementById('root-action-SearchAction') !== null,
+    () => document.getElementById("root-action-SearchAction") !== null,
   );
   const [isOpen, setIsOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [results, setResults] = useState<LinkResultData[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -125,10 +125,10 @@ export default function CommandPalette(): React.JSX.Element | null {
 
   // ---- I18n strings (read once from hidden DOM node provided by Jelly shell) -
   const i18n = useMemo(() => {
-    const el = document.getElementById('command-palette-i18n');
+    const el = document.getElementById("command-palette-i18n");
     return {
-      getHelp: el?.dataset.getHelp ?? 'Get Help',
-      noResultsFor: el?.dataset.noResultsFor ?? 'No results for',
+      getHelp: el?.dataset.getHelp ?? "Get Help",
+      noResultsFor: el?.dataset.noResultsFor ?? "No results for",
     };
   }, []);
 
@@ -136,16 +136,16 @@ export default function CommandPalette(): React.JSX.Element | null {
   const executeSearch = useCallback(
     (searchQuery: string) => {
       const searchUrl = document.body.dataset.searchUrl;
-      const rootUrl = document.head?.dataset.rooturl ?? '';
+      const rootUrl = document.head?.dataset.rooturl ?? "";
 
       // Empty query → show "Get Help" shortcut (source index.js lines 64-74)
       if (searchQuery.length === 0) {
         setResults([
           {
             icon: HELP,
-            type: 'symbol',
+            type: "symbol",
             label: i18n.getHelp,
-            url: document.body.dataset.searchHelpUrl ?? '',
+            url: document.body.dataset.searchHelpUrl ?? "",
             isExternal: true,
             group: null,
           },
@@ -172,15 +172,15 @@ export default function CommandPalette(): React.JSX.Element | null {
       fetch(`${searchUrl}?query=${encodeURIComponent(searchQuery)}`)
         .then((response) => response.json())
         .then((data: { suggestions?: SearchSuggestion[] }) => {
-          const suggestions: LinkResultData[] = (
-            data.suggestions ?? []
-          ).map((s: SearchSuggestion) => ({
-            icon: s.icon,
-            type: s.type,
-            label: s.name,
-            url: correctAddress(s.url, rootUrl),
-            group: s.group,
-          }));
+          const suggestions: LinkResultData[] = (data.suggestions ?? []).map(
+            (s: SearchSuggestion) => ({
+              icon: s.icon,
+              type: s.type,
+              label: s.name,
+              url: correctAddress(s.url, rootUrl),
+              group: s.group,
+            }),
+          );
           setResults(suggestions);
           setSelectedIndex(0);
         })
@@ -209,14 +209,14 @@ export default function CommandPalette(): React.JSX.Element | null {
       }
     });
     // Trigger initial results render with the current query value
-    executeSearch(inputRef.current?.value ?? '');
+    executeSearch(inputRef.current?.value ?? "");
   }, [executeSearch]);
 
   // ---- Hide palette with closing animation (source index.js lines 145-156) --
   const hideCommandPalette = useCallback(() => {
     setIsClosing(true);
     // Set closing attribute immediately for CSS animation trigger
-    dialogRef.current?.setAttribute('closing', '');
+    dialogRef.current?.setAttribute("closing", "");
   }, []);
 
   // ---- Toggle show/hide -----------------------------------------------------
@@ -231,7 +231,7 @@ export default function CommandPalette(): React.JSX.Element | null {
   // ---- Animation end: finalise close (source index.js lines 147-155) --------
   const handleAnimationEnd = useCallback(() => {
     if (isClosing) {
-      dialogRef.current?.removeAttribute('closing');
+      dialogRef.current?.removeAttribute("closing");
       dialogRef.current?.close();
       setIsClosing(false);
       setIsOpen(false);
@@ -264,10 +264,7 @@ export default function CommandPalette(): React.JSX.Element | null {
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current);
       }
-      debounceTimerRef.current = setTimeout(
-        () => executeSearch(value),
-        150,
-      );
+      debounceTimerRef.current = setTimeout(() => executeSearch(value), 150);
     },
     [executeSearch],
   );
@@ -288,19 +285,19 @@ export default function CommandPalette(): React.JSX.Element | null {
       const maxLength = flatItems.length;
 
       switch (e.key) {
-        case 'ArrowDown':
+        case "ArrowDown":
           e.preventDefault();
           if (maxLength > 0) {
             setSelectedIndex((prev) => (prev + 1) % maxLength);
           }
           break;
-        case 'ArrowUp':
+        case "ArrowUp":
           e.preventDefault();
           if (maxLength > 0) {
             setSelectedIndex((prev) => (prev - 1 + maxLength) % maxLength);
           }
           break;
-        case 'Enter': {
+        case "Enter": {
           e.preventDefault();
           const item = flatItems[selectedIndex];
           if (item) {
@@ -308,7 +305,7 @@ export default function CommandPalette(): React.JSX.Element | null {
           }
           break;
         }
-        case 'Escape':
+        case "Escape":
           e.preventDefault();
           hideCommandPalette();
           break;
@@ -318,16 +315,16 @@ export default function CommandPalette(): React.JSX.Element | null {
   );
 
   // ---- Register Ctrl+K / Cmd+K keyboard shortcut ----------------------------
-  useKeyboardShortcut('CMD+K', togglePalette, { enabled: isActive });
+  useKeyboardShortcut("CMD+K", togglePalette, { enabled: isActive });
 
   // ---- Attach click handler to trigger button in the page header ------------
   useEffect(() => {
-    const button = document.getElementById('root-action-SearchAction');
+    const button = document.getElementById("root-action-SearchAction");
     if (!button) {
       return;
     }
-    button.addEventListener('click', togglePalette);
-    return () => button.removeEventListener('click', togglePalette);
+    button.addEventListener("click", togglePalette);
+    return () => button.removeEventListener("click", togglePalette);
   }, [togglePalette]);
 
   // ---- Prevent native <dialog> Escape (we animate close ourselves) ----------
@@ -340,8 +337,8 @@ export default function CommandPalette(): React.JSX.Element | null {
       e.preventDefault();
       hideCommandPalette();
     };
-    dialog.addEventListener('cancel', handleCancel);
-    return () => dialog.removeEventListener('cancel', handleCancel);
+    dialog.addEventListener("cancel", handleCancel);
+    return () => dialog.removeEventListener("cancel", handleCancel);
   }, [hideCommandPalette]);
 
   // ---- Results container height for CSS transitions (source line 115) -------
@@ -356,10 +353,10 @@ export default function CommandPalette(): React.JSX.Element | null {
     if (!resultsRef.current) {
       return;
     }
-    const links = resultsRef.current.querySelectorAll('a');
+    const links = resultsRef.current.querySelectorAll("a");
     const selected = links[selectedIndex];
-    if (selected && typeof selected.scrollIntoView === 'function') {
-      selected.scrollIntoView({ block: 'nearest' });
+    if (selected && typeof selected.scrollIntoView === "function") {
+      selected.scrollIntoView({ block: "nearest" });
     }
   }, [selectedIndex]);
 
@@ -399,7 +396,7 @@ export default function CommandPalette(): React.JSX.Element | null {
           {/* Search bar */}
           <div
             className={`jenkins-command-palette__search${
-              isLoading ? ' jenkins-search--loading' : ''
+              isLoading ? " jenkins-search--loading" : ""
             }`}
           >
             <input
@@ -424,80 +421,75 @@ export default function CommandPalette(): React.JSX.Element | null {
           >
             <div id="search-results" ref={resultsRef}>
               {/* Grouped result items */}
-              {Object.entries(groupedResults).flatMap(
-                ([group, items]) => {
-                  const elements: React.JSX.Element[] = [];
+              {Object.entries(groupedResults).flatMap(([group, items]) => {
+                const elements: React.JSX.Element[] = [];
 
-                  // Group heading (skip for ungrouped / null group)
-                  if (group !== 'null') {
-                    elements.push(
-                      <p
-                        key={`heading-${group}`}
-                        className="jenkins-command-palette__results__heading"
-                      >
-                        {group}
-                      </p>,
-                    );
-                  }
+                // Group heading (skip for ungrouped / null group)
+                if (group !== "null") {
+                  elements.push(
+                    <p
+                      key={`heading-${group}`}
+                      className="jenkins-command-palette__results__heading"
+                    >
+                      {group}
+                    </p>,
+                  );
+                }
 
-                  // Result items within the group
-                  items.forEach((item, idx) => {
-                    const itemFlatIndex = currentFlatIndex;
-                    currentFlatIndex += 1;
+                // Result items within the group
+                items.forEach((item, idx) => {
+                  const itemFlatIndex = currentFlatIndex;
+                  currentFlatIndex += 1;
 
-                    elements.push(
-                      <a
-                        key={`item-${group}-${idx}`}
-                        className={`jenkins-command-palette__results__item${
-                          itemFlatIndex === selectedIndex
-                            ? ' jenkins-command-palette__results__item--hover'
-                            : ''
-                        }`}
-                        href={xmlEscape(item.url)}
-                        onMouseEnter={() =>
-                          setSelectedIndex(itemFlatIndex)
-                        }
-                      >
-                        {/* Icon — image vs inline SVG */}
-                        {item.type === 'image' ? (
-                          <img
-                            alt={xmlEscape(item.label)}
-                            className="jenkins-command-palette__results__item__icon jenkins-avatar"
-                            src={item.icon}
-                          />
-                        ) : (
-                          <div
-                            className="jenkins-command-palette__results__item__icon"
-                            dangerouslySetInnerHTML={{
-                              __html: item.icon,
-                            }}
-                          />
-                        )}
+                  elements.push(
+                    <a
+                      key={`item-${group}-${idx}`}
+                      className={`jenkins-command-palette__results__item${
+                        itemFlatIndex === selectedIndex
+                          ? " jenkins-command-palette__results__item--hover"
+                          : ""
+                      }`}
+                      href={xmlEscape(item.url)}
+                      onMouseEnter={() => setSelectedIndex(itemFlatIndex)}
+                    >
+                      {/* Icon — image vs inline SVG */}
+                      {item.type === "image" ? (
+                        <img
+                          alt={xmlEscape(item.label)}
+                          className="jenkins-command-palette__results__item__icon jenkins-avatar"
+                          src={item.icon}
+                        />
+                      ) : (
+                        <div
+                          className="jenkins-command-palette__results__item__icon"
+                          dangerouslySetInnerHTML={{
+                            __html: item.icon,
+                          }}
+                        />
+                      )}
 
-                        {/* Label — XSS escaped */}
-                        {xmlEscape(item.label)}
+                      {/* Label — XSS escaped */}
+                      {xmlEscape(item.label)}
 
-                        {/* External link badge */}
-                        {item.isExternal && (
-                          <span
-                            dangerouslySetInnerHTML={{
-                              __html: EXTERNAL_LINK,
-                            }}
-                          />
-                        )}
-                      </a>,
-                    );
-                  });
+                      {/* External link badge */}
+                      {item.isExternal && (
+                        <span
+                          dangerouslySetInnerHTML={{
+                            __html: EXTERNAL_LINK,
+                          }}
+                        />
+                      )}
+                    </a>,
+                  );
+                });
 
-                  return elements;
-                },
-              )}
+                return elements;
+              })}
 
               {/* No results message with XSS-escaped query (source lines 104-112) */}
               {query.length > 0 && results.length === 0 && !isLoading && (
                 <p className="jenkins-command-palette__info">
-                  <span>{i18n.noResultsFor}</span>{' '}
-                  {xmlEscape(query)}
+                  <span>{i18n.noResultsFor}</span> {xmlEscape(query)}
                 </p>
               )}
             </div>

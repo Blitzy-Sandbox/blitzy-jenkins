@@ -376,8 +376,7 @@ const Dialog: React.FC<DialogProps> = ({
   // -----------------------------------------------------------------------
 
   // Determine OK button form association for native submit
-  const okFormAttr =
-    dialogType === "form" && submitButton ? formId : undefined;
+  const okFormAttr = dialogType === "form" && submitButton ? formId : undefined;
 
   // Source line 220: skip click handler when form + submitButton
   const okClickHandler =
@@ -388,9 +387,7 @@ const Dialog: React.FC<DialogProps> = ({
       ref={dialogRef}
       className="jenkins-dialog"
       style={{ maxWidth: maxWidth, minWidth: minWidth }}
-      onClick={
-        dialogType === "modal" ? () => handleCancel() : undefined
-      }
+      onClick={dialogType === "modal" ? () => handleCancel() : undefined}
       onKeyDown={handleKeyDown}
       onCancel={handleNativeCancel}
     >
@@ -452,9 +449,7 @@ const Dialog: React.FC<DialogProps> = ({
               </div>
             )}
             {options.message != null && (
-              <div className="jenkins-dialog__contents">
-                {options.message}
-              </div>
+              <div className="jenkins-dialog__contents">{options.message}</div>
             )}
           </>
         )}
@@ -704,9 +699,7 @@ export function renderOnDemandDialog(dialogId: string): void {
 
     // Use the global dialog.modal method (source line 262)
     const dialogGlobal = (window as unknown as Record<string, unknown>)
-      .dialog as
-      | Record<string, (...args: unknown[]) => void>
-      | undefined;
+      .dialog as Record<string, (...args: unknown[]) => void> | undefined;
     if (dialogGlobal && typeof dialogGlobal.modal === "function") {
       dialogGlobal.modal(content, { maxWidth: "550px", title });
     }

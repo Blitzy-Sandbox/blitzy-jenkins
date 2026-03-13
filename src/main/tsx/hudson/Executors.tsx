@@ -20,20 +20,20 @@
  * @module hudson/Executors
  */
 
-import React, { useState, useCallback } from 'react';
-import BuildProgressBar from './BuildProgressBar';
-import { useStaplerQuery } from '@/hooks/useStaplerQuery';
-import { useStaplerMutation } from '@/hooks/useStaplerMutation';
-import { useI18n } from '@/hooks/useI18n';
+import React, { useState, useCallback } from "react";
+import BuildProgressBar from "./BuildProgressBar";
+import { useStaplerQuery } from "@/hooks/useStaplerQuery";
+import { useStaplerMutation } from "@/hooks/useStaplerMutation";
+import { useI18n } from "@/hooks/useI18n";
 import type {
   Computer,
   ExecutorInfo,
   ExecutableInfo,
   ComputerSet,
   Build,
-} from '@/types/models';
-import { CHEVRON_DOWN } from '@/utils/symbols';
-import { getBaseUrl } from '@/utils/baseUrl';
+} from "@/types/models";
+import { CHEVRON_DOWN } from "@/utils/symbols";
+import { getBaseUrl } from "@/utils/baseUrl";
 
 // ============================================================================
 // Internal Types
@@ -94,8 +94,8 @@ const CHEVRON_UP =
 const PAPER_PLANE_OUTLINE =
   '<svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">' +
   '<path d="M473 39.05a24 24 0 00-25.5-5.46L47.47 185h-.07a24 24 0 001 45.16l.18.07 ' +
-  '137.3 58.59a16 16 0 0012.31-1.3L410 166 225.33 335.37a16.34 16.34 0 00-1.29 12.29' +
-  'l58.56 136.89.07.17A24 24 0 00304.76 496a24.09 24.09 0 0023.45-18.09L478.5 64.57a' +
+  "137.3 58.59a16 16 0 0012.31-1.3L410 166 225.33 335.37a16.34 16.34 0 00-1.29 12.29" +
+  "l58.56 136.89.07.17A24 24 0 00304.76 496a24.09 24.09 0 0023.45-18.09L478.5 64.57a" +
   '24 24 0 00-5.5-25.52z" fill="none" stroke="currentColor" stroke-linecap="round" ' +
   'stroke-linejoin="round" stroke-width="32"/></svg>';
 
@@ -148,7 +148,7 @@ export interface ExecutorsProps {
  */
 function getComputerUrl(computer: Computer): string {
   if (isBuiltInNode(computer)) {
-    return 'computer/(built-in)/';
+    return "computer/(built-in)/";
   }
   return `computer/${encodeURIComponent(computer.displayName)}/`;
 }
@@ -159,9 +159,9 @@ function getComputerUrl(computer: Computer): string {
  */
 function isBuiltInNode(computer: Computer): boolean {
   return (
-    computer._class === 'hudson.model.Hudson$MasterComputer' ||
-    computer.displayName === 'Built-In Node' ||
-    computer.displayName === 'master'
+    computer._class === "hudson.model.Hudson$MasterComputer" ||
+    computer.displayName === "Built-In Node" ||
+    computer.displayName === "master"
   );
 }
 
@@ -189,7 +189,7 @@ function buildDisplayExecutors(computer: Computer): DisplayExecutor[] {
 
   for (const exec of computer.oneOffExecutors) {
     result.push({
-      displayName: '',
+      displayName: "",
       url: `executors/${exec.number}/`,
       executor: exec,
     });
@@ -235,16 +235,14 @@ function countTotalExecutors(computer: Computer): number {
  * - build.building (for animation determination)
  * - build.executor (for initial executor info)
  */
-function createBuildProxy(
-  exe: ExecutableInfo,
-  executor: ExecutorInfo,
-): Build {
+function createBuildProxy(exe: ExecutableInfo, executor: ExecutorInfo): Build {
   return {
     _class: exe._class,
     number: exe.number ?? 0,
     id: String(exe.number ?? 0),
-    url: exe.url ?? '',
-    displayName: (exe as ExtendedExecutableInfo).displayName ?? `#${exe.number ?? 0}`,
+    url: exe.url ?? "",
+    displayName:
+      (exe as ExtendedExecutableInfo).displayName ?? `#${exe.number ?? 0}`,
     fullDisplayName: exe.fullDisplayName,
     description: null,
     timestamp: 0,
@@ -268,8 +266,10 @@ function createBuildProxy(
  */
 async function postWithCrumb(url: string): Promise<void> {
   const headDataset = document.head?.dataset ?? {};
-  const crumbHeaderName = (headDataset as Record<string, string | undefined>).crumbheader ?? '';
-  const crumbHeaderValue = (headDataset as Record<string, string | undefined>).crumbvalue ?? '';
+  const crumbHeaderName =
+    (headDataset as Record<string, string | undefined>).crumbheader ?? "";
+  const crumbHeaderValue =
+    (headDataset as Record<string, string | undefined>).crumbvalue ?? "";
 
   const headers: Record<string, string> = {};
   if (crumbHeaderName && crumbHeaderValue) {
@@ -277,9 +277,9 @@ async function postWithCrumb(url: string): Promise<void> {
   }
 
   await fetch(url, {
-    method: 'POST',
+    method: "POST",
     headers,
-    credentials: 'same-origin',
+    credentials: "same-origin",
   });
 }
 
@@ -322,8 +322,8 @@ export default function Executors({
     isLoading,
     isFetching,
   } = useStaplerQuery<ComputerSet>({
-    url: viewUrl ? `${viewUrl}ajax` : '/computer/api/json',
-    queryKey: ['executors', 'computerSet', viewUrl ?? 'all'],
+    url: viewUrl ? `${viewUrl}ajax` : "/computer/api/json",
+    queryKey: ["executors", "computerSet", viewUrl ?? "all"],
     refetchInterval: REFRESH_INTERVAL_MS,
     enabled: !computersProp,
     staleTime: 0,
@@ -331,8 +331,7 @@ export default function Executors({
 
   // Resolve computer list: props take precedence over fetched data
   // Mirrors Jelly line 132: <j:set var="computers" value="${attrs.computers?:app.computers}"/>
-  const allComputers: Computer[] =
-    computersProp ?? fetchedData?.computer ?? [];
+  const allComputers: Computer[] = computersProp ?? fetchedData?.computer ?? [];
 
   // --------------------------------------------------------------------------
   // Collapse Toggle Mutation
@@ -340,7 +339,7 @@ export default function Executors({
   // --------------------------------------------------------------------------
   const toggleMutation = useStaplerMutation<void, void>({
     url: `${baseUrl}/toggleCollapse?paneId=executors`,
-    contentType: 'form-urlencoded',
+    contentType: "form-urlencoded",
     onSuccess: () => {
       setCollapsed((prev) => !prev);
     },
@@ -369,8 +368,8 @@ export default function Executors({
   const handleStopBuild = useCallback(
     (stopUrl: string, displayName: string) => {
       const confirmTemplate =
-        t('confirm') ?? 'Are you sure you want to abort {0}?';
-      const confirmMessage = confirmTemplate.replace('{0}', displayName);
+        t("confirm") ?? "Are you sure you want to abort {0}?";
+      const confirmMessage = confirmTemplate.replace("{0}", displayName);
       if (!window.confirm(confirmMessage)) {
         return;
       }
@@ -423,25 +422,25 @@ export default function Executors({
   // --------------------------------------------------------------------------
   // Collapsed Text Computation — mirrors Jelly lines 149-165
   // --------------------------------------------------------------------------
-  let collapsedText = '';
-  let executorDetails = '';
-  let singleTooltip = '';
+  let collapsedText = "";
+  let executorDetails = "";
+  let singleTooltip = "";
 
   if (!builtInHasExecutors && computersSize === 0) {
     // No executors at all — Jelly line 151: ${%noExecutors}
-    collapsedText = t('noExecutors') ?? 'No executors';
+    collapsedText = t("noExecutors") ?? "No executors";
   } else if (singleComputer && computers.length > 0) {
     // Single computer — Jelly lines 154-158
     const sc = computers[0];
     const busy = countBusyExecutors(sc);
     const total = countTotalExecutors(sc);
     executorDetails = `${busy}/${total}`;
-    collapsedText = (t('CollapsedSingle') ?? '{0} busy / {1} total')
-      .replace('{0}', String(busy))
-      .replace('{1}', String(total));
-    singleTooltip = (t('busy') ?? '{0} of {1} executors busy')
-      .replace('{0}', String(busy))
-      .replace('{1}', String(total));
+    collapsedText = (t("CollapsedSingle") ?? "{0} busy / {1} total")
+      .replace("{0}", String(busy))
+      .replace("{1}", String(total));
+    singleTooltip = (t("busy") ?? "{0} of {1} executors busy")
+      .replace("{0}", String(busy))
+      .replace("{1}", String(total));
   } else if (computersSize > 0) {
     // Multiple computers — Jelly lines 160-164
     const totalBusy = computers.reduce(
@@ -455,17 +454,17 @@ export default function Executors({
     if (!builtInHasExecutors) {
       // Without built-in — Jelly line 161: ${%CollapsedMulti(...)}
       collapsedText = (
-        t('CollapsedMulti') ?? '{0} computers, {1} busy / {2} total'
+        t("CollapsedMulti") ?? "{0} computers, {1} busy / {2} total"
       )
-        .replace('{0}', String(computersSize))
-        .replace('{1}', String(totalBusy))
-        .replace('{2}', String(totalExecs));
+        .replace("{0}", String(computersSize))
+        .replace("{1}", String(totalBusy))
+        .replace("{2}", String(totalExecs));
     } else {
       // With built-in — Jelly line 164: ${%Computers(...)}
-      collapsedText = (t('Computers') ?? '{0} computers, {1} busy / {2} total')
-        .replace('{0}', String(computersSize - 1))
-        .replace('{1}', String(totalBusy))
-        .replace('{2}', String(totalExecs));
+      collapsedText = (t("Computers") ?? "{0} computers, {1} busy / {2} total")
+        .replace("{0}", String(computersSize - 1))
+        .replace("{1}", String(totalBusy))
+        .replace("{2}", String(totalExecs));
     }
   }
 
@@ -474,8 +473,8 @@ export default function Executors({
   // --------------------------------------------------------------------------
   const chevronIcon = collapsed ? CHEVRON_UP : CHEVRON_DOWN;
   const collapseTooltip = collapsed
-    ? (t('Expand') ?? 'Expand')
-    : (t('Collapse') ?? 'Collapse');
+    ? (t("Expand") ?? "Expand")
+    : (t("Collapse") ?? "Collapse");
 
   // --------------------------------------------------------------------------
   // Loading state
@@ -486,7 +485,7 @@ export default function Executors({
         <div className="pane-header">
           <span className="pane-header-title">
             <a href={`${baseUrl}/computer/`}>
-              {t('Build Executor Status') ?? 'Build Executor Status'}
+              {t("Build Executor Status") ?? "Build Executor Status"}
             </a>
           </span>
         </div>
@@ -500,16 +499,16 @@ export default function Executors({
   // --------------------------------------------------------------------------
   return (
     <div
-      className={`pane-frame ${collapsed ? 'collapsed' : 'expanded'}`}
+      className={`pane-frame ${collapsed ? "collapsed" : "expanded"}`}
       id="executors"
-      data-fetching={isFetching ? 'true' : undefined}
+      data-fetching={isFetching ? "true" : undefined}
     >
       {/* Pane Header — Jelly lines 168-183 */}
       <div className="pane-header">
         {/* Title link — Jelly line 170 */}
         <span className="pane-header-title">
           <a href={`${baseUrl}/computer/`}>
-            {t('Build Executor Status') ?? 'Build Executor Status'}
+            {t("Build Executor Status") ?? "Build Executor Status"}
           </a>
         </span>
 
@@ -593,25 +592,23 @@ export default function Executors({
                         c.offlineCause ? (
                           /* Offline with cause — Jelly lines 41-48 */
                           <span>
-                            {' ('}
+                            {" ("}
                             <span
                               className="icon-xs jenkins-!-error-color"
                               aria-hidden="true"
                             />
-                            {` ${t('offline') ?? 'offline'})`}
+                            {` ${t("offline") ?? "offline"})`}
                           </span>
                         ) : (
                           /* Offline without cause — Jelly line 52 */
-                          <span>
-                            {` (${t('offline') ?? 'offline'})`}
-                          </span>
+                          <span>{` (${t("offline") ?? "offline"})`}</span>
                         )
                       ) : (
                         /* Online — show busy/total — Jelly lines 55-59 */
                         <span
-                          title={(t('busy') ?? '{0} of {1} executors busy')
-                            .replace('{0}', String(busy))
-                            .replace('{1}', String(total))}
+                          title={(t("busy") ?? "{0} of {1} executors busy")
+                            .replace("{0}", String(busy))
+                            .replace("{1}", String(total))}
                           data-tooltip-append-to-parent="true"
                         >
                           {` ${busy}/${total}`}
@@ -620,10 +617,7 @@ export default function Executors({
 
                       {/* Suspended indicator — Jelly line 60 */}
                       {c.temporarilyOffline && !c.offline && (
-                        <span>
-                          {' '}
-                          ({t('suspended') ?? 'suspended'})
-                        </span>
+                        <span> ({t("suspended") ?? "suspended"})</span>
                       )}
                     </div>
                   )}
@@ -638,19 +632,20 @@ export default function Executors({
                         return null;
                       }
 
-                      const exe = e.currentExecutable as ExtendedExecutableInfo | null;
+                      const exe =
+                        e.currentExecutable as ExtendedExecutableInfo | null;
 
                       return (
                         <div className="executor-row" key={de.url}>
                           {/* Executor type column — Jelly lines 66-70 */}
                           <div className="executor-type">
-                            {de.displayName === '' ? (
+                            {de.displayName === "" ? (
                               /* Light weight executor icon — Jelly line 68 */
                               <span
                                 className="icon-sm"
                                 title={
-                                  t('Light weight executor') ??
-                                  'Light weight executor'
+                                  t("Light weight executor") ??
+                                  "Light weight executor"
                                 }
                                 dangerouslySetInnerHTML={{
                                   __html: PAPER_PLANE_OUTLINE,
@@ -669,17 +664,17 @@ export default function Executors({
                               !e.idle ? (
                                 /* Pending: no executable yet — Jelly lines 85-89 */
                                 <div>
-                                  <div style={{ whiteSpace: 'normal' }}>
-                                    {t('Pending') ?? 'Pending'}
+                                  <div style={{ whiteSpace: "normal" }}>
+                                    {t("Pending") ?? "Pending"}
                                   </div>
                                   <BuildProgressBar
                                     build={
                                       {
-                                        url: '',
+                                        url: "",
                                         building: true,
                                         number: 0,
-                                        id: '0',
-                                        displayName: '',
+                                        id: "0",
+                                        displayName: "",
                                         description: null,
                                         timestamp: 0,
                                         duration: 0,
@@ -693,18 +688,20 @@ export default function Executors({
                                       } as Build
                                     }
                                     progress={-1}
-                                    tooltip={t('Pending') ?? 'Pending'}
+                                    tooltip={t("Pending") ?? "Pending"}
                                     animate={false}
                                   />
                                 </div>
                               ) : (
                                 /* Idle (race condition) — Jelly line 97 */
-                                <span>{t('Idle') ?? 'Idle'}</span>
+                                <span>{t("Idle") ?? "Idle"}</span>
                               )
                             ) : !exe.url ? (
                               /* No read permission — Jelly lines 99-108 */
                               <div>
-                                <span>{t('Unknown Task') ?? 'Unknown Task'}</span>
+                                <span>
+                                  {t("Unknown Task") ?? "Unknown Task"}
+                                </span>
                                 <BuildProgressBar
                                   build={createBuildProxy(exe, e)}
                                   executor={e}
@@ -717,13 +714,11 @@ export default function Executors({
                                   <tbody>
                                     <tr>
                                       <td className="pane">
-                                        <div style={{ whiteSpace: 'normal' }}>
-                                          <a
-                                            href={`${baseUrl}/${exe.url}`}
-                                          >
+                                        <div style={{ whiteSpace: "normal" }}>
+                                          <a href={`${baseUrl}/${exe.url}`}>
                                             {exe.fullDisplayName ??
-                                              t('Unknown Task') ??
-                                              'Unknown Task'}
+                                              t("Unknown Task") ??
+                                              "Unknown Task"}
                                           </a>
                                         </div>
                                       </td>
@@ -756,11 +751,11 @@ export default function Executors({
                                 href={`${baseUrl}/${computerUrl}${de.url}stopBuild${
                                   exe.externalizableId
                                     ? `?runExtId=${encodeURIComponent(exe.externalizableId)}`
-                                    : ''
+                                    : ""
                                 }`}
                                 title={
-                                  t('terminate this build') ??
-                                  'terminate this build'
+                                  t("terminate this build") ??
+                                  "terminate this build"
                                 }
                                 onClick={(
                                   event: React.MouseEvent<HTMLAnchorElement>,
@@ -772,22 +767,20 @@ export default function Executors({
                                         ? `?runExtId=${encodeURIComponent(
                                             exe.externalizableId,
                                           )}`
-                                        : ''
+                                        : ""
                                     }`,
                                     exe.fullDisplayName ??
-                                      t('Unknown Task') ??
-                                      'Unknown Task',
+                                      t("Unknown Task") ??
+                                      "Unknown Task",
                                   );
                                 }}
                                 role="button"
                                 aria-label={
-                                  t('terminate this build') ??
-                                  'terminate this build'
+                                  t("terminate this build") ??
+                                  "terminate this build"
                                 }
                               >
-                                <span className="icon-sm">
-                                  &#x25A0;
-                                </span>
+                                <span className="icon-sm">&#x25A0;</span>
                               </a>
                             )}
                           </div>
@@ -801,12 +794,12 @@ export default function Executors({
                       .map((de) => (
                         <div className="executor-row" key={`idle-${de.url}`}>
                           <div className="executor-type">
-                            {de.displayName === '' ? (
+                            {de.displayName === "" ? (
                               <span
                                 className="icon-sm"
                                 title={
-                                  t('Light weight executor') ??
-                                  'Light weight executor'
+                                  t("Light weight executor") ??
+                                  "Light weight executor"
                                 }
                                 dangerouslySetInnerHTML={{
                                   __html: PAPER_PLANE_OUTLINE,
@@ -817,7 +810,7 @@ export default function Executors({
                             )}
                           </div>
                           <div className="executor-cell">
-                            <span>{t('Idle') ?? 'Idle'}</span>
+                            <span>{t("Idle") ?? "Idle"}</span>
                           </div>
                           <div className="executor-stop" />
                         </div>
@@ -830,7 +823,7 @@ export default function Executors({
             {/* No executors state (when expanded but no computers) */}
             {computers.length === 0 && (
               <div className="executors-collapsed">
-                {t('noExecutors') ?? 'No executors'}
+                {t("noExecutors") ?? "No executors"}
               </div>
             )}
           </>

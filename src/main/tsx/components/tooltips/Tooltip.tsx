@@ -310,10 +310,7 @@ function hideAndRemoveTooltipDom(tooltipEl: HTMLElement): void {
  * @param text  - Plain text content for the notification tooltip
  * @param element - The DOM element to attach the notification to
  */
-export function hoverNotification(
-  text: string,
-  element: HTMLElement,
-): void {
+export function hoverNotification(text: string, element: HTMLElement): void {
   if (!text || !element) {
     return;
   }
@@ -532,35 +529,39 @@ function Tooltip({
     childRefStable.current = childRefRaw;
   });
 
-  const setTriggerRef = useCallback((node: HTMLElement | null) => {
-    triggerRef.current = node;
+  const setTriggerRef = useCallback(
+    (node: HTMLElement | null) => {
+      triggerRef.current = node;
 
-    // Update portal container when trigger ref changes
-    if (appendToParent && node?.parentElement) {
-      setPortalContainer(node.parentElement);
-    } else {
-      setPortalContainer(typeof document !== "undefined" ? document.body : null);
-    }
+      // Update portal container when trigger ref changes
+      if (appendToParent && node?.parentElement) {
+        setPortalContainer(node.parentElement);
+      } else {
+        setPortalContainer(
+          typeof document !== "undefined" ? document.body : null,
+        );
+      }
 
-    // Preserve any existing ref on the child element
-    const externalRef = childRefStable.current;
-    if (typeof externalRef === "function") {
-      (externalRef as (instance: HTMLElement | null) => void)(node);
-    } else if (
-      externalRef !== null &&
-      externalRef !== undefined &&
-      typeof externalRef === "object"
-    ) {
-      const mutableRef = externalRef as React.MutableRefObject<HTMLElement | null>;
-      mutableRef.current = node;
-    }
-  }, [appendToParent]);
+      // Preserve any existing ref on the child element
+      const externalRef = childRefStable.current;
+      if (typeof externalRef === "function") {
+        (externalRef as (instance: HTMLElement | null) => void)(node);
+      } else if (
+        externalRef !== null &&
+        externalRef !== undefined &&
+        typeof externalRef === "object"
+      ) {
+        const mutableRef =
+          externalRef as React.MutableRefObject<HTMLElement | null>;
+        mutableRef.current = node;
+      }
+    },
+    [appendToParent],
+  );
 
   /* ---- render tooltip content ------------------------------------------- */
   const renderTooltipContent = (): React.ReactNode => {
-    const displayContent = content
-      ? convertTooltipText(content)
-      : undefined;
+    const displayContent = content ? convertTooltipText(content) : undefined;
 
     return (
       <div
@@ -682,9 +683,12 @@ function readTooltipConfig(el: HTMLElement): {
   return {
     content: (htmlContent ?? textContent) as string,
     isHtml: Boolean(htmlContent),
-    delay: parseInt(el.getAttribute("data-tooltip-delay") ?? "", 10) || DEFAULT_DELAY,
+    delay:
+      parseInt(el.getAttribute("data-tooltip-delay") ?? "", 10) ||
+      DEFAULT_DELAY,
     appendToParent: el.hasAttribute("data-tooltip-append-to-parent"),
-    interactive: el.hasAttribute("data-tooltip-interactive") && Boolean(htmlContent),
+    interactive:
+      el.hasAttribute("data-tooltip-interactive") && Boolean(htmlContent),
   };
 }
 
@@ -699,7 +703,9 @@ function attachTooltipToElement(el: HTMLElement): ManagedTooltip {
     tooltipEl: null,
     showTimeoutId: null,
     hideTimeoutId: null,
-    cleanup: () => { /* replaced below */ },
+    cleanup: () => {
+      /* replaced below */
+    },
   };
 
   function clearManagedTimers(): void {
@@ -740,9 +746,10 @@ function attachTooltipToElement(el: HTMLElement): ManagedTooltip {
       }
       managed.tooltipEl = tooltipEl;
 
-      const container = cfg.appendToParent && el.parentElement
-        ? el.parentElement
-        : document.body;
+      const container =
+        cfg.appendToParent && el.parentElement
+          ? el.parentElement
+          : document.body;
       container.appendChild(tooltipEl);
 
       // Position and measure

@@ -263,9 +263,7 @@ export default function MyView({
   // retrieve its items (e.g., due to a permissions error or backend failure),
   // items is null rather than an empty array.
   if (items === null) {
-    return (
-      <p>{t("broken") ?? "Unable to retrieve items for this view."}</p>
-    );
+    return <p>{t("broken") ?? "Unable to retrieve items for this view."}</p>;
   }
 
   // ---------------------------------------------------------------------------
@@ -298,9 +296,7 @@ export default function MyView({
           <ViewTabs views={views} currentView={currentView} />
         )}
         {/* MyView/noJob.jelly: literally <div>${%blurb}</div> */}
-        <div>
-          {t("blurb") ?? "This view has no jobs."}
-        </div>
+        <div>{t("blurb") ?? "This view has no jobs."}</div>
       </>
     );
   }

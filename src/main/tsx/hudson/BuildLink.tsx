@@ -1,8 +1,8 @@
-import React from 'react';
-import type { Job, Build, BallColor } from '@/types/models';
-import { getBaseUrl } from '@/utils/baseUrl';
-import * as symbols from '@/utils/symbols';
-import { useI18n } from '@/hooks/useI18n';
+import React from "react";
+import type { Job, Build, BallColor } from "@/types/models";
+import { getBaseUrl } from "@/utils/baseUrl";
+import * as symbols from "@/utils/symbols";
+import { useI18n } from "@/hooks/useI18n";
 
 // ---------------------------------------------------------------------------
 // Helper: Derive BallColor from Build state
@@ -24,36 +24,36 @@ function getBuildBallColor(build: Build): BallColor {
 
   if (building) {
     switch (result) {
-      case 'SUCCESS':
-        return 'blue_anime';
-      case 'UNSTABLE':
-        return 'yellow_anime';
-      case 'FAILURE':
-        return 'red_anime';
-      case 'NOT_BUILT':
-        return 'nobuilt_anime';
-      case 'ABORTED':
-        return 'aborted_anime';
+      case "SUCCESS":
+        return "blue_anime";
+      case "UNSTABLE":
+        return "yellow_anime";
+      case "FAILURE":
+        return "red_anime";
+      case "NOT_BUILT":
+        return "nobuilt_anime";
+      case "ABORTED":
+        return "aborted_anime";
       default:
         // result is null while a brand-new build is still running
-        return 'grey_anime';
+        return "grey_anime";
     }
   }
 
   switch (result) {
-    case 'SUCCESS':
-      return 'blue';
-    case 'UNSTABLE':
-      return 'yellow';
-    case 'FAILURE':
-      return 'red';
-    case 'NOT_BUILT':
-      return 'nobuilt';
-    case 'ABORTED':
-      return 'aborted';
+    case "SUCCESS":
+      return "blue";
+    case "UNSTABLE":
+      return "yellow";
+    case "FAILURE":
+      return "red";
+    case "NOT_BUILT":
+      return "nobuilt";
+    case "ABORTED":
+      return "aborted";
     default:
       // result is null when the build finished without setting a result
-      return 'grey';
+      return "grey";
   }
 }
 
@@ -72,18 +72,18 @@ function getBuildBallColor(build: Build): BallColor {
  */
 function getBallColorDescription(color: BallColor): string {
   const baseDescriptions: Record<string, string> = {
-    blue: 'Success',
-    yellow: 'Unstable',
-    red: 'Failed',
-    grey: 'Pending',
-    disabled: 'Disabled',
-    aborted: 'Aborted',
-    nobuilt: 'Not built',
+    blue: "Success",
+    yellow: "Unstable",
+    red: "Failed",
+    grey: "Pending",
+    disabled: "Disabled",
+    aborted: "Aborted",
+    nobuilt: "Not built",
   };
 
-  const isAnime = color.endsWith('_anime');
-  const baseColor = isAnime ? color.replace('_anime', '') : color;
-  const baseDescription = baseDescriptions[baseColor] ?? 'Unknown';
+  const isAnime = color.endsWith("_anime");
+  const baseColor = isAnime ? color.replace("_anime", "") : color;
+  const baseDescription = baseDescriptions[baseColor] ?? "Unknown";
 
   return isAnime ? `${baseDescription} (in progress)` : baseDescription;
 }
@@ -170,7 +170,7 @@ const BuildLink: React.FC<BuildLinkProps> = ({
   // Mirror Jelly's h.appendSpaceIfNotNull(jobName):
   // If jobName is present, append a trailing space so the output reads
   // "JobName #42" instead of "JobName#42".
-  const jobNameWithSpace = jobName != null ? `${jobName} ` : '';
+  const jobNameWithSpace = jobName != null ? `${jobName} ` : "";
 
   // Resolve the build: use the provided `build` prop or look it up from
   // `job.builds` by matching `buildNumber`.
@@ -195,7 +195,7 @@ const BuildLink: React.FC<BuildLinkProps> = ({
     return (
       <>
         <a href={`${rootURL}/${job.url}`} className="model-link">
-          {jobName ?? ''}
+          {jobName ?? ""}
         </a>
         {` #${buildNumber}`}
       </>
@@ -217,8 +217,8 @@ const BuildLink: React.FC<BuildLinkProps> = ({
   // Inline style matching the Jelly <l:icon> output exactly
   const iconStyle: React.CSSProperties = {
     marginLeft: 0,
-    position: 'relative',
-    top: '-0.1rem',
+    position: "relative",
+    top: "-0.1rem",
   };
 
   return (

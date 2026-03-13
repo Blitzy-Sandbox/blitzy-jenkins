@@ -466,7 +466,12 @@ function MobileJobItem({
   useFullName?: boolean;
   hasBuildButton: boolean;
   descriptionText: string;
-  healthReport: Array<{ score: number; iconUrl?: string; iconClassName?: string; description: string }>;
+  healthReport: Array<{
+    score: number;
+    iconUrl?: string;
+    iconClassName?: string;
+    description: string;
+  }>;
 }): React.JSX.Element {
   const iconName = resolveIconName(job.color);
   const iconTooltip = getBallColorDescription(job.color);
@@ -619,7 +624,7 @@ function ProjectView({
       url: "/view/all/api/json?tree=columns[*]",
       queryKey: ["projectView", "defaultColumns"],
       enabled: columnExtensions === undefined,
-      staleTime: 300_000, /* Column config rarely changes — cache for 5 minutes */
+      staleTime: 300_000 /* Column config rarely changes — cache for 5 minutes */,
     });
 
   /**
@@ -738,7 +743,10 @@ function ProjectView({
   }
 
   return (
-    <div className={dashboardClassName} data-item-group={itemGroup ? "true" : undefined}>
+    <div
+      className={dashboardClassName}
+      data-item-group={itemGroup ? "true" : undefined}
+    >
       {hasContent && (
         <>
           {/* ---------------------------------------------------------------

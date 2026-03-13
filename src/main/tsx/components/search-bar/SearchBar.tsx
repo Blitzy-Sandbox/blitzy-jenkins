@@ -284,37 +284,33 @@ function SearchBar({ suggestions, placeholder, className }: SearchBarProps) {
       <div
         ref={resultsContainerRef}
         className={`jenkins-search__results-container${
-          isVisible
-            ? " jenkins-search__results-container--visible"
-            : ""
+          isVisible ? " jenkins-search__results-container--visible" : ""
         }`}
       >
         <div ref={resultsRef} className="jenkins-dropdown">
-          {filteredResults.length > 0
-            ? filteredResults.map((item, index) => (
-                <a
-                  key={item.url}
-                  className={`jenkins-dropdown__item${
-                    index === selectedIndex ? ` ${SELECTED_CLASS}` : ""
-                  }`}
-                  href={item.url}
-                >
-                  {item.icon != null && item.icon !== "" && (
-                    <div
-                      className="jenkins-dropdown__item__icon"
-                      dangerouslySetInnerHTML={{ __html: item.icon }}
-                    />
-                  )}
-                  {xmlEscape(item.label)}
-                </a>
-              ))
-            : query.length > 0
-              ? (
-                  <p className="jenkins-search__results__no-results-label">
-                    No results
-                  </p>
-                )
-              : null}
+          {filteredResults.length > 0 ? (
+            filteredResults.map((item, index) => (
+              <a
+                key={item.url}
+                className={`jenkins-dropdown__item${
+                  index === selectedIndex ? ` ${SELECTED_CLASS}` : ""
+                }`}
+                href={item.url}
+              >
+                {item.icon != null && item.icon !== "" && (
+                  <div
+                    className="jenkins-dropdown__item__icon"
+                    dangerouslySetInnerHTML={{ __html: item.icon }}
+                  />
+                )}
+                {xmlEscape(item.label)}
+              </a>
+            ))
+          ) : query.length > 0 ? (
+            <p className="jenkins-search__results__no-results-label">
+              No results
+            </p>
+          ) : null}
         </div>
       </div>
     </div>

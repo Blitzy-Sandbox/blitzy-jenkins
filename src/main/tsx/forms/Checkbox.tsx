@@ -1,4 +1,4 @@
-import { useState, useId, useActionState, type ChangeEvent } from 'react';
+import { useState, useId, useActionState, type ChangeEvent } from "react";
 
 /**
  * Props for the Checkbox component.
@@ -84,7 +84,9 @@ export function Checkbox({
 
   /* Controlled vs uncontrolled checked state management */
   const isControlled = controlledChecked !== undefined;
-  const [internalChecked, setInternalChecked] = useState(defaultChecked ?? false);
+  const [internalChecked, setInternalChecked] = useState(
+    defaultChecked ?? false,
+  );
   const resolvedChecked = isControlled ? controlledChecked : internalChecked;
 
   /*
@@ -114,20 +116,20 @@ export function Checkbox({
     inputClassParts.push(className);
   }
   if (negative) {
-    inputClassParts.push('negative');
+    inputClassParts.push("negative");
   }
   if (checkUrl) {
-    inputClassParts.push('validated');
+    inputClassParts.push("validated");
   }
   const inputClasses =
-    inputClassParts.length > 0 ? inputClassParts.join(' ') : undefined;
+    inputClassParts.length > 0 ? inputClassParts.join(" ") : undefined;
 
   /* Build label CSS classes */
-  const labelClassParts: string[] = ['attach-previous'];
+  const labelClassParts: string[] = ["attach-previous"];
   if (label == null) {
-    labelClassParts.push('js-checkbox-label-empty');
+    labelClassParts.push("js-checkbox-label-empty");
   }
-  const labelClasses = labelClassParts.join(' ');
+  const labelClasses = labelClassParts.join(" ");
 
   /* Checkbox is disabled when explicitly disabled or during form submission */
   const isDisabled = disabled || isPending;
@@ -149,12 +151,8 @@ export function Checkbox({
           data-check-depends-on={checkDependsOn}
           data-json={json}
         />
-        <label
-          className={labelClasses}
-          htmlFor={checkboxId}
-          title={tooltip}
-        >
-          {label ?? ''}
+        <label className={labelClasses} htmlFor={checkboxId} title={tooltip}>
+          {label ?? ""}
         </label>
       </span>
       {description != null && (

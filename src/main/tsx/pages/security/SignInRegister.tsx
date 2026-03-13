@@ -30,9 +30,9 @@
    functions (passwordScore, getPasswordStrengthLabel, getPasswordStrengthColor)
    that are part of its public API and are also consumed by unit tests. */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-import { useI18n } from '@/hooks/useI18n';
+import { useI18n } from "@/hooks/useI18n";
 
 // ---------------------------------------------------------------------------
 // Pure Utility Functions (non-React, exported for independent testing)
@@ -109,15 +109,15 @@ export function getPasswordStrengthLabel(
   t: (key: string) => string | null,
 ): string {
   if (score > 80) {
-    return t('strength-strong') ?? '';
+    return t("strength-strong") ?? "";
   }
   if (score > 60) {
-    return t('strength-moderate') ?? '';
+    return t("strength-moderate") ?? "";
   }
   if (score >= 30) {
-    return t('strength-weak') ?? '';
+    return t("strength-weak") ?? "";
   }
-  return t('strength-poor') ?? '';
+  return t("strength-poor") ?? "";
 }
 
 /**
@@ -136,15 +136,15 @@ export function getPasswordStrengthLabel(
  */
 export function getPasswordStrengthColor(score: number): string {
   if (score > 80) {
-    return 'var(--green)';
+    return "var(--green)";
   }
   if (score > 60) {
-    return 'var(--yellow)';
+    return "var(--yellow)";
   }
   if (score >= 30) {
-    return 'var(--orange)';
+    return "var(--orange)";
   }
-  return 'var(--error-color)';
+  return "var(--error-color)";
 }
 
 // ---------------------------------------------------------------------------
@@ -170,7 +170,7 @@ export function getPasswordStrengthColor(score: number): string {
  */
 export function SignInRegister(): React.JSX.Element {
   // State: password value and show/hide toggle
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   // Localization hook — replaces `import { getI18n } from "@/util/i18n"`
@@ -179,9 +179,9 @@ export function SignInRegister(): React.JSX.Element {
   // Derived values computed from password state on each render
   const score = passwordScore(password);
   const strengthLabel =
-    password.length > 0 ? getPasswordStrengthLabel(score, t) : '';
+    password.length > 0 ? getPasswordStrengthLabel(score, t) : "";
   const strengthColor =
-    password.length > 0 ? getPasswordStrengthColor(score) : '';
+    password.length > 0 ? getPasswordStrengthColor(score) : "";
   const isStrengthVisible = password.length > 0;
 
   // Memoized handler: replaces passwordField.addEventListener("input", ...)
@@ -214,7 +214,7 @@ export function SignInRegister(): React.JSX.Element {
             {/* Primary password input */}
             <input
               id="password1"
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={handlePasswordChange}
               autoComplete="new-password"
@@ -226,12 +226,7 @@ export function SignInRegister(): React.JSX.Element {
               Both inputs read from the same `password` state. The confirmation
               field is NOT independently editable — it is automatically filled.
             */}
-            <input
-              id="password2"
-              type="password"
-              value={password}
-              readOnly
-            />
+            <input id="password2" type="password" value={password} readOnly />
 
             {/* Show password checkbox */}
             <input
@@ -249,10 +244,7 @@ export function SignInRegister(): React.JSX.Element {
               - #passwordStrength has transition via SCSS
             */}
             <div id="passwordStrengthWrapper" hidden={!isStrengthVisible}>
-              <span
-                id="passwordStrength"
-                style={{ color: strengthColor }}
-              >
+              <span id="passwordStrength" style={{ color: strengthColor }}>
                 {strengthLabel}
               </span>
             </div>

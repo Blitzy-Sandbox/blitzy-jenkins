@@ -33,9 +33,9 @@
  * @module forms/FormEntry
  */
 
-import { useState, useCallback, type ReactNode, type JSX } from 'react';
-import { useI18n } from '@/hooks/useI18n';
-import { useStaplerQuery } from '@/hooks/useStaplerQuery';
+import { useState, useCallback, type ReactNode, type JSX } from "react";
+import { useI18n } from "@/hooks/useI18n";
+import { useStaplerQuery } from "@/hooks/useStaplerQuery";
 
 // =============================================================================
 // Public Interface
@@ -164,8 +164,8 @@ export function FormEntry({
     isLoading: helpLoading,
     isError: helpError,
   } = useStaplerQuery<string>({
-    url: help ?? '',
-    queryKey: ['formEntryHelp', help ?? ''],
+    url: help ?? "",
+    queryKey: ["formEntryHelp", help ?? ""],
     enabled: helpExpanded && help != null && help.length > 0,
     staleTime: 5 * 60 * 1000, // Help pages are static — cache for 5 minutes
   });
@@ -189,15 +189,15 @@ export function FormEntry({
 
   // Build the outer container class string matching Jelly's:
   //   <div class="jenkins-form-item tr ${attrs.class}">
-  const containerClassList = ['jenkins-form-item', 'tr'];
+  const containerClassList = ["jenkins-form-item", "tr"];
   if (className) {
     containerClassList.push(className);
   }
-  const containerClass = containerClassList.join(' ');
+  const containerClass = containerClassList.join(" ");
 
   // Accessible label for the help button
   const helpAriaLabel =
-    t('help') ?? `Help for ${title ?? field ?? 'this field'}`;
+    t("help") ?? `Help for ${title ?? field ?? "this field"}`;
 
   // ---------------------------------------------------------------------------
   // Shared sub-elements
@@ -226,7 +226,7 @@ export function FormEntry({
         handleHelpToggle();
       }}
       onKeyDown={(e: React.KeyboardEvent) => {
-        if (e.key === 'Enter' || e.key === ' ') {
+        if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           handleHelpToggle();
         }
@@ -260,19 +260,20 @@ export function FormEntry({
     }
 
     if (!helpExpanded) {
-      return (
-        <div className="help-area" style={{ display: 'none' }} />
-      );
+      return <div className="help-area" style={{ display: "none" }} />;
     }
 
     return (
       <div className="help-area">
         <div className="help">
           {helpLoading && (
-            <div className="jenkins-spinner" aria-label={t('loading') ?? 'Loading...'} />
+            <div
+              className="jenkins-spinner"
+              aria-label={t("loading") ?? "Loading..."}
+            />
           )}
           {helpError && (
-            <p>{t('helpLoadError') ?? 'Help content could not be loaded.'}</p>
+            <p>{t("helpLoadError") ?? "Help content could not be loaded."}</p>
           )}
           {helpContent != null && !helpLoading && !helpError && (
             <div
@@ -323,9 +324,7 @@ export function FormEntry({
         )}
 
         {/* Control wrapper — entry.jelly lines 88-90 */}
-        <div className="setting-main">
-          {children}
-        </div>
+        <div className="setting-main">{children}</div>
 
         {/* Validation area — entry.jelly lines 91-93 */}
         {renderValidationArea()}
@@ -346,15 +345,13 @@ export function FormEntry({
       {help != null ? (
         <div
           className="setting-main help-sibling"
-          style={{ display: 'inline-flex', alignItems: 'center' }}
+          style={{ display: "inline-flex", alignItems: "center" }}
         >
           {children}
           {renderHelpLink()}
         </div>
       ) : (
-        <div className="setting-main help-sibling">
-          {children}
-        </div>
+        <div className="setting-main help-sibling">{children}</div>
       )}
 
       {/* Validation area — entry.jelly lines 112-114 */}

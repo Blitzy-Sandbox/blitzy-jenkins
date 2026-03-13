@@ -61,6 +61,7 @@ THE SOFTWARE.
   </j:set>
 
   <l:settings-subpage header="${header}">
+    <div id="react-root" data-view-type="computer-set" data-model-url="${rootURL}/computer/api/json"></div>
     <j:set var="monitors" value="${it._monitors}"/>
     <j:set var="tableWidth" value="${3}"/>
     <t:setIconSize/>

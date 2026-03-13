@@ -22,14 +22,8 @@
  * @module forms/ComboBox
  */
 
-import {
-  useState,
-  useRef,
-  useEffect,
-  useCallback,
-  useMemo,
-} from 'react';
-import { useStaplerQuery } from '@/hooks/useStaplerQuery';
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import { useStaplerQuery } from "@/hooks/useStaplerQuery";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -79,7 +73,7 @@ export interface ComboBoxProps {
   checkUrl?: string;
 
   /** HTTP method for checkUrl validation requests. */
-  checkMethod?: 'get' | 'post';
+  checkMethod?: "get" | "post";
 
   /**
    * URL to fetch autocomplete suggestions from a Stapler doFillXyzItems endpoint.
@@ -143,7 +137,7 @@ const HTML_TAG_REGEX = /<\/?[^>]+(>|$)/g;
  * @returns Plain text with all HTML tags removed
  */
 function stripHtmlTags(html: string): string {
-  return html.replace(HTML_TAG_REGEX, '');
+  return html.replace(HTML_TAG_REGEX, "");
 }
 
 // ---------------------------------------------------------------------------
@@ -189,7 +183,7 @@ function stripHtmlTags(html: string): string {
 export function ComboBox({
   name,
   value,
-  defaultValue = '',
+  defaultValue = "",
   className,
   field,
   checkUrl,
@@ -263,8 +257,8 @@ export function ComboBox({
    *   callback.call(combobox, currentValue)  →  useStaplerQuery(fillUrl)
    */
   const { data: fetchedData, isLoading } = useStaplerQuery<FillResponse>({
-    url: fillUrl ?? '',
-    queryKey: ['combobox-fill', fillUrl ?? '', fillDependsOn ?? ''],
+    url: fillUrl ?? "",
+    queryKey: ["combobox-fill", fillUrl ?? "", fillDependsOn ?? ""],
     enabled: Boolean(fillUrl),
     staleTime: SUGGESTIONS_STALE_TIME_MS,
   });
@@ -296,7 +290,7 @@ export function ComboBox({
       return [];
     }
     const trimmed = inputValue.trim().toLowerCase();
-    if (trimmed === '') {
+    if (trimmed === "") {
       return allOptions;
     }
     return allOptions.filter((item) => {
@@ -324,14 +318,14 @@ export function ComboBox({
    *   class="combobox2 jenkins-input {clazz} {checkUrl ? 'validated' : ''}"
    */
   const inputClassName = useMemo<string>(() => {
-    const classes: string[] = ['combobox2', 'jenkins-input'];
+    const classes: string[] = ["combobox2", "jenkins-input"];
     if (className) {
       classes.push(className);
     }
     if (checkUrl) {
-      classes.push('validated');
+      classes.push("validated");
     }
-    return classes.join(' ');
+    return classes.join(" ");
   }, [className, checkUrl]);
 
   // -------------------------------------------------------------------------
@@ -369,9 +363,9 @@ export function ComboBox({
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -395,8 +389,8 @@ export function ComboBox({
     if (isOpen && highlightedIndex >= 0 && dropdownRef.current) {
       const items = dropdownRef.current.querySelectorAll('[role="option"]');
       const highlightedEl = items[highlightedIndex] as HTMLElement | undefined;
-      if (highlightedEl && typeof highlightedEl.scrollIntoView === 'function') {
-        highlightedEl.scrollIntoView({ block: 'nearest' });
+      if (highlightedEl && typeof highlightedEl.scrollIntoView === "function") {
+        highlightedEl.scrollIntoView({ block: "nearest" });
       }
     }
   }, [isOpen, highlightedIndex]);
@@ -457,7 +451,7 @@ export function ComboBox({
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>): void => {
       /* Open dropdown on arrow keys when currently closed */
-      if (!isOpen && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
+      if (!isOpen && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
         setIsOpen(true);
         if (filteredSuggestions.length > 0) {
           setHighlightedIndex(0);
@@ -467,7 +461,7 @@ export function ComboBox({
       }
 
       switch (e.key) {
-        case 'ArrowDown': {
+        case "ArrowDown": {
           e.preventDefault();
           setHighlightedIndex((prev) => {
             const next = prev + 1;
@@ -476,7 +470,7 @@ export function ComboBox({
           break;
         }
 
-        case 'ArrowUp': {
+        case "ArrowUp": {
           e.preventDefault();
           setHighlightedIndex((prev) => {
             const next = prev - 1;
@@ -485,7 +479,7 @@ export function ComboBox({
           break;
         }
 
-        case 'Enter': {
+        case "Enter": {
           if (
             isOpen &&
             highlightedIndex >= 0 &&
@@ -497,7 +491,7 @@ export function ComboBox({
           break;
         }
 
-        case 'Tab': {
+        case "Tab": {
           /* Select the highlighted item on Tab but allow focus to move */
           if (
             isOpen &&
@@ -510,7 +504,7 @@ export function ComboBox({
           break;
         }
 
-        case 'Escape': {
+        case "Escape": {
           e.preventDefault();
           setIsOpen(false);
           setHighlightedIndex(-1);
@@ -584,7 +578,7 @@ export function ComboBox({
       /* Structural positioning for the dropdown to anchor against.
          The legacy combobox.js used document.body + absolute coords;
          the React version uses a relative parent pattern instead. */
-      style={{ position: 'relative' }}
+      style={{ position: "relative" }}
     >
       <input
         ref={inputRef}
@@ -630,10 +624,10 @@ export function ComboBox({
              equivalent. The .comboBoxList SCSS class provides z-index,
              background, shadow, scrolling, and border-radius. */
           style={{
-            position: 'absolute',
+            position: "absolute",
             insetInlineStart: 0,
-            insetBlockStart: '100%',
-            inlineSize: '100%',
+            insetBlockStart: "100%",
+            inlineSize: "100%",
           }}
         >
           {filteredSuggestions.map((suggestion, index) => {
@@ -644,8 +638,8 @@ export function ComboBox({
                 id={getOptionId(index)}
                 className={
                   isHighlighted
-                    ? 'comboBoxItem comboBoxSelectedItem'
-                    : 'comboBoxItem'
+                    ? "comboBoxItem comboBoxSelectedItem"
+                    : "comboBoxItem"
                 }
                 role="option"
                 aria-selected={isHighlighted}

@@ -26,16 +26,16 @@
  * @module pages/job/JobBuildHistory
  */
 
-import { useState } from 'react';
+import { useState } from "react";
 
-import Layout from '@/layout/Layout';
-import { Skeleton } from '@/layout/Skeleton';
-import BreadcrumbBar from '@/layout/BreadcrumbBar';
-import { useStaplerQuery } from '@/hooks/useStaplerQuery';
-import { useI18n } from '@/hooks/useI18n';
-import { useJenkinsConfig } from '@/providers/JenkinsConfigProvider';
-import type { BallColor } from '@/types/models';
-import * as symbols from '@/utils/symbols';
+import Layout from "@/layout/Layout";
+import { Skeleton } from "@/layout/Skeleton";
+import BreadcrumbBar from "@/layout/BreadcrumbBar";
+import { useStaplerQuery } from "@/hooks/useStaplerQuery";
+import { useI18n } from "@/hooks/useI18n";
+import { useJenkinsConfig } from "@/providers/JenkinsConfigProvider";
+import type { BallColor } from "@/types/models";
+import * as symbols from "@/utils/symbols";
 
 /*
  * BreadcrumbBar is imported per the module dependency schema for explicit
@@ -126,7 +126,7 @@ interface JobApiResponse {
  * recent builds, matching the builds-card pagination pattern.
  */
 const BUILDS_TREE =
-  'builds[number,url,displayName,result,timestamp,duration,builtOn,building]{0,50}';
+  "builds[number,url,displayName,result,timestamp,duration,builtOn,building]{0,50}";
 
 /**
  * Map from {@link BallColor} values to SVG symbol IDs.
@@ -140,27 +140,27 @@ const BUILDS_TREE =
  * definitions in `war/src/main/resources/images/symbols/`.
  */
 const BALL_COLOR_TO_SYMBOL: Record<BallColor, string> = {
-  blue: 'symbol-status-blue',
-  blue_anime: 'symbol-status-blue-anime',
-  red: 'symbol-status-red',
-  red_anime: 'symbol-status-red-anime',
-  yellow: 'symbol-status-yellow',
-  yellow_anime: 'symbol-status-yellow-anime',
-  nobuilt: 'symbol-status-nobuilt',
-  nobuilt_anime: 'symbol-status-nobuilt-anime',
-  aborted: 'symbol-status-aborted',
-  aborted_anime: 'symbol-status-aborted-anime',
-  disabled: 'symbol-status-disabled',
-  disabled_anime: 'symbol-status-disabled-anime',
-  grey: 'symbol-status-disabled',
-  grey_anime: 'symbol-status-disabled-anime',
+  blue: "symbol-status-blue",
+  blue_anime: "symbol-status-blue-anime",
+  red: "symbol-status-red",
+  red_anime: "symbol-status-red-anime",
+  yellow: "symbol-status-yellow",
+  yellow_anime: "symbol-status-yellow-anime",
+  nobuilt: "symbol-status-nobuilt",
+  nobuilt_anime: "symbol-status-nobuilt-anime",
+  aborted: "symbol-status-aborted",
+  aborted_anime: "symbol-status-aborted-anime",
+  disabled: "symbol-status-disabled",
+  disabled_anime: "symbol-status-disabled-anime",
+  grey: "symbol-status-disabled",
+  grey_anime: "symbol-status-disabled-anime",
 };
 
 /** SVG symbol ID for the console / terminal icon */
-const CONSOLE_SYMBOL = 'symbol-terminal';
+const CONSOLE_SYMBOL = "symbol-terminal";
 
 /** Default fallback symbol when an icon name is not recognised */
-const FALLBACK_SYMBOL = 'symbol-status-nobuilt';
+const FALLBACK_SYMBOL = "symbol-status-nobuilt";
 
 // =============================================================================
 // Icon Size Configuration
@@ -170,20 +170,20 @@ const FALLBACK_SYMBOL = 'symbol-status-nobuilt';
  * Icon size identifiers matching Jenkins' `<t:setIconSize/>` / `<t:iconSize/>`
  * Jelly tag values used in buildTimeTrend.jelly lines 57-58 and 74.
  */
-type IconSize = '16x16' | '24x24' | '32x32';
+type IconSize = "16x16" | "24x24" | "32x32";
 
 /** Maps icon size to the table-level CSS modifier class */
 const ICON_SIZE_TABLE_CLASSES: Record<IconSize, string> = {
-  '16x16': 'jenkins-table--small',
-  '24x24': 'jenkins-table--medium',
-  '32x32': '',
+  "16x16": "jenkins-table--small",
+  "24x24": "jenkins-table--medium",
+  "32x32": "",
 };
 
 /** Maps icon size to the per-icon CSS sizing class */
 const ICON_SIZE_CLASSES: Record<IconSize, string> = {
-  '16x16': 'icon-sm',
-  '24x24': 'icon-md',
-  '32x32': 'icon-lg',
+  "16x16": "icon-sm",
+  "24x24": "icon-md",
+  "32x32": "icon-lg",
 };
 
 // =============================================================================
@@ -201,23 +201,23 @@ const ICON_SIZE_CLASSES: Record<IconSize, string> = {
 function mapResultToIconName(result: string | null, building: boolean): string {
   let base: string;
   switch (result) {
-    case 'SUCCESS':
-      base = 'blue';
+    case "SUCCESS":
+      base = "blue";
       break;
-    case 'UNSTABLE':
-      base = 'yellow';
+    case "UNSTABLE":
+      base = "yellow";
       break;
-    case 'FAILURE':
-      base = 'red';
+    case "FAILURE":
+      base = "red";
       break;
-    case 'ABORTED':
-      base = 'aborted';
+    case "ABORTED":
+      base = "aborted";
       break;
-    case 'NOT_BUILT':
-      base = 'nobuilt';
+    case "NOT_BUILT":
+      base = "nobuilt";
       break;
     default:
-      base = result === null && building ? 'nobuilt' : 'disabled';
+      base = result === null && building ? "nobuilt" : "disabled";
       break;
   }
   return building ? `${base}_anime` : base;
@@ -239,7 +239,7 @@ function getStatusSymbol(iconName: string): string {
  */
 function formatDuration(ms: number): string {
   if (ms < 0) {
-    return '0 sec';
+    return "0 sec";
   }
   const seconds = Math.floor(ms / 1000);
   const minutes = Math.floor(seconds / 60);
@@ -268,7 +268,7 @@ function formatDuration(ms: number): string {
 function formatTimeSince(timestamp: number): string {
   const diff = Date.now() - timestamp;
   if (diff < 0) {
-    return 'just now';
+    return "just now";
   }
 
   const seconds = Math.floor(diff / 1000);
@@ -289,7 +289,9 @@ function formatTimeSince(timestamp: number): string {
   }
   if (hours > 0) {
     const remainMin = minutes % 60;
-    return remainMin > 0 ? `${hours} hr ${remainMin} min ago` : `${hours} hr ago`;
+    return remainMin > 0
+      ? `${hours} hr ${remainMin} min ago`
+      : `${hours} hr ago`;
   }
   if (minutes > 0) {
     return `${minutes} min ago`;
@@ -306,7 +308,7 @@ function normalizeJobPath(jobUrl: string, baseUrl: string): string {
   let path = jobUrl;
 
   /* Handle absolute URLs — extract pathname */
-  if (path.startsWith('http://') || path.startsWith('https://')) {
+  if (path.startsWith("http://") || path.startsWith("https://")) {
     try {
       path = new URL(path).pathname;
     } catch {
@@ -319,10 +321,10 @@ function normalizeJobPath(jobUrl: string, baseUrl: string): string {
     path = path.substring(baseUrl.length);
   }
 
-  if (!path.startsWith('/')) {
+  if (!path.startsWith("/")) {
     path = `/${path}`;
   }
-  return path.endsWith('/') ? path : `${path}/`;
+  return path.endsWith("/") ? path : `${path}/`;
 }
 
 /**
@@ -381,7 +383,7 @@ export default function JobBuildHistory({
   /* -------------------------------------------------------------------- */
   const { baseUrl } = useJenkinsConfig();
   const { t } = useI18n();
-  const [iconSize, setIconSize] = useState<IconSize>('24x24');
+  const [iconSize, setIconSize] = useState<IconSize>("24x24");
 
   /* -------------------------------------------------------------------- */
   /* Resolve normalized job path for API calls                              */
@@ -394,7 +396,7 @@ export default function JobBuildHistory({
   /* -------------------------------------------------------------------- */
   const { data, isLoading, isError } = useStaplerQuery<JobApiResponse>({
     url: apiUrl,
-    queryKey: ['buildTimeTrend', jobUrl],
+    queryKey: ["buildTimeTrend", jobUrl],
     staleTime: 30_000,
   });
 
@@ -412,7 +414,7 @@ export default function JobBuildHistory({
   /* -------------------------------------------------------------------- */
   /* Page title — mirrors Jelly: ${%title(it.displayName)}                  */
   /* -------------------------------------------------------------------- */
-  const pageTitle = t('title') ?? `Build Time Trend of ${displayName}`;
+  const pageTitle = t("title") ?? `Build Time Trend of ${displayName}`;
 
   /* -------------------------------------------------------------------- */
   /* Graph URLs — mirrors Jelly line 76                                     */
@@ -426,7 +428,7 @@ export default function JobBuildHistory({
     <Layout title={pageTitle}>
       <div id="buildTimeTrend">
         {/* Heading — mirrors Jelly line 50 */}
-        <h1>{t('Build Time Trend') ?? 'Build Time Trend'}</h1>
+        <h1>{t("Build Time Trend") ?? "Build Time Trend"}</h1>
 
         {/* Icon size selector — mirrors Jelly <t:setIconSize/> / <t:iconSize/> */}
         <div
@@ -434,18 +436,22 @@ export default function JobBuildHistory({
           role="radiogroup"
           aria-label="Icon size"
         >
-          {(['16x16', '24x24', '32x32'] as IconSize[]).map((size) => (
+          {(["16x16", "24x24", "32x32"] as IconSize[]).map((size) => (
             <button
               key={size}
               type="button"
               className={[
-                'jenkins-icon-size-selector__btn',
-                iconSize === size ? 'jenkins-icon-size-selector__btn--active' : '',
+                "jenkins-icon-size-selector__btn",
+                iconSize === size
+                  ? "jenkins-icon-size-selector__btn--active"
+                  : "",
               ]
                 .filter(Boolean)
-                .join(' ')}
+                .join(" ")}
               aria-pressed={iconSize === size}
-              onClick={() => { setIconSize(size); }}
+              onClick={() => {
+                setIconSize(size);
+              }}
             >
               <span className="jenkins-visually-hidden">{size}</span>
             </button>
@@ -462,39 +468,35 @@ export default function JobBuildHistory({
               dangerouslySetInnerHTML={{ __html: symbols.WARNING }}
             />
             <span>
-              {t('Failed to load data') ??
-                'Failed to load build time trend data.'}
+              {t("Failed to load data") ??
+                "Failed to load build time trend data."}
             </span>
           </div>
         ) : entries.length === 0 ? (
           <p className="jenkins-notice">
-            {t('No builds') ?? 'No builds have been recorded yet.'}
+            {t("No builds") ?? "No builds have been recorded yet."}
           </p>
         ) : (
           <table
             className={[
-              'jenkins-table',
-              'jenkins-table--auto-width',
-              'sortable',
+              "jenkins-table",
+              "jenkins-table--auto-width",
+              "sortable",
               iconSizeTableClass,
             ]
               .filter(Boolean)
-              .join(' ')}
+              .join(" ")}
             id="trend"
             data-show-agent={String(showAgent)}
             data-icon-size-class={iconSizeClass}
           >
             <thead>
               <tr>
-                <th className="jenkins-table__cell--tight">
-                  {t('S') ?? 'S'}
-                </th>
-                <th data-initial-sort-dir="up">
-                  {t('Build') ?? 'Build'}
-                </th>
-                <th>{t('Time Since') ?? 'Time Since'}</th>
-                <th>{t('Duration') ?? 'Duration'}</th>
-                {showAgent && <th>{t('Agent') ?? 'Agent'}</th>}
+                <th className="jenkins-table__cell--tight">{t("S") ?? "S"}</th>
+                <th data-initial-sort-dir="up">{t("Build") ?? "Build"}</th>
+                <th>{t("Time Since") ?? "Time Since"}</th>
+                <th>{t("Duration") ?? "Duration"}</th>
+                {showAgent && <th>{t("Agent") ?? "Agent"}</th>}
                 <th
                   className="jenkins-table__cell--tight"
                   data-sort-disable="true"
@@ -511,18 +513,13 @@ export default function JobBuildHistory({
                       aria-label={entry.iconName}
                       focusable="false"
                     >
-                      <use
-                        href={`#${getStatusSymbol(entry.iconName)}`}
-                      />
+                      <use href={`#${getStatusSymbol(entry.iconName)}`} />
                     </svg>
                   </td>
 
                   {/* Build link cell */}
                   <td>
-                    <a
-                      href={entry.buildUrl}
-                      className="model-link inside"
-                    >
+                    <a href={entry.buildUrl} className="model-link inside">
                       {entry.buildDisplayName}
                     </a>
                   </td>
@@ -546,7 +543,7 @@ export default function JobBuildHistory({
                           {entry.builtOnStr ?? entry.builtOn}
                         </a>
                       ) : (
-                        ''
+                        ""
                       )}
                     </td>
                   )}
@@ -575,7 +572,7 @@ export default function JobBuildHistory({
           src={graphPngUrl}
           width={500}
           height={400}
-          alt={`[${t('Build time graph') ?? 'Build time graph'}]`}
+          alt={`[${t("Build time graph") ?? "Build time graph"}]`}
           loading="lazy"
           decoding="async"
         />

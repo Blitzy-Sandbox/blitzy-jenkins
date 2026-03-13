@@ -401,9 +401,7 @@ export default function Dashboard({
           key={view.name}
           href={buildUrl(view.url || "")}
           className={
-            view.name === (viewData?.name || viewName)
-              ? "tab active"
-              : "tab"
+            view.name === (viewData?.name || viewName) ? "tab active" : "tab"
           }
         >
           {view.name}
@@ -424,7 +422,10 @@ export default function Dashboard({
    * used by dashboard content sections.
    */
   const emptyState: React.ReactNode = (
-    <Card title={t("Welcome to Jenkins!") || "Welcome to Jenkins!"} id="main-panel-content">
+    <Card
+      title={t("Welcome to Jenkins!") || "Welcome to Jenkins!"}
+      id="main-panel-content"
+    >
       <section className="empty-state-block">
         <p>
           <a

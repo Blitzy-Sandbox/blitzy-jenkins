@@ -34,7 +34,7 @@ import {
   useCallback,
   useMemo,
   type ReactNode,
-} from 'react';
+} from "react";
 
 // ---------------------------------------------------------------------------
 // JenkinsConfig Interface
@@ -111,7 +111,9 @@ export interface JenkinsConfig {
  * to enforce that consumers are wrapped in the provider tree — the
  * `useJenkinsConfig()` hook throws if the context is missing.
  */
-const JenkinsConfigContext = createContext<JenkinsConfig | undefined>(undefined);
+const JenkinsConfigContext = createContext<JenkinsConfig | undefined>(
+  undefined,
+);
 
 // ---------------------------------------------------------------------------
 // Provider Component
@@ -149,7 +151,9 @@ interface JenkinsConfigProviderProps {
  * @param props - Component props containing the children to wrap
  * @returns Provider-wrapped children with access to Jenkins configuration
  */
-export function JenkinsConfigProvider({ children }: JenkinsConfigProviderProps) {
+export function JenkinsConfigProvider({
+  children,
+}: JenkinsConfigProviderProps) {
   // -------------------------------------------------------------------------
   // Static configuration — read once from document.head.dataset
   // -------------------------------------------------------------------------
@@ -158,13 +162,13 @@ export function JenkinsConfigProvider({ children }: JenkinsConfigProviderProps) 
   // the underlying dataset values remain constant.
 
   /** Jenkins base URL / context path — mirrors jenkins.js line 13 exactly */
-  const baseUrl = document.head.dataset.rooturl ?? '';
+  const baseUrl = document.head.dataset.rooturl ?? "";
 
   /** Static resource URL base */
-  const resUrl = document.head.dataset.resurl ?? '';
+  const resUrl = document.head.dataset.resurl ?? "";
 
   /** Images URL base */
-  const imagesUrl = document.head.dataset.imagesurl ?? '';
+  const imagesUrl = document.head.dataset.imagesurl ?? "";
 
   // -------------------------------------------------------------------------
   // Mutable crumb state — supports dynamic refresh
@@ -173,8 +177,8 @@ export function JenkinsConfigProvider({ children }: JenkinsConfigProviderProps) 
   // refreshCrumb() after security-sensitive operations that rotate the token.
   // This replaces the mutable window.crumb object pattern with React state.
 
-  const initialCrumbField = document.head.dataset.crumbrequestfield ?? '';
-  const initialCrumbValue = document.head.dataset.crumb ?? '';
+  const initialCrumbField = document.head.dataset.crumbrequestfield ?? "";
+  const initialCrumbValue = document.head.dataset.crumb ?? "";
 
   const [crumbFieldName, setCrumbFieldName] = useState(initialCrumbField);
   const [crumbValue, setCrumbValue] = useState(initialCrumbValue);
@@ -287,7 +291,7 @@ export function useJenkinsConfig(): JenkinsConfig {
   const context = useContext(JenkinsConfigContext);
   if (context === undefined) {
     throw new Error(
-      'useJenkinsConfig must be used within a JenkinsConfigProvider',
+      "useJenkinsConfig must be used within a JenkinsConfigProvider",
     );
   }
   return context;

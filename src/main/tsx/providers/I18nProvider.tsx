@@ -40,7 +40,7 @@ import {
   useCallback,
   useMemo,
   type ReactNode,
-} from 'react';
+} from "react";
 
 // ---------------------------------------------------------------------------
 // Resource Bundle Response Type
@@ -202,11 +202,11 @@ export function I18nProvider({ children }: I18nProviderProps) {
   // or when the requested attribute is not defined.
 
   const getI18n = useCallback((key: string): string | null => {
-    const i18nElement = document.querySelector('#i18n');
+    const i18nElement = document.querySelector("#i18n");
     if (!i18nElement) {
       return null;
     }
-    return i18nElement.getAttribute('data-' + key);
+    return i18nElement.getAttribute("data-" + key);
   }, []);
 
   // -------------------------------------------------------------------------
@@ -227,19 +227,19 @@ export function I18nProvider({ children }: I18nProviderProps) {
     async (bundleName: string): Promise<Record<string, string>> => {
       // Resolve base URL from document.head.dataset.rooturl
       // Mirrors: jenkins.baseUrl = function() { return document.head.dataset.rooturl; }
-      const baseUrl = document.head.dataset.rooturl ?? '';
+      const baseUrl = document.head.dataset.rooturl ?? "";
 
       // Construct endpoint URL — mirrors jenkins.js line 104:
       //   jenkins.get("/i18n/resourceBundle?baseName=" + bundleName, ...)
       const url = `${baseUrl}/i18n/resourceBundle?baseName=${encodeURIComponent(bundleName)}`;
 
       const response = await fetch(url, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Accept': 'application/json',
+          Accept: "application/json",
         },
         // Mirrors jenkins.js line 34: cache: false
-        cache: 'no-store',
+        cache: "no-store",
       });
 
       if (!response.ok) {
@@ -255,9 +255,9 @@ export function I18nProvider({ children }: I18nProviderProps) {
       //     if (onError) { onError(res.message); }
       //     throw "Unable to load localization data: " + res.message;
       //   }
-      if (result.status !== 'ok') {
+      if (result.status !== "ok") {
         throw new Error(
-          `Unable to load localization data: ${result.message ?? 'Unknown error'}`,
+          `Unable to load localization data: ${result.message ?? "Unknown error"}`,
         );
       }
 
@@ -282,7 +282,7 @@ export function I18nProvider({ children }: I18nProviderProps) {
           // Only intercept string property access — symbol access (like
           // Symbol.toPrimitive or Symbol.iterator) falls through to the
           // underlying object to avoid breaking built-in JavaScript behavior.
-          if (typeof property === 'symbol') {
+          if (typeof property === "symbol") {
             return Reflect.get(target, property) as string;
           }
           if (property in target) {
@@ -318,11 +318,7 @@ export function I18nProvider({ children }: I18nProviderProps) {
     [getI18n, loadTranslations, translations],
   );
 
-  return (
-    <I18nContext.Provider value={value}>
-      {children}
-    </I18nContext.Provider>
-  );
+  return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }
 
 // ---------------------------------------------------------------------------
@@ -366,9 +362,7 @@ export function I18nProvider({ children }: I18nProviderProps) {
 export function useI18nContext(): I18nContextValue {
   const context = useContext(I18nContext);
   if (context === undefined) {
-    throw new Error(
-      'useI18nContext must be used within an I18nProvider',
-    );
+    throw new Error("useI18nContext must be used within an I18nProvider");
   }
   return context;
 }

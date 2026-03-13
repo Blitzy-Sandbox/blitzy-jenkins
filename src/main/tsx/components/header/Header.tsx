@@ -180,9 +180,7 @@ function Header(): React.ReactElement | null {
       measureElement = createElementFromHtml(OVERFLOW_BUTTON_HTML);
 
       // Insert after the first breadcrumb list item (the Jenkins logo)
-      const logo = document.querySelector(
-        ".jenkins-breadcrumbs__list-item",
-      );
+      const logo = document.querySelector(".jenkins-breadcrumbs__list-item");
       if (logo) {
         logo.after(measureElement);
       }
@@ -492,10 +490,7 @@ function Header(): React.ReactElement | null {
     return createPortal(
       <Dropdown items={overflowItems} trigger="click" offset={[0, 10]}>
         <button className="jenkins-button jenkins-button--tertiary">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 512 512"
-          >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
             <circle
               cx="256"
               cy="256"

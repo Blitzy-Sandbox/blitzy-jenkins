@@ -29,6 +29,7 @@ THE SOFTWARE.
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
   <l:layout title="${%Manage Jenkins}" permissions="${app.MANAGE_AND_SYSTEM_READ}">
     <l:main-panel>
+      <div id="react-root" data-view-type="manage-jenkins" data-model-url="${rootURL}/manage/api/json"></div>
       <l:app-bar title="${%Manage Jenkins}">
         <l:search-bar placeholder="${%Search settings}" id="settings-search-bar" />
       </l:app-bar>

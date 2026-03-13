@@ -23,15 +23,15 @@ This document defines the user flows used to validate **functional symmetry** be
 
 Every user flow section in this document follows the same structure with seven required fields:
 
-| Field | Description |
-|-------|-------------|
-| **Flow Name** | Human-readable identifier for the user flow |
-| **Entry Point** | Starting URL or page for the flow |
-| **Preconditions** | Required Jenkins state before the flow begins (e.g., existing jobs, running builds) |
-| **Step Sequence** | Numbered steps the user or Playwright test performs |
-| **Terminal Success State** | What defines successful completion of the flow |
-| **Screenshot References** | Paths to baseline and refactored screenshots in `docs/screenshots/` |
-| **Corresponding E2E Test** | Path to the Playwright test specification file in `e2e/flows/` |
+| Field                      | Description                                                                         |
+| -------------------------- | ----------------------------------------------------------------------------------- |
+| **Flow Name**              | Human-readable identifier for the user flow                                         |
+| **Entry Point**            | Starting URL or page for the flow                                                   |
+| **Preconditions**          | Required Jenkins state before the flow begins (e.g., existing jobs, running builds) |
+| **Step Sequence**          | Numbered steps the user or Playwright test performs                                 |
+| **Terminal Success State** | What defines successful completion of the flow                                      |
+| **Screenshot References**  | Paths to baseline and refactored screenshots in `docs/screenshots/`                 |
+| **Corresponding E2E Test** | Path to the Playwright test specification file in `e2e/flows/`                      |
 
 ---
 
@@ -257,16 +257,16 @@ Every user flow section in this document follows the same structure with seven r
 
 ## Summary — Flow-to-Test Mapping
 
-| # | Flow Name | Entry Point | E2E Test File | Screenshot Directory |
-|---|-----------|-------------|---------------|---------------------|
-| 1 | Dashboard Navigation and Interaction | `GET /` | `e2e/flows/dashboard.spec.ts` | `docs/screenshots/dashboard/` |
-| 2 | Job Creation (Freestyle and Pipeline) | `GET /view/all/newJob` | `e2e/flows/job-create.spec.ts` | `docs/screenshots/job-index/` |
-| 3 | Build Trigger (Manual and SCM) | `GET /job/{jobName}/` | `e2e/flows/build-trigger.spec.ts` | `docs/screenshots/job-index/` |
-| 4 | Real-Time Console Output Viewing | `GET /job/{jobName}/{buildNumber}/console` | `e2e/flows/console-output.spec.ts` | `docs/screenshots/build-console/` |
-| 5 | Build History Inspection | `GET /job/{jobName}/` | `e2e/flows/build-history.spec.ts` | `docs/screenshots/job-index/` |
-| 6 | Job Configuration Modification | `GET /job/{jobName}/configure` | `e2e/flows/job-configure.spec.ts` | `docs/screenshots/job-configure/` |
-| 7 | Plugin Manager Navigation | `GET /manage/pluginManager/` | `e2e/flows/plugin-manager.spec.ts` | `docs/screenshots/plugin-manager/` |
-| 8 | Custom Views Interaction | `GET /` | `e2e/flows/custom-views.spec.ts` | `docs/screenshots/dashboard/` |
+| #   | Flow Name                             | Entry Point                                | E2E Test File                      | Screenshot Directory               |
+| --- | ------------------------------------- | ------------------------------------------ | ---------------------------------- | ---------------------------------- |
+| 1   | Dashboard Navigation and Interaction  | `GET /`                                    | `e2e/flows/dashboard.spec.ts`      | `docs/screenshots/dashboard/`      |
+| 2   | Job Creation (Freestyle and Pipeline) | `GET /view/all/newJob`                     | `e2e/flows/job-create.spec.ts`     | `docs/screenshots/job-index/`      |
+| 3   | Build Trigger (Manual and SCM)        | `GET /job/{jobName}/`                      | `e2e/flows/build-trigger.spec.ts`  | `docs/screenshots/job-index/`      |
+| 4   | Real-Time Console Output Viewing      | `GET /job/{jobName}/{buildNumber}/console` | `e2e/flows/console-output.spec.ts` | `docs/screenshots/build-console/`  |
+| 5   | Build History Inspection              | `GET /job/{jobName}/`                      | `e2e/flows/build-history.spec.ts`  | `docs/screenshots/job-index/`      |
+| 6   | Job Configuration Modification        | `GET /job/{jobName}/configure`             | `e2e/flows/job-configure.spec.ts`  | `docs/screenshots/job-configure/`  |
+| 7   | Plugin Manager Navigation             | `GET /manage/pluginManager/`               | `e2e/flows/plugin-manager.spec.ts` | `docs/screenshots/plugin-manager/` |
+| 8   | Custom Views Interaction              | `GET /`                                    | `e2e/flows/custom-views.spec.ts`   | `docs/screenshots/dashboard/`      |
 
 ---
 
@@ -293,10 +293,10 @@ The following dynamic content types are masked during screenshot comparison to p
 Masking is implemented via Playwright's `mask` option on `toHaveScreenshot()`:
 
 ```typescript
-await expect(page).toHaveScreenshot('view-name.png', {
+await expect(page).toHaveScreenshot("view-name.png", {
   mask: [
-    page.locator('.timestamp'),
-    page.locator('.build-row-cell .pane.build-name'),
+    page.locator(".timestamp"),
+    page.locator(".build-row-cell .pane.build-name"),
   ],
   maxDiffPixels: 100,
 });

@@ -40,8 +40,7 @@ import { SubmitButton } from "@/forms/SubmitButton";
  * - Comparing against the current URL to determine reset-button visibility
  * - Resetting the URL when the "Reset to default" link is clicked
  */
-const DEFAULT_UPDATE_SITE_URL =
-  "https://updates.jenkins.io/update-center.json";
+const DEFAULT_UPDATE_SITE_URL = "https://updates.jenkins.io/update-center.json";
 
 // =============================================================================
 // Props Interface
@@ -256,17 +255,11 @@ export function PluginAdvanced({
           >
             {/* CSRF crumb hidden field for Stapler POST protection */}
             {crumbFieldName && crumbValue && (
-              <input
-                type="hidden"
-                name={crumbFieldName}
-                value={crumbValue}
-              />
+              <input type="hidden" name={crumbFieldName} value={crumbValue} />
             )}
 
             {/* Deploy description text (advanced.jelly line 51) */}
-            <div style={{ marginBlockEnd: "1em" }}>
-              {t("deploytext") ?? ""}
-            </div>
+            <div style={{ marginBlockEnd: "1em" }}>{t("deploytext") ?? ""}</div>
 
             {/* File input for .hpi/.jpi plugin files */}
             {/* (advanced.jelly lines 53-55) */}
@@ -309,11 +302,7 @@ export function PluginAdvanced({
         <form method="post" action="siteConfigure" name="siteConfigure">
           {/* CSRF crumb hidden field for Stapler POST protection */}
           {crumbFieldName && crumbValue && (
-            <input
-              type="hidden"
-              name={crumbFieldName}
-              value={crumbValue}
-            />
+            <input type="hidden" name={crumbFieldName} value={crumbValue} />
           )}
 
           <FormEntry title={t("URL") ?? "URL"}>
@@ -322,11 +311,7 @@ export function PluginAdvanced({
               {/* Visible only when the current URL differs from the */}
               {/* default constant — replaces _updateSite.js toggle  */}
               {isAdmin && canResetToDefault && showResetButton && (
-                <a
-                  id="reset-to-default"
-                  href="#"
-                  onClick={handleReset}
-                >
+                <a id="reset-to-default" href="#" onClick={handleReset}>
                   {t("Reset to default") ?? "Reset to default"}
                 </a>
               )}

@@ -26,9 +26,9 @@
  * @module Password
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-import { useI18n } from '@/hooks/useI18n';
+import { useI18n } from "@/hooks/useI18n";
 
 // ---------------------------------------------------------------------------
 // PasswordProps Interface
@@ -180,15 +180,15 @@ export function Password({
   const [editing, setEditing] = useState(false);
 
   // Track the current input value for controlled component behavior
-  const [inputValue, setInputValue] = useState(value ?? '');
+  const [inputValue, setInputValue] = useState(value ?? "");
 
   // Memoized handler for the "Change Password" button click.
   // Transitions from the concealed placeholder view to the editable input.
   const handleChangePassword = useCallback((): void => {
     setEditing(true);
     // Clear the existing concealed value so the user types a fresh password
-    setInputValue('');
-    onChange?.('');
+    setInputValue("");
+    onChange?.("");
   }, [onChange]);
 
   // Memoized handler for input value changes
@@ -208,20 +208,20 @@ export function Password({
     if (extra) {
       classes.push(extra);
     }
-    classes.push('jenkins-input');
+    classes.push("jenkins-input");
     if (hasValidation) {
-      classes.push('validated');
+      classes.push("validated");
     }
     if (className) {
       classes.push(className);
     }
-    return classes.join(' ');
+    return classes.join(" ");
   };
 
   // Localized strings with fallbacks
-  const concealedText = t('Concealed') ?? 'Concealed';
-  const changePasswordText = t('Change Password') ?? 'Change Password';
-  const naText = t('N/A') ?? 'N/A';
+  const concealedText = t("Concealed") ?? "Concealed";
+  const changePasswordText = t("Change Password") ?? "Change Password";
+  const naText = t("N/A") ?? "N/A";
 
   // -------------------------------------------------------------------
   // Mode 1: Read-Only
@@ -248,7 +248,7 @@ export function Password({
           {/* Hidden input preserves the existing value for form submission */}
           <input
             className={buildInputClassName(
-              'complex-password-field hidden-password-field',
+              "complex-password-field hidden-password-field",
             )}
             name={resolvedName}
             value={value}
@@ -284,7 +284,7 @@ export function Password({
     // Matches Jelly: <m:input ... type="text" ... />
     return (
       <input
-        className={buildInputClassName('complex-password-field')}
+        className={buildInputClassName("complex-password-field")}
         name={resolvedName}
         value={inputValue}
         type="text"
@@ -303,7 +303,7 @@ export function Password({
   // -------------------------------------------------------------------
   return (
     <input
-      className={buildInputClassName('')}
+      className={buildInputClassName("")}
       name={resolvedName}
       value={inputValue}
       type="password"

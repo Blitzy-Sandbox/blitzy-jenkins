@@ -257,6 +257,12 @@ export default defineConfig({
     exclude: ["e2e/**", "node_modules/**", "**/dist/**"],
     environment: "jsdom",
     globals: true,
+    /**
+     * Global setup file that suppresses harmless React 19 scheduler
+     * teardown errors (e.g., "window is not defined") fired after jsdom
+     * environment destruction.
+     */
+    setupFiles: ["src/main/tsx/test-setup.ts"],
   },
 
   /**

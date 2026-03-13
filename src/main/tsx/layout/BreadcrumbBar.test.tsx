@@ -34,9 +34,7 @@ describe("BreadcrumbBar", () => {
 
   it("renders nothing when items is empty", () => {
     const { container } = render(<BreadcrumbBar items={[]} />);
-    const items = container.querySelectorAll(
-      ".jenkins-breadcrumbs__list-item",
-    );
+    const items = container.querySelectorAll(".jenkins-breadcrumbs__list-item");
     expect(items.length).toBe(0);
   });
 

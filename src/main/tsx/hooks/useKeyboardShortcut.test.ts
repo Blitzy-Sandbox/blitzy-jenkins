@@ -169,9 +169,7 @@ describe("useKeyboardShortcut", () => {
 
   it("does not call callback when enabled is false", () => {
     const callback = vi.fn();
-    renderHook(() =>
-      useKeyboardShortcut("/", callback, { enabled: false }),
-    );
+    renderHook(() => useKeyboardShortcut("/", callback, { enabled: false }));
 
     act(() => {
       document.dispatchEvent(

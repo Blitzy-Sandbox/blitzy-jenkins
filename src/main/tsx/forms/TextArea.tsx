@@ -1,13 +1,7 @@
-import {
-  useState,
-  useRef,
-  useEffect,
-  useCallback,
-  useMemo,
-} from 'react';
-import type { CSSProperties, ChangeEvent, MouseEvent } from 'react';
-import { useI18n } from '@/hooks/useI18n';
-import { useStaplerMutation } from '@/hooks/useStaplerMutation';
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import type { CSSProperties, ChangeEvent, MouseEvent } from "react";
+import { useI18n } from "@/hooks/useI18n";
+import { useStaplerMutation } from "@/hooks/useStaplerMutation";
 
 /**
  * Props interface for the TextArea component.
@@ -32,7 +26,7 @@ export interface TextAreaProps {
   /** Space/comma-separated field names whose values are sent during AJAX validation */
   checkDependsOn?: string;
   /** HTTP method for AJAX validation requests (defaults to 'post' since Jenkins 2.285) */
-  checkMethod?: 'get' | 'post';
+  checkMethod?: "get" | "post";
   /** CodeMirror language mode identifier (e.g. 'text/x-java', 'text/x-groovy') */
   codemirrorMode?: string;
   /** Additional CodeMirror editor configuration as a JSON string */
@@ -146,14 +140,14 @@ export function TextArea(props: TextAreaProps) {
     data: previewData,
     isPending: isPreviewPending,
   } = useStaplerMutation<string, { text: string }>({
-    url: previewEndpoint ?? '',
-    responseType: 'text',
-    contentType: 'form-urlencoded',
+    url: previewEndpoint ?? "",
+    responseType: "text",
+    contentType: "form-urlencoded",
   });
 
   // Internal value state for uncontrolled mode (when valueProp is not provided)
   const [internalValue, setInternalValue] = useState<string>(
-    defaultValue ?? '',
+    defaultValue ?? "",
   );
 
   // Derive the current textarea value:
@@ -178,7 +172,7 @@ export function TextArea(props: TextAreaProps) {
       return;
     }
     textarea.dispatchEvent(
-      new CustomEvent('jenkins:codemirror-init', {
+      new CustomEvent("jenkins:codemirror-init", {
         detail: { mode: codemirrorMode, config: codemirrorConfig },
         bubbles: true,
       }),
@@ -202,17 +196,17 @@ export function TextArea(props: TextAreaProps) {
   // CSS class string: 'jenkins-input' base + conditional 'validated' and 'codemirror'
   // + any user-provided className
   const computedClassName = useMemo(() => {
-    const classes: string[] = ['jenkins-input'];
+    const classes: string[] = ["jenkins-input"];
     if (checkUrl) {
-      classes.push('validated');
+      classes.push("validated");
     }
     if (codemirrorMode) {
-      classes.push('codemirror');
+      classes.push("codemirror");
     }
     if (className) {
       classes.push(className);
     }
-    return classes.join(' ');
+    return classes.join(" ");
   }, [checkUrl, codemirrorMode, className]);
 
   // Textarea value with leading newline preservation.
@@ -220,7 +214,7 @@ export function TextArea(props: TextAreaProps) {
   // ensures the original content is rendered correctly (matches Jelly &#10; injection).
   const renderedValue = useMemo(() => {
     if (currentValue && startsWithNewline(currentValue)) {
-      return '\n' + currentValue;
+      return "\n" + currentValue;
     }
     return currentValue;
   }, [currentValue]);
@@ -252,18 +246,15 @@ export function TextArea(props: TextAreaProps) {
   );
 
   // Hide preview: collapses the preview panel and shows the textarea again
-  const handleHidePreview = useCallback(
-    (e: MouseEvent<HTMLAnchorElement>) => {
-      e.preventDefault();
-      setShowPreview(false);
-    },
-    [],
-  );
+  const handleHidePreview = useCallback((e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    setShowPreview(false);
+  }, []);
 
   // --- Localized labels ---
 
-  const previewLabel = t('Preview') ?? 'Preview';
-  const hidePreviewLabel = t('Hide preview') ?? 'Hide preview';
+  const previewLabel = t("Preview") ?? "Preview";
+  const hidePreviewLabel = t("Hide preview") ?? "Hide preview";
 
   // Whether the preview section should be rendered at all
   const hasPreview = Boolean(previewEndpoint) && !readOnly;
@@ -316,7 +307,7 @@ export function TextArea(props: TextAreaProps) {
             <div
               className="textarea-preview"
               dangerouslySetInnerHTML={{
-                __html: isPreviewPending ? '' : (previewData ?? ''),
+                __html: isPreviewPending ? "" : (previewData ?? ""),
               }}
             />
           )}

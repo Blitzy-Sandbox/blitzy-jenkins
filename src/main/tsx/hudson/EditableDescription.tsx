@@ -1,7 +1,7 @@
-import { useState, useCallback, useRef } from 'react';
-import { useStaplerMutation } from '@/hooks/useStaplerMutation';
-import { useCrumb } from '@/hooks/useCrumb';
-import { useI18n } from '@/hooks/useI18n';
+import { useState, useCallback, useRef } from "react";
+import { useStaplerMutation } from "@/hooks/useStaplerMutation";
+import { useCrumb } from "@/hooks/useCrumb";
+import { useI18n } from "@/hooks/useI18n";
 
 /**
  * Props for the EditableDescription component.
@@ -63,7 +63,7 @@ function EditableDescription({
 
   // Ref that tracks the latest editText value so async onSuccess can read it
   // without stale-closure issues.
-  const editTextRef = useRef<string>(description ?? '');
+  const editTextRef = useRef<string>(description ?? "");
 
   // ---------------------------------------------------------------------------
   // Component state
@@ -73,15 +73,15 @@ function EditableDescription({
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   /** Raw text currently being edited in the textarea */
-  const [editText, setEditText] = useState<string>(description ?? '');
+  const [editText, setEditText] = useState<string>(description ?? "");
 
   /**
    * Currently displayed description (may diverge from the `description` prop
    * after a successful save because the component owns local state).
    */
-  const [currentDescription, setCurrentDescription] = useState<string | undefined>(
-    description,
-  );
+  const [currentDescription, setCurrentDescription] = useState<
+    string | undefined
+  >(description);
 
   // ---------------------------------------------------------------------------
   // Mutation — save description via Stapler POST
@@ -96,9 +96,9 @@ function EditableDescription({
    * server-side.
    */
   const { mutate, isPending } = useStaplerMutation<string, string>({
-    url: submissionUrl || 'submitDescription',
-    contentType: 'form-urlencoded',
-    responseType: 'text',
+    url: submissionUrl || "submitDescription",
+    contentType: "form-urlencoded",
+    responseType: "text",
     onSuccess: (responseData: string) => {
       // If the server returns rendered HTML, display it; otherwise fall back to
       // the raw text the user typed (read from the ref to avoid stale closure).
@@ -111,7 +111,7 @@ function EditableDescription({
     },
     onError: (error: Error) => {
       // Log the error; the component stays in edit mode so the user can retry.
-      console.error('Failed to save description:', error.message);
+      console.error("Failed to save description:", error.message);
     },
   });
 
@@ -127,7 +127,7 @@ function EditableDescription({
    * simply toggles a boolean and the declarative JSX swaps the visible panels.
    */
   const handleEdit = useCallback(() => {
-    const text = currentDescription ?? '';
+    const text = currentDescription ?? "";
     setEditText(text);
     editTextRef.current = text;
     setIsEditing(true);
@@ -146,7 +146,7 @@ function EditableDescription({
    * form, and removed `jenkins-hidden` from content and the edit button.
    */
   const handleCancel = useCallback(() => {
-    const text = currentDescription ?? '';
+    const text = currentDescription ?? "";
     setEditText(text);
     editTextRef.current = text;
     setIsEditing(false);
@@ -163,7 +163,7 @@ function EditableDescription({
    */
   const handleSave = useCallback(() => {
     const params = new URLSearchParams();
-    params.append('description', editText);
+    params.append("description", editText);
 
     // Dual CSRF crumb injection: header (handled by hook) + body (explicit).
     if (crumbFieldName && crumbValue) {
@@ -195,8 +195,8 @@ function EditableDescription({
 
   /** Localised button label — mirrors Jelly's ${%Edit description} / ${%Add description} */
   const editButtonText = hasDescription
-    ? (t('Edit description') ?? 'Edit description')
-    : (t('Add description') ?? 'Add description');
+    ? (t("Edit description") ?? "Edit description")
+    : (t("Add description") ?? "Add description");
 
   // ---------------------------------------------------------------------------
   // Render
@@ -209,7 +209,7 @@ function EditableDescription({
       {/* ------------------------------------------------------------------ */}
       <div
         id="description-content"
-        className={isEditing ? 'jenkins-hidden' : undefined}
+        className={isEditing ? "jenkins-hidden" : undefined}
         /*
          * dangerouslySetInnerHTML is acceptable here because the content is
          * pre-formatted by Jenkins' app.markupFormatter.translate() on the
@@ -228,7 +228,7 @@ function EditableDescription({
       {/* ------------------------------------------------------------------ */}
       <div
         id="description-edit-form"
-        className={isEditing ? undefined : 'jenkins-hidden'}
+        className={isEditing ? undefined : "jenkins-hidden"}
       >
         {isEditing && (
           <>
@@ -240,14 +240,10 @@ function EditableDescription({
               rows={8}
             />
             <div className="jenkins-buttons-row">
-              <button
-                type="submit"
-                onClick={handleSave}
-                disabled={isPending}
-              >
+              <button type="submit" onClick={handleSave} disabled={isPending}>
                 {isPending
-                  ? (t('Saving...') ?? 'Saving...')
-                  : (t('Save') ?? 'Save')}
+                  ? (t("Saving...") ?? "Saving...")
+                  : (t("Save") ?? "Save")}
               </button>
               <button
                 type="button"
@@ -255,7 +251,7 @@ function EditableDescription({
                 onClick={handleCancel}
                 disabled={isPending}
               >
-                {t('Cancel') ?? 'Cancel'}
+                {t("Cancel") ?? "Cancel"}
               </button>
             </div>
           </>
@@ -269,15 +265,15 @@ function EditableDescription({
       {hasPermission && !hideButton && (
         <div
           className={
-            'jenkins-buttons-row jenkins-buttons-row--invert description-edit-button' +
-            (isEditing ? ' jenkins-hidden' : '')
+            "jenkins-buttons-row jenkins-buttons-row--invert description-edit-button" +
+            (isEditing ? " jenkins-hidden" : "")
           }
         >
           <button
             id="description-link"
             type="button"
-            data-url={submissionUrl || 'submitDescription'}
-            data-description={currentDescription ?? ''}
+            data-url={submissionUrl || "submitDescription"}
+            data-description={currentDescription ?? ""}
             onClick={handleEdit}
           >
             {editButtonText}

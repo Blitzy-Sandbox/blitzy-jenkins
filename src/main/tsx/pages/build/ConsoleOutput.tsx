@@ -28,13 +28,13 @@
  * @module pages/build/ConsoleOutput
  */
 
-import { useState, useEffect, useRef, useCallback } from 'react';
-import Layout from '@/layout/Layout';
-import { Spinner } from '@/layout/Spinner';
-import { useStaplerQuery } from '@/hooks/useStaplerQuery';
-import { useI18n } from '@/hooks/useI18n';
-import { useJenkinsConfig } from '@/providers/JenkinsConfigProvider';
-import type { Build } from '@/types/models';
+import { useState, useEffect, useRef, useCallback } from "react";
+import Layout from "@/layout/Layout";
+import { Spinner } from "@/layout/Spinner";
+import { useStaplerQuery } from "@/hooks/useStaplerQuery";
+import { useI18n } from "@/hooks/useI18n";
+import { useJenkinsConfig } from "@/providers/JenkinsConfigProvider";
+import type { Build } from "@/types/models";
 
 // =============================================================================
 // Constants
@@ -129,10 +129,10 @@ export default function ConsoleOutput({
    */
   const resolvedBuildUrl = (() => {
     if (!buildUrl) {
-      return '';
+      return "";
     }
-    const normalized = buildUrl.endsWith('/') ? buildUrl : `${buildUrl}/`;
-    return normalized.startsWith('/')
+    const normalized = buildUrl.endsWith("/") ? buildUrl : `${buildUrl}/`;
+    return normalized.startsWith("/")
       ? `${baseUrl}${normalized}`
       : `${baseUrl}/${normalized}`;
   })();
@@ -149,8 +149,8 @@ export default function ConsoleOutput({
     isLoading,
     isError,
   } = useStaplerQuery<Build>({
-    queryKey: ['build-info', buildUrl],
-    url: `${buildUrl ?? '/'}api/json?tree=building,result,displayName,fullDisplayName`,
+    queryKey: ["build-info", buildUrl],
+    url: `${buildUrl ?? "/"}api/json?tree=building,result,displayName,fullDisplayName`,
     enabled: !!buildUrl,
     staleTime: 5_000,
     refetchInterval: false,
@@ -161,7 +161,7 @@ export default function ConsoleOutput({
   // ---------------------------------------------------------------------------
 
   /** Accumulated HTML content from progressiveHtml responses */
-  const [outputHtml, setOutputHtml] = useState<string>('');
+  const [outputHtml, setOutputHtml] = useState<string>("");
 
   /** Whether more data is expected (from X-More-Data header) */
   const [hasMoreData, setHasMoreData] = useState<boolean>(true);
@@ -181,7 +181,7 @@ export default function ConsoleOutput({
   const [prevBuildUrl, setPrevBuildUrl] = useState<string>(resolvedBuildUrl);
   if (prevBuildUrl !== resolvedBuildUrl) {
     setPrevBuildUrl(resolvedBuildUrl);
-    setOutputHtml('');
+    setOutputHtml("");
     setTruncatedKB(0);
     setHasMoreData(true);
   }
@@ -213,7 +213,10 @@ export default function ConsoleOutput({
   const isBuilding = buildData?.building ?? false;
   const buildResult = buildData?.result ?? null;
   const displayName =
-    buildData?.displayName ?? (jobName ? `${jobName} #${buildNumber ?? ''}`.trim() : `#${buildNumber ?? 'unknown'}`);
+    buildData?.displayName ??
+    (jobName
+      ? `${jobName} #${buildNumber ?? ""}`.trim()
+      : `#${buildNumber ?? "unknown"}`);
   const fullDisplayName = buildData?.fullDisplayName ?? displayName;
 
   // ---------------------------------------------------------------------------
@@ -267,14 +270,14 @@ export default function ConsoleOutput({
         if (isProbePhase) {
           const probeResponse = await fetch(
             `${resolvedBuildUrl}logText/progressiveHtml?start=${PROBE_OFFSET}`,
-            { headers, method: 'GET' },
+            { headers, method: "GET" },
           );
           if (cancelled) {
             return;
           }
 
           const logSize = parseInt(
-            probeResponse.headers.get('X-Text-Size') ?? '0',
+            probeResponse.headers.get("X-Text-Size") ?? "0",
             10,
           );
           const skipBytes = Math.max(0, logSize - CONSOLE_TAIL_KB * 1024);
@@ -290,7 +293,7 @@ export default function ConsoleOutput({
         // Phase 2 — Fetch progressive HTML content from current offset
         const response = await fetch(
           `${resolvedBuildUrl}logText/progressiveHtml?start=${currentOffset}`,
-          { headers, method: 'GET' },
+          { headers, method: "GET" },
         );
         if (cancelled) {
           return;
@@ -298,11 +301,10 @@ export default function ConsoleOutput({
 
         const html = await response.text();
         const newOffset = parseInt(
-          response.headers.get('X-Text-Size') ?? String(currentOffset),
+          response.headers.get("X-Text-Size") ?? String(currentOffset),
           10,
         );
-        const moreData =
-          response.headers.get('X-More-Data') === 'true';
+        const moreData = response.headers.get("X-More-Data") === "true";
 
         // Append new content to accumulated output
         if (html.length > 0) {
@@ -318,18 +320,14 @@ export default function ConsoleOutput({
         } else if (!moreData) {
           // Mirrors console-log.jelly line 28:
           //   onFinishEvent="jenkins:consoleFinished"
-          document.dispatchEvent(
-            new CustomEvent('jenkins:consoleFinished'),
-          );
+          document.dispatchEvent(new CustomEvent("jenkins:consoleFinished"));
         }
       } catch (error: unknown) {
         // Log transient failures and retry with backoff
         if (!cancelled) {
           const message =
             error instanceof Error ? error.message : String(error);
-          console.error(
-            `Console progressive fetch failed: ${message}`,
-          );
+          console.error(`Console progressive fetch failed: ${message}`);
           timer = setTimeout(poll, RETRY_INTERVAL_MS);
         }
       }
@@ -384,7 +382,7 @@ export default function ConsoleOutput({
       return;
     }
 
-    const textContent = outRef.current.textContent ?? '';
+    const textContent = outRef.current.textContent ?? "";
 
     try {
       await navigator.clipboard.writeText(textContent);
@@ -395,7 +393,7 @@ export default function ConsoleOutput({
       range.selectNodeContents(outRef.current);
       selection?.removeAllRanges();
       selection?.addRange(range);
-      document.execCommand('copy');
+      document.execCommand("copy");
       selection?.removeAllRanges();
     }
   }, []);
@@ -404,10 +402,10 @@ export default function ConsoleOutput({
   // i18n labels with fallback defaults
   // ---------------------------------------------------------------------------
 
-  const pageTitle = t('console') ?? 'Console';
-  const downloadLabel = t('download') ?? 'Download';
-  const copyLabel = t('copy') ?? 'Copy';
-  const viewPlainTextLabel = t('view-as-plain-text') ?? 'View as plain text';
+  const pageTitle = t("console") ?? "Console";
+  const downloadLabel = t("download") ?? "Download";
+  const copyLabel = t("copy") ?? "Copy";
+  const viewPlainTextLabel = t("view-as-plain-text") ?? "View as plain text";
 
   /**
    * Constructs the "skipSome" truncation message with the KB parameter.
@@ -415,9 +413,9 @@ export default function ConsoleOutput({
    * The i18n template is expected to contain a `{0}` placeholder for the KB value.
    */
   const skipSomeMessage = (() => {
-    const template = t('skipsome');
+    const template = t("skipsome");
     if (template) {
-      return template.replace('{0}', String(truncatedKB));
+      return template.replace("{0}", String(truncatedKB));
     }
     return `Skipped ${truncatedKB} KB of output. Show complete output.`;
   })();
@@ -456,8 +454,7 @@ export default function ConsoleOutput({
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
               <polyline points="7 10 12 15 17 10" />
               <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-            {' '}
+            </svg>{" "}
             {downloadLabel}
           </a>
 
@@ -503,7 +500,7 @@ export default function ConsoleOutput({
       {truncatedKB > 0 && (
         <a
           className="jenkins-button jenkins-!-accent-color jenkins-!-padding-2 jenkins-!-margin-bottom-2"
-          style={{ width: '100%', justifyContent: 'start' }}
+          style={{ width: "100%", justifyContent: "start" }}
           href="consoleFull"
         >
           <svg
@@ -521,8 +518,7 @@ export default function ConsoleOutput({
             <circle cx="12" cy="12" r="10" />
             <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
             <line x1="12" y1="17" x2="12.01" y2="17" />
-          </svg>
-          {' '}
+          </svg>{" "}
           {skipSomeMessage}
         </a>
       )}

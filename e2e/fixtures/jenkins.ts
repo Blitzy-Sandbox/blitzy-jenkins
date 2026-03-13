@@ -14,7 +14,12 @@
  * @see AAP Section 0.7.1 for Jelly-to-React mount strategy (react-root hydration)
  */
 
-import { test as base, expect, type Page, type Locator } from "@playwright/test";
+import {
+  test as base,
+  expect,
+  type Page,
+  type Locator,
+} from "@playwright/test";
 
 // ---------------------------------------------------------------------------
 // Configuration Constants
@@ -192,13 +197,8 @@ export class JenkinsPage {
    * @param jobName - The name of the Jenkins job
    * @param buildNumber - The build number to inspect
    */
-  async navigateToBuild(
-    jobName: string,
-    buildNumber: number,
-  ): Promise<void> {
-    await this.goto(
-      `/job/${encodeURIComponent(jobName)}/${buildNumber}/`,
-    );
+  async navigateToBuild(jobName: string, buildNumber: number): Promise<void> {
+    await this.goto(`/job/${encodeURIComponent(jobName)}/${buildNumber}/`);
     await this.page
       .locator("#main-panel")
       .waitFor({ state: "visible", timeout: DEFAULT_WAIT_TIMEOUT });
@@ -339,9 +339,7 @@ export class JenkinsPage {
    * @returns Playwright Locator for the notification bar element
    */
   getNotificationBar(): Locator {
-    return this.page
-      .locator("#notification-bar, .notif-alert-default")
-      .first();
+    return this.page.locator("#notification-bar, .notif-alert-default").first();
   }
 
   /**
@@ -474,9 +472,7 @@ export class JenkinsPage {
     const timestampLocator = this.page.locator(
       "time, .timestamp, [data-timestamp]",
     );
-    const buildNumberLocator = this.page.locator(
-      ".build-link .display-name",
-    );
+    const buildNumberLocator = this.page.locator(".build-link .display-name");
     const queueLocator = this.page.locator(".queue-id");
     const progressLocator = this.page.locator(".progress-bar");
 

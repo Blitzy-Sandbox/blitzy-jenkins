@@ -21,12 +21,7 @@
  * @module components/dropdowns/Dropdown
  */
 
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useCallback,
-} from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { xmlEscape } from "@/utils/security";
 import { CHEVRON_DOWN, FUNNEL } from "@/utils/symbols";
@@ -139,10 +134,7 @@ interface ContextMenuItem {
 // ---------------------------------------------------------------------------
 
 function isNavigableItem(item: DropdownItem): boolean {
-  return (
-    item.type === "link" ||
-    item.type === "button"
-  );
+  return item.type === "link" || item.type === "button";
 }
 
 // ---------------------------------------------------------------------------
@@ -186,9 +178,7 @@ export function debounce<T extends (...args: unknown[]) => void>(
  * @param children - HTMLCollection from a `<template>` element.
  * @returns Array of dropdown item descriptors.
  */
-export function convertHtmlToItems(
-  children: HTMLCollection,
-): DropdownItem[] {
+export function convertHtmlToItems(children: HTMLCollection): DropdownItem[] {
   const items: DropdownItem[] = [];
 
   Array.from(children).forEach((child) => {
@@ -226,8 +216,7 @@ export function convertHtmlToItems(
           label: attributes.dropdownText,
           icon: attributes.dropdownIcon,
           iconXml: attributes.dropdownIcon,
-          subMenu: () =>
-            convertHtmlToItems(templateEl.content.children),
+          subMenu: () => convertHtmlToItems(templateEl.content.children),
         });
         break;
       }
@@ -247,9 +236,7 @@ export function convertHtmlToItems(
         items.push({
           type: "CUSTOM",
           contents: (
-            <div
-              dangerouslySetInnerHTML={{ __html: wrapper.innerHTML }}
-            />
+            <div dangerouslySetInnerHTML={{ __html: wrapper.innerHTML }} />
           ),
         });
         break;
@@ -274,9 +261,7 @@ export function convertHtmlToItems(
  * @param items - Array of context menu items from the Stapler JSON API.
  * @returns Typed dropdown item array.
  */
-export function mapContextMenuItems(
-  items: ContextMenuItem[],
-): DropdownItem[] {
+export function mapContextMenuItems(items: ContextMenuItem[]): DropdownItem[] {
   return items.map((item): DropdownItem => {
     if (item.type === "HEADER") {
       return { type: "HEADER", label: item.displayName };
@@ -306,9 +291,7 @@ export function mapContextMenuItems(
           } else {
             fetch(item.url ?? "", { method: "post" }).then((rsp) => {
               if (!rsp.ok) {
-                console.warn(
-                  `Context menu action failed: ${item.displayName}`,
-                );
+                console.warn(`Context menu action failed: ${item.displayName}`);
               }
             });
           }
@@ -699,9 +682,7 @@ const Dropdown: React.FC<DropdownProps> = ({
           if (selectedIndex >= 0 && selectedIndex < items.length) {
             const selectedItem = items[selectedIndex];
             if (selectedItem.onClick) {
-              selectedItem.onClick(
-                e as unknown as React.MouseEvent,
-              );
+              selectedItem.onClick(e as unknown as React.MouseEvent);
             } else if (selectedItem.url) {
               window.location.href = selectedItem.url;
             }
@@ -801,9 +782,7 @@ const Dropdown: React.FC<DropdownProps> = ({
 
     switch (item.type) {
       case "CUSTOM":
-        return (
-          <React.Fragment key={key}>{item.contents}</React.Fragment>
-        );
+        return <React.Fragment key={key}>{item.contents}</React.Fragment>;
 
       case "HEADER":
         return (
@@ -813,9 +792,7 @@ const Dropdown: React.FC<DropdownProps> = ({
         );
 
       case "SEPARATOR":
-        return (
-          <div key={key} className="jenkins-dropdown__separator" />
-        );
+        return <div key={key} className="jenkins-dropdown__separator" />;
 
       case "DISABLED":
         return (

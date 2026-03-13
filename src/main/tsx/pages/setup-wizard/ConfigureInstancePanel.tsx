@@ -17,10 +17,10 @@
  * - HTTP errors written as HTML into iframe body (handleConfigureInstanceResponseError)
  * - Optional HTML message rendered via dangerouslySetInnerHTML (triple-mustache pattern)
  */
-import { useState, useRef, useCallback } from 'react';
-import { useSaveConfigureInstance } from '@/api/security';
-import { useCrumb } from '@/hooks/useCrumb';
-import type { StaplerResponse, CrumbRefreshResponse } from '@/api/types';
+import { useState, useRef, useCallback } from "react";
+import { useSaveConfigureInstance } from "@/api/security";
+import { useCrumb } from "@/hooks/useCrumb";
+import type { StaplerResponse, CrumbRefreshResponse } from "@/api/types";
 
 /**
  * Props interface for the ConfigureInstancePanel component.
@@ -110,46 +110,43 @@ const ConfigureInstancePanel: React.FC<ConfigureInstancePanelProps> = ({
    *     $input.closest('tr').find('.error-panel').text(errors[name]);
    *   });
    */
-  const displayErrors = useCallback(
-    (errors: Record<string, string>): void => {
-      const iframe = iframeRef.current;
-      if (!iframe) {
-        return;
-      }
+  const displayErrors = useCallback((errors: Record<string, string>): void => {
+    const iframe = iframeRef.current;
+    if (!iframe) {
+      return;
+    }
 
-      const iframeDoc = iframe.contentDocument;
-      if (!iframeDoc) {
-        return;
-      }
+    const iframeDoc = iframe.contentDocument;
+    if (!iframeDoc) {
+      return;
+    }
 
-      // Clear any previously displayed error states
-      const existingErrors = iframeDoc.querySelectorAll('.has-error');
-      existingErrors.forEach((el: Element) => {
-        el.classList.remove('has-error');
-      });
+    // Clear any previously displayed error states
+    const existingErrors = iframeDoc.querySelectorAll(".has-error");
+    existingErrors.forEach((el: Element) => {
+      el.classList.remove("has-error");
+    });
 
-      // Apply error styling and messages for each validation error
-      Object.entries(errors).forEach(([fieldName, errorMessage]) => {
-        const input = iframeDoc.querySelector<HTMLElement>(
-          `[name="${fieldName}"]`,
-        );
-        if (input) {
-          // Add error styling to the parent <tr> row container
-          const parentRow = input.closest('tr');
-          if (parentRow) {
-            parentRow.classList.add('has-error');
+    // Apply error styling and messages for each validation error
+    Object.entries(errors).forEach(([fieldName, errorMessage]) => {
+      const input = iframeDoc.querySelector<HTMLElement>(
+        `[name="${fieldName}"]`,
+      );
+      if (input) {
+        // Add error styling to the parent <tr> row container
+        const parentRow = input.closest("tr");
+        if (parentRow) {
+          parentRow.classList.add("has-error");
 
-            // Populate the error message in the .error-panel element
-            const errorPanel = parentRow.querySelector('.error-panel');
-            if (errorPanel) {
-              errorPanel.textContent = errorMessage;
-            }
+          // Populate the error message in the .error-panel element
+          const errorPanel = parentRow.querySelector(".error-panel");
+          if (errorPanel) {
+            errorPanel.textContent = errorMessage;
           }
         }
-      });
-    },
-    [],
-  );
+      }
+    });
+  }, []);
 
   /**
    * Handles HTTP error responses by writing error content into the iframe.
@@ -170,7 +167,7 @@ const ConfigureInstancePanel: React.FC<ConfigureInstancePanelProps> = ({
     (error: Error): void => {
       const iframe = iframeRef.current;
       if (!iframe) {
-        onError(error.message || 'An error occurred');
+        onError(error.message || "An error occurred");
         return;
       }
 
@@ -178,12 +175,12 @@ const ConfigureInstancePanel: React.FC<ConfigureInstancePanelProps> = ({
       if (iframeDoc) {
         try {
           // Write the error content into the iframe for inline display
-          const errorContent = error.message || 'An unexpected error occurred.';
+          const errorContent = error.message || "An unexpected error occurred.";
 
           // Attempt to parse and extract #main-panel from HTML error response
           const parser = new DOMParser();
-          const parsedDoc = parser.parseFromString(errorContent, 'text/html');
-          const mainPanel = parsedDoc.querySelector('#main-panel');
+          const parsedDoc = parser.parseFromString(errorContent, "text/html");
+          const mainPanel = parsedDoc.querySelector("#main-panel");
 
           iframeDoc.open();
           if (mainPanel) {
@@ -194,10 +191,10 @@ const ConfigureInstancePanel: React.FC<ConfigureInstancePanelProps> = ({
           iframeDoc.close();
         } catch {
           // If writing to iframe fails, propagate error to parent component
-          onError(error.message || 'An error occurred');
+          onError(error.message || "An error occurred");
         }
       } else {
-        onError(error.message || 'An error occurred');
+        onError(error.message || "An error occurred");
       }
 
       // Re-enable buttons so the user can retry or navigate away
@@ -238,27 +235,24 @@ const ConfigureInstancePanel: React.FC<ConfigureInstancePanelProps> = ({
     const iframeDoc = iframe.contentDocument;
     if (!iframeDoc) {
       setButtonsEnabled(true);
-      onError('Unable to access iframe content');
+      onError("Unable to access iframe content");
       return;
     }
 
     // Locate the configuration form in the iframe, excluding .no-json forms
     // Source: pluginSetupWizardGui.js line 1115 —
     //   iframe.contents().find("form:not(.no-json)")
-    const form = iframeDoc.querySelector<HTMLFormElement>(
-      'form:not(.no-json)',
-    );
+    const form = iframeDoc.querySelector<HTMLFormElement>("form:not(.no-json)");
     if (!form) {
       setButtonsEnabled(true);
-      onError('Unable to find configuration form');
+      onError("Unable to find configuration form");
       return;
     }
 
     // Extract the rootUrl value from the form input
-    const rootUrlInput = form.querySelector<HTMLInputElement>(
-      '[name="rootUrl"]',
-    );
-    const rootUrl = rootUrlInput?.value ?? '';
+    const rootUrlInput =
+      form.querySelector<HTMLInputElement>('[name="rootUrl"]');
+    const rootUrl = rootUrlInput?.value ?? "";
 
     // Execute the save mutation with extracted form data
     saveInstance(
@@ -278,13 +272,13 @@ const ConfigureInstancePanel: React.FC<ConfigureInstancePanelProps> = ({
           if (response.data?.crumbRequestField) {
             updateCrumb(
               response.data.crumbRequestField,
-              response.data.crumb ?? '',
+              response.data.crumb ?? "",
             );
           }
 
           // Route based on response status
           // Source: pluginSetupWizardGui.js handleConfigureInstanceResponseSuccess (lines 1076-1089)
-          if (response.status === 'ok') {
+          if (response.status === "ok") {
             // Success — advance to the next wizard step
             onSaveSuccess();
           } else {
@@ -344,9 +338,7 @@ const ConfigureInstancePanel: React.FC<ConfigureInstancePanelProps> = ({
         <div className="jumbotron welcome-panel security-panel">
           {/* Optional HTML message content — triple-mustache {{{message}}} replacement */}
           {/* Source: configureInstance.hbs line 6 — {{{message}}} (unescaped HTML) */}
-          {message && (
-            <div dangerouslySetInnerHTML={{ __html: message }} />
-          )}
+          {message && <div dangerouslySetInnerHTML={{ __html: message }} />}
 
           {/* Server-managed iframe for instance URL configuration form */}
           {/* Source: configureInstance.hbs line 8 */}
@@ -356,7 +348,7 @@ const ConfigureInstancePanel: React.FC<ConfigureInstancePanelProps> = ({
             id="setup-configure-instance"
             title={
               translations.installWizard_addFirstUser_title ||
-              'Configure Instance'
+              "Configure Instance"
             }
             onLoad={handleIframeLoad}
           />

@@ -20,11 +20,11 @@
  * @module hudson/BuildProgressBar
  */
 
-import { useState, useEffect } from 'react';
-import { useStaplerQuery } from '@/hooks/useStaplerQuery';
-import { useI18n } from '@/hooks/useI18n';
-import type { Build, ExecutorInfo } from '@/types/models';
-import { getBaseUrl } from '@/utils/baseUrl';
+import { useState, useEffect } from "react";
+import { useStaplerQuery } from "@/hooks/useStaplerQuery";
+import { useI18n } from "@/hooks/useI18n";
+import type { Build, ExecutorInfo } from "@/types/models";
+import { getBaseUrl } from "@/utils/baseUrl";
 
 // ---------------------------------------------------------------------------
 // Internal Types
@@ -182,13 +182,14 @@ export default function BuildProgressBar({
   // X-Executor-Stuck response headers. Instead, we fetch JSON from the
   // build's API endpoint.
   // -----------------------------------------------------------------------
-  const { data: polledData, isLoading } = useStaplerQuery<BuildProgressPollResponse>({
-    url: `${build.url}api/json?tree=building,executor[progress,likelyStuck]`,
-    queryKey: ['buildProgress', build.url],
-    refetchInterval: shouldPoll ? 5000 : false,
-    enabled: shouldPoll,
-    staleTime: 0,
-  });
+  const { data: polledData, isLoading } =
+    useStaplerQuery<BuildProgressPollResponse>({
+      url: `${build.url}api/json?tree=building,executor[progress,likelyStuck]`,
+      queryKey: ["buildProgress", build.url],
+      refetchInterval: shouldPoll ? 5000 : false,
+      enabled: shouldPoll,
+      staleTime: 0,
+    });
 
   // -----------------------------------------------------------------------
   // Derive progress directly from available data sources.
@@ -250,9 +251,9 @@ export default function BuildProgressBar({
   // -----------------------------------------------------------------------
   useEffect(() => {
     if (polledData && !polledData.building) {
-      const announcer = document.getElementById('jenkins-sr-announcements');
+      const announcer = document.getElementById("jenkins-sr-announcements");
       if (announcer) {
-        announcer.textContent = t('buildComplete') || 'Build completed';
+        announcer.textContent = t("buildComplete") || "Build completed";
       }
     }
   }, [polledData, t]);
@@ -283,7 +284,7 @@ export default function BuildProgressBar({
     }
 
     // Attempt to use the i18n template
-    const template = t('text');
+    const template = t("text");
     if (template) {
       return template;
     }
@@ -314,8 +315,8 @@ export default function BuildProgressBar({
   //   progressBar.classList.add/remove("app-progress-bar--error")
   // -----------------------------------------------------------------------
   const className: string = currentStuck
-    ? 'app-progress-bar app-progress-bar--error'
-    : 'app-progress-bar';
+    ? "app-progress-bar app-progress-bar--error"
+    : "app-progress-bar";
 
   // -----------------------------------------------------------------------
   // Progress width style — only applied when progress is determinate

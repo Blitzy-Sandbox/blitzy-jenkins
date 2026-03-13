@@ -72,7 +72,11 @@ export default function TabBar({
 
   // Build the class string to match the Jelly output:
   //   class="tabBarFrame ${attrs.class} ${attrs.showBaseline ? 'showBaseline' : ''}"
-  const frameClassName = ["tabBarFrame", className, showBaseline ? "showBaseline" : ""]
+  const frameClassName = [
+    "tabBarFrame",
+    className,
+    showBaseline ? "showBaseline" : "",
+  ]
     .filter(Boolean)
     .join(" ");
 

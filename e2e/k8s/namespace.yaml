@@ -1,0 +1,11 @@
+---
+# Kubernetes namespace for Jenkins E2E visual regression testing.
+# Contains dual Jenkins instances (baseline Jelly-rendered + React-rendered)
+# with shared JENKINS_HOME state for screenshot comparison.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: jenkins-e2e
+  labels:
+    app.kubernetes.io/part-of: jenkins-e2e
+    purpose: visual-regression-testing

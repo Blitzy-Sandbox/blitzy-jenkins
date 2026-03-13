@@ -24,10 +24,14 @@
  *   `docs/screenshots/<testFileDir>/<screenshotName>.png`
  *
  * Environment variables:
- *   - `CI`           — Set to any truthy value in CI environments to enable
- *                       stricter settings (forbidOnly, sequential workers, retries)
- *   - `JENKINS_URL`  — Base URL of the Jenkins instance under test
- *                       (defaults to `http://localhost:8080/jenkins`)
+ *   - `CI`                  — Set to any truthy value in CI environments to enable
+ *                              stricter settings (forbidOnly, sequential workers, retries)
+ *   - `JENKINS_URL`         — Base URL of the Jenkins instance under test
+ *                              (defaults to `http://localhost:8080/jenkins`)
+ *   - `JENKINS_BASELINE_URL` — Base URL of the Jelly-rendered baseline Jenkins instance
+ *                              (defaults to `http://jenkins-baseline.jenkins-e2e.svc.cluster.local:8080/jenkins`)
+ *   - `JENKINS_REACT_URL`  — Base URL of the React-rendered Jenkins instance
+ *                              (defaults to `http://jenkins-react.jenkins-e2e.svc.cluster.local:8080/jenkins`)
  *
  * @see {@link https://playwright.dev/docs/test-configuration} Playwright Configuration
  * @see {@link https://playwright.dev/docs/test-snapshots} Visual Comparisons
@@ -180,17 +184,40 @@ export default defineConfig({
    * --------------------------------------------------------------------------- */
 
   /**
-   * Test against Chromium Desktop Chrome as the primary browser target.
-   * Jenkins core targets modern evergreen browsers; Chromium provides the
-   * most consistent rendering baseline for visual regression comparison.
+   * Two projects target the dual Jenkins instances deployed on Kubernetes:
    *
-   * Additional browser projects (Firefox, WebKit) can be added here when
-   * cross-browser visual regression coverage is required.
+   *   - `baseline` — The standard Jelly-rendered Jenkins instance used as the
+   *     visual reference. Captures baseline screenshots for comparison.
+   *
+   *   - `react` — The React 19 UI-enabled Jenkins instance. Screenshots are
+   *     compared against the baseline to validate visual symmetry.
+   *
+   * Both projects run all flow and visual specs using Chromium Desktop Chrome
+   * for consistent rendering. Each project receives its own baseURL from
+   * environment variables, defaulting to the Kubernetes ClusterIP service names.
+   *
+   * For local development, override with:
+   *   JENKINS_BASELINE_URL=http://localhost:8080/jenkins
+   *   JENKINS_REACT_URL=http://localhost:8081/jenkins
    */
   projects: [
     {
-      name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      name: "baseline",
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL:
+          process.env.JENKINS_BASELINE_URL ||
+          "http://jenkins-baseline.jenkins-e2e.svc.cluster.local:8080/jenkins",
+      },
+    },
+    {
+      name: "react",
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL:
+          process.env.JENKINS_REACT_URL ||
+          "http://jenkins-react.jenkins-e2e.svc.cluster.local:8080/jenkins",
+      },
     },
   ],
 

@@ -26,11 +26,11 @@
  *
  * @module layout/Layout
  */
-import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { useJenkinsConfig } from '@/providers/JenkinsConfigProvider';
-import BreadcrumbBar from './BreadcrumbBar';
-import { SidePanel } from './SidePanel';
-import { MainPanel } from './MainPanel';
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import { useJenkinsConfig } from "@/providers/JenkinsConfigProvider";
+import BreadcrumbBar from "./BreadcrumbBar";
+import { SidePanel } from "./SidePanel";
+import { MainPanel } from "./MainPanel";
 
 /**
  * Props for the {@link Layout} component.
@@ -54,7 +54,7 @@ export interface LayoutProps {
    *
    * Maps to the Jelly `type` attribute (layout.jelly lines 86-91).
    */
-  type?: 'two-column' | 'one-column' | 'full-screen';
+  type?: "two-column" | "one-column" | "full-screen";
 
   /**
    * When `true`, the Bootstrap 3 responsive grid CSS is excluded.
@@ -80,7 +80,7 @@ export interface LayoutProps {
  * DOM id for the dynamically injected responsive-grid.css `<link>` element.
  * Used to safely add/remove the stylesheet without affecting other links.
  */
-const RESPONSIVE_GRID_LINK_ID = 'jenkins-responsive-grid-css';
+const RESPONSIVE_GRID_LINK_ID = "jenkins-responsive-grid-css";
 
 /**
  * Main page shell component replacing the Jelly `<l:layout>` tag.
@@ -101,7 +101,7 @@ const RESPONSIVE_GRID_LINK_ID = 'jenkins-responsive-grid-css';
  */
 export default function Layout({
   title,
-  type = 'two-column',
+  type = "two-column",
   noGrid = false,
   sidePanel,
   children,
@@ -122,7 +122,7 @@ export default function Layout({
   /*    <title>${h.appendIfNotNull(title,' - Jenkins','Jenkins')}</title> */
   /* ------------------------------------------------------------------ */
   useEffect(() => {
-    document.title = title ? `${title} - Jenkins` : 'Jenkins';
+    document.title = title ? `${title} - Jenkins` : "Jenkins";
   }, [title]);
 
   /* ------------------------------------------------------------------ */
@@ -131,7 +131,7 @@ export default function Layout({
   /*    <body id="jenkins" class="${layoutType} jenkins-${h.version}">    */
   /* ------------------------------------------------------------------ */
   useEffect(() => {
-    document.body.id = 'jenkins';
+    document.body.id = "jenkins";
     document.body.classList.add(layoutType);
     return () => {
       document.body.classList.remove(layoutType);
@@ -152,11 +152,11 @@ export default function Layout({
     ) as HTMLLinkElement | null;
 
     if (!noGrid && !existing) {
-      const resUrl = document.head.dataset.resurl ?? '';
-      const link = document.createElement('link');
+      const resUrl = document.head.dataset.resurl ?? "";
+      const link = document.createElement("link");
       link.id = RESPONSIVE_GRID_LINK_ID;
-      link.rel = 'stylesheet';
-      link.type = 'text/css';
+      link.rel = "stylesheet";
+      link.type = "text/css";
       link.href = `${resUrl}/css/responsive-grid.css`;
       document.head.appendChild(link);
     } else if (noGrid && existing) {
@@ -193,24 +193,24 @@ export default function Layout({
     };
 
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         closeVersionMenu();
         versionButtonRef.current?.focus();
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('keydown', handleEscape);
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
     };
   }, [versionMenuOpen, closeVersionMenu]);
 
   /* ------------------------------------------------------------------ */
   /*  Jenkins version string from body dataset (set by Jelly shell)      */
   /* ------------------------------------------------------------------ */
-  const version = document.body.dataset.version ?? '';
+  const version = document.body.dataset.version ?? "";
 
   /* ------------------------------------------------------------------ */
   /*  Render                                                             */
@@ -218,14 +218,14 @@ export default function Layout({
   return (
     <>
       {/* Accessibility skip-link — mirrors layout.jelly line 163 */}
-      {layoutType !== 'full-screen' && (
+      {layoutType !== "full-screen" && (
         <a href="#skip2content" className="jenkins-skip-link">
           Skip to content
         </a>
       )}
 
       {/* Breadcrumb navigation — mirrors layout.jelly lines 138-141 */}
-      {layoutType !== 'full-screen' && <BreadcrumbBar />}
+      {layoutType !== "full-screen" && <BreadcrumbBar />}
 
       {/*
        * Page body container — mirrors layout.jelly lines 172-181:
@@ -237,7 +237,7 @@ export default function Layout({
         className={`app-page-body app-page-body--${layoutType} clear`}
       >
         {/* Side panel — only for two-column layout (layout.jelly line 173) */}
-        {layoutType === 'two-column' && sidePanel != null && (
+        {layoutType === "two-column" && sidePanel != null && (
           <SidePanel>{sidePanel}</SidePanel>
         )}
 
@@ -251,14 +251,11 @@ export default function Layout({
       </div>
 
       {/* Footer — mirrors layout.jelly lines 183-218 */}
-      {layoutType !== 'full-screen' && (
+      {layoutType !== "full-screen" && (
         <footer className="page-footer jenkins-mobile-hide">
           <div className="page-footer__flex-row">
             {/* Placeholder consumed by page decorators (layout.jelly line 186) */}
-            <div
-              className="page-footer__footer-id-placeholder"
-              id="footer"
-            />
+            <div className="page-footer__footer-id-placeholder" id="footer" />
 
             <div className="page-footer__links">
               {/* REST API link — mirrors layout.jelly line 196 */}

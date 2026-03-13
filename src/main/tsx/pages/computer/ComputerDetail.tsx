@@ -388,11 +388,7 @@ function ComputerDetail({ nodeName }: ComputerDetailProps): React.JSX.Element {
                 : {})}
             >
               <span className="task-icon-link">
-                <svg
-                  className="svg-icon"
-                  aria-hidden="true"
-                  focusable="false"
-                >
+                <svg className="svg-icon" aria-hidden="true" focusable="false">
                   <use href={`#${link.icon}`} />
                 </svg>
               </span>
@@ -464,11 +460,7 @@ function ComputerDetail({ nodeName }: ComputerDetailProps): React.JSX.Element {
               rel="noopener noreferrer"
               aria-label={t("Help") ?? "Help"}
             >
-              <svg
-                className="svg-icon"
-                aria-hidden="true"
-                focusable="false"
-              >
+              <svg className="svg-icon" aria-hidden="true" focusable="false">
                 <use href="#symbol-help" />
               </svg>
             </a>
@@ -490,17 +482,16 @@ function ComputerDetail({ nodeName }: ComputerDetailProps): React.JSX.Element {
       {/* Offline Cause — mirrors index.jelly lines 61-63                   */}
       {/* Shown when node is offline with a cause and not connecting         */}
       {/* ================================================================= */}
-      {computer.offlineCause &&
-        computer.offline &&
-        !computer.connecting && (
-          <div className="offline-cause">
-            <p>
-              {(computer.offlineCause as OfflineCause).description ??
-                computer.offlineCauseReason ??
-                (t("Offline") ?? "Offline")}
-            </p>
-          </div>
-        )}
+      {computer.offlineCause && computer.offline && !computer.connecting && (
+        <div className="offline-cause">
+          <p>
+            {(computer.offlineCause as OfflineCause).description ??
+              computer.offlineCauseReason ??
+              t("Offline") ??
+              "Offline"}
+          </p>
+        </div>
+      )}
 
       {/* ================================================================= */}
       {/* Manual Launch Section — mirrors index.jelly lines 65-67           */}
@@ -532,34 +523,27 @@ function ComputerDetail({ nodeName }: ComputerDetailProps): React.JSX.Element {
       {/* Monitoring Data — mirrors index.jelly lines 73-83                 */}
       {/* <f:advanced> rendered as collapsible <details> element            */}
       {/* ================================================================= */}
-      {computer.monitorData &&
-        Object.keys(computer.monitorData).length > 0 && (
-          <details
-            className="jenkins-details"
-            open={monitoringExpanded}
-            onToggle={(e) =>
-              setMonitoringExpanded(
-                (e.target as HTMLDetailsElement).open,
-              )
-            }
-          >
-            <summary>
-              {t("Monitoring Data") ?? "Monitoring Data"}
-            </summary>
-            <table className="jenkins-table jenkins-table--small jenkins-table--auto-width">
-              <tbody>
-                {Object.entries(computer.monitorData).map(
-                  ([key, value]) => (
-                    <tr key={key}>
-                      <td>{getMonitorCaption(key)}</td>
-                      <td>{renderMonitorValue(value)}</td>
-                    </tr>
-                  ),
-                )}
-              </tbody>
-            </table>
-          </details>
-        )}
+      {computer.monitorData && Object.keys(computer.monitorData).length > 0 && (
+        <details
+          className="jenkins-details"
+          open={monitoringExpanded}
+          onToggle={(e) =>
+            setMonitoringExpanded((e.target as HTMLDetailsElement).open)
+          }
+        >
+          <summary>{t("Monitoring Data") ?? "Monitoring Data"}</summary>
+          <table className="jenkins-table jenkins-table--small jenkins-table--auto-width">
+            <tbody>
+              {Object.entries(computer.monitorData).map(([key, value]) => (
+                <tr key={key}>
+                  <td>{getMonitorCaption(key)}</td>
+                  <td>{renderMonitorValue(value)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </details>
+      )}
 
       {/* ================================================================= */}
       {/* Labels — mirrors index.jelly lines 85-96                          */}
@@ -573,9 +557,7 @@ function ComputerDetail({ nodeName }: ComputerDetailProps): React.JSX.Element {
               <React.Fragment key={label.name}>
                 <a
                   className="model-link inside"
-                  href={buildUrl(
-                    `/label/${encodeURIComponent(label.name)}`,
-                  )}
+                  href={buildUrl(`/label/${encodeURIComponent(label.name)}`)}
                 >
                   {label.name}
                 </a>

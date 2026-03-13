@@ -20,9 +20,9 @@
  * @module MainPanel
  */
 
-import type React from 'react';
+import type React from "react";
 
-import { useI18n } from '@/hooks/useI18n';
+import { useI18n } from "@/hooks/useI18n";
 
 /**
  * Props for the {@link MainPanel} component.
@@ -122,7 +122,7 @@ export function MainPanel({
              */}
             {quietDownReason?.trim()
               ? quietDownReason
-              : (t('saferestart') ?? 'Jenkins is restarting')}
+              : (t("saferestart") ?? "Jenkins is restarting")}
           </div>
         ) : (
           <div id="shutdown-msg">
@@ -141,7 +141,7 @@ export function MainPanel({
              */}
             {quietDownReason != null
               ? quietDownReason
-              : (t('shutdown') ?? 'Jenkins is shutting down')}
+              : (t("shutdown") ?? "Jenkins is shutting down")}
           </div>
         ))}
       {/* Skip-to-content anchor — mirrors main-panel.jelly line 60.

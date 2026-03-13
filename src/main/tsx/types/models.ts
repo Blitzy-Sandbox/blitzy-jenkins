@@ -23,31 +23,31 @@
  * The '_anime' suffix indicates an in-progress (animated) state.
  */
 export type BallColor =
-  | 'red'
-  | 'red_anime'
-  | 'yellow'
-  | 'yellow_anime'
-  | 'blue'
-  | 'blue_anime'
-  | 'grey'
-  | 'grey_anime'
-  | 'disabled'
-  | 'disabled_anime'
-  | 'aborted'
-  | 'aborted_anime'
-  | 'nobuilt'
-  | 'nobuilt_anime';
+  | "red"
+  | "red_anime"
+  | "yellow"
+  | "yellow_anime"
+  | "blue"
+  | "blue_anime"
+  | "grey"
+  | "grey_anime"
+  | "disabled"
+  | "disabled_anime"
+  | "aborted"
+  | "aborted_anime"
+  | "nobuilt"
+  | "nobuilt_anime";
 
 /**
  * Build result status values.
  * Derived from hudson.model.Result Java class static final constants.
  */
 export type ResultStatus =
-  | 'SUCCESS'
-  | 'UNSTABLE'
-  | 'FAILURE'
-  | 'NOT_BUILT'
-  | 'ABORTED';
+  | "SUCCESS"
+  | "UNSTABLE"
+  | "FAILURE"
+  | "NOT_BUILT"
+  | "ABORTED";
 
 // ============================================================================
 // Action and Cause Types

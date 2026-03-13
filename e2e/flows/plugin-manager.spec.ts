@@ -137,7 +137,9 @@ test.describe("Plugin Manager User Flows", () => {
     // Wait briefly for plugin content to load — the installed plugins page
     // should display plugin entries either as table rows or list items
     await jenkinsPage.page
-      .locator('#plugins, .installed-plugins-table, [data-testid="installed-plugins"]')
+      .locator(
+        '#plugins, .installed-plugins-table, [data-testid="installed-plugins"]',
+      )
       .first()
       .waitFor({ state: "visible", timeout: 15000 })
       .catch(() => {
@@ -242,12 +244,12 @@ test.describe("Plugin Manager User Flows", () => {
       ".jenkins-search--loading",
     );
     // After sufficient wait, loading should be done
-    await expect(loadingIndicator).toHaveCount(0, { timeout: 10000 }).catch(
-      () => {
+    await expect(loadingIndicator)
+      .toHaveCount(0, { timeout: 10000 })
+      .catch(() => {
         // If the loading class persists it may indicate a slow network,
         // not a test failure in the component behavior itself
-      },
-    );
+      });
 
     // Assert the plugins table is filtered — the tbody should now contain
     // rows matching the "git" search term. The applyFilter() function in
@@ -469,7 +471,7 @@ test.describe("Plugin Manager User Flows", () => {
       // The notification bar should contain error-related content — either
       // the text from the template element or an error styling class
       const notificationContent = jenkinsPage.page.locator(
-        '#notification-bar .notif-alert-show, .notif-alert-default, .jenkins-notification--error',
+        "#notification-bar .notif-alert-show, .notif-alert-default, .jenkins-notification--error",
       );
       await expect(notificationContent.first()).toBeVisible();
     } else {
@@ -478,7 +480,7 @@ test.describe("Plugin Manager User Flows", () => {
       // The notification bar may or may not be in the DOM — if it exists
       // it should not be displaying an error.
       const errorNotification = jenkinsPage.page.locator(
-        '#notification-bar.notif-alert-show, .jenkins-notification--error',
+        "#notification-bar.notif-alert-show, .jenkins-notification--error",
       );
       const errorCount = await errorNotification.count();
       // If an error notification exists, it should not be visible (or not present)

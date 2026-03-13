@@ -16,13 +16,13 @@
  *   </table>
  */
 
-import React, { useState, useMemo, useCallback } from 'react';
-import BuildLink from './BuildLink';
-import BuildProgressBar from './BuildProgressBar';
-import { useStaplerQuery } from '@/hooks/useStaplerQuery';
-import { useI18n } from '@/hooks/useI18n';
-import type { Build, BallColor, Job } from '@/types/models';
-import { getBaseUrl } from '@/utils/baseUrl';
+import React, { useState, useMemo, useCallback } from "react";
+import BuildLink from "./BuildLink";
+import BuildProgressBar from "./BuildProgressBar";
+import { useStaplerQuery } from "@/hooks/useStaplerQuery";
+import { useI18n } from "@/hooks/useI18n";
+import type { Build, BallColor, Job } from "@/types/models";
+import { getBaseUrl } from "@/utils/baseUrl";
 
 /* ------------------------------------------------------------------ */
 /*  Props Interface (named export per schema)                         */
@@ -64,21 +64,21 @@ interface BuildsApiResponse {
  */
 function getBallColorForBuild(build: Build): BallColor {
   const { result, building } = build;
-  const suffix = building ? '_anime' : '';
+  const suffix = building ? "_anime" : "";
 
   switch (result) {
-    case 'SUCCESS':
+    case "SUCCESS":
       return `blue${suffix}` as BallColor;
-    case 'FAILURE':
+    case "FAILURE":
       return `red${suffix}` as BallColor;
-    case 'UNSTABLE':
+    case "UNSTABLE":
       return `yellow${suffix}` as BallColor;
-    case 'ABORTED':
+    case "ABORTED":
       return `aborted${suffix}` as BallColor;
-    case 'NOT_BUILT':
+    case "NOT_BUILT":
       return `nobuilt${suffix}` as BallColor;
     default:
-      return (building ? 'grey_anime' : 'grey') as BallColor;
+      return (building ? "grey_anime" : "grey") as BallColor;
   }
 }
 
@@ -88,18 +88,18 @@ function getBallColorForBuild(build: Build): BallColor {
  */
 function getResultDescription(result: string | null): string {
   switch (result) {
-    case 'SUCCESS':
-      return 'Success';
-    case 'FAILURE':
-      return 'Failed';
-    case 'UNSTABLE':
-      return 'Unstable';
-    case 'ABORTED':
-      return 'Aborted';
-    case 'NOT_BUILT':
-      return 'Not built';
+    case "SUCCESS":
+      return "Success";
+    case "FAILURE":
+      return "Failed";
+    case "UNSTABLE":
+      return "Unstable";
+    case "ABORTED":
+      return "Aborted";
+    case "NOT_BUILT":
+      return "Not built";
     default:
-      return '';
+      return "";
   }
 }
 
@@ -109,7 +109,7 @@ function getResultDescription(result: string | null): string {
  */
 function formatDuration(ms: number): string {
   if (ms <= 0) {
-    return '';
+    return "";
   }
   const totalSeconds = Math.floor(ms / 1000);
   const hours = Math.floor(totalSeconds / 3600);
@@ -131,11 +131,11 @@ function formatDuration(ms: number): string {
  */
 function formatTimeSince(timestamp: number): string {
   if (!timestamp) {
-    return '';
+    return "";
   }
   const diffMs = Date.now() - timestamp;
   if (diffMs < 0) {
-    return '';
+    return "";
   }
 
   const seconds = Math.floor(diffMs / 1000);
@@ -146,21 +146,21 @@ function formatTimeSince(timestamp: number): string {
   const years = Math.floor(days / 365);
 
   if (years > 0) {
-    return years === 1 ? '1 yr ago' : `${years} yr ago`;
+    return years === 1 ? "1 yr ago" : `${years} yr ago`;
   }
   if (months > 0) {
-    return months === 1 ? '1 mo ago' : `${months} mo ago`;
+    return months === 1 ? "1 mo ago" : `${months} mo ago`;
   }
   if (days > 0) {
-    return days === 1 ? '1 day ago' : `${days} days ago`;
+    return days === 1 ? "1 day ago" : `${days} days ago`;
   }
   if (hours > 0) {
-    return hours === 1 ? '1 hr ago' : `${hours} hr ago`;
+    return hours === 1 ? "1 hr ago" : `${hours} hr ago`;
   }
   if (minutes > 0) {
-    return minutes === 1 ? '1 min ago' : `${minutes} min ago`;
+    return minutes === 1 ? "1 min ago" : `${minutes} min ago`;
   }
-  return seconds <= 1 ? '1 sec ago' : `${seconds} sec ago`;
+  return seconds <= 1 ? "1 sec ago" : `${seconds} sec ago`;
 }
 
 /**
@@ -171,12 +171,12 @@ function formatTimeSince(timestamp: number): string {
  */
 function getTableSizeClass(iconSizeClass: string): string {
   switch (iconSizeClass) {
-    case '16x16':
-      return 'jenkins-table--small';
-    case '24x24':
-      return 'jenkins-table--medium';
+    case "16x16":
+      return "jenkins-table--small";
+    case "24x24":
+      return "jenkins-table--medium";
     default:
-      return '';
+      return "";
   }
 }
 
@@ -192,8 +192,8 @@ function getTableSizeClass(iconSizeClass: string): string {
  * Build.executor, and Build.actions.
  */
 const BUILD_TREE_FIELDS =
-  'builds[number,url,displayName,result,building,timestamp,duration,' +
-  'estimatedDuration,executor[progress,likelyStuck],actions[*]]';
+  "builds[number,url,displayName,result,building,timestamp,duration," +
+  "estimatedDuration,executor[progress,likelyStuck],actions[*]]";
 
 /* ------------------------------------------------------------------ */
 /*  Component                                                         */
@@ -236,7 +236,7 @@ function BuildListTable({
    * components. Currently defaults to standard (empty) size. The Jelly
    * template supports 16x16 / 24x24 variants via its `iconSize` attr.
    */
-  const [iconSizeClass] = useState<string>('');
+  const [iconSizeClass] = useState<string>("");
 
   /* ---- Polling --------------------------------------------------- */
 
@@ -249,9 +249,9 @@ function BuildListTable({
   /** Construct the Stapler REST endpoint URL for builds polling. */
   const pollingUrl = useMemo(() => {
     if (!jobUrl) {
-      return '';
+      return "";
     }
-    const normalized = jobUrl.startsWith('/') ? jobUrl.slice(1) : jobUrl;
+    const normalized = jobUrl.startsWith("/") ? jobUrl.slice(1) : jobUrl;
     return `${baseUrl}/${normalized}/api/json?tree=${BUILD_TREE_FIELDS}`;
   }, [jobUrl, baseUrl]);
 
@@ -260,7 +260,7 @@ function BuildListTable({
    * Active while any build is in progress; disabled when all complete.
    */
   const { data, isLoading, isFetching } = useStaplerQuery<BuildsApiResponse>({
-    queryKey: ['builds', jobUrl ?? ''],
+    queryKey: ["builds", jobUrl ?? ""],
     url: pollingUrl,
     enabled: !!jobUrl && pollingUrl.length > 0,
     refetchInterval: hasBuildsInProgress ? refetchInterval : false,
@@ -298,9 +298,7 @@ function BuildListTable({
   /** Stable console-URL builder. */
   const getConsoleUrl = useCallback(
     (build: Build): string => {
-      const buildPath = build.url.startsWith('/')
-        ? build.url
-        : `/${build.url}`;
+      const buildPath = build.url.startsWith("/") ? build.url : `/${build.url}`;
       return `${baseUrl}${buildPath}console`;
     },
     [baseUrl],
@@ -308,17 +306,17 @@ function BuildListTable({
 
   /* ---- I18n column headers --------------------------------------- */
 
-  const headerS = t('S') ?? 'S';
-  const headerBuild = t('Build') ?? 'Build';
-  const headerTimeSince = t('Time Since') ?? 'Time Since';
-  const headerStatus = t('Status') ?? 'Status';
-  const consoleAlt = t('Console output') ?? 'Console output';
+  const headerS = t("S") ?? "S";
+  const headerBuild = t("Build") ?? "Build";
+  const headerTimeSince = t("Time Since") ?? "Time Since";
+  const headerStatus = t("Status") ?? "Status";
+  const consoleAlt = t("Console output") ?? "Console output";
 
   /* ---- Derived table className ----------------------------------- */
 
-  const tableClassName = ['jenkins-table', tableSizeClass, 'sortable']
+  const tableClassName = ["jenkins-table", tableSizeClass, "sortable"]
     .filter(Boolean)
-    .join(' ');
+    .join(" ");
 
   /* ---- Render: loading skeleton ---------------------------------- */
 
@@ -366,38 +364,33 @@ function BuildListTable({
           <th>{headerBuild}</th>
           <th data-initial-sort-dir="up">{headerTimeSince}</th>
           <th>{headerStatus}</th>
-          <th
-            className="jenkins-table__cell--tight"
-            data-sort-disable="true"
-          />
+          <th className="jenkins-table__cell--tight" data-sort-disable="true" />
         </tr>
       </thead>
       <tbody>
         {builds.length === 0 ? (
           <tr>
-            <td colSpan={5}>{t('No builds') ?? 'No builds'}</td>
+            <td colSpan={5}>{t("No builds") ?? "No builds"}</td>
           </tr>
         ) : (
           builds.map((build) => {
             const ballColor: BallColor = getBallColorForBuild(build);
             const statusText = build.building
-              ? ''
+              ? ""
               : getResultDescription(build.result);
             const durationText =
               !build.building && build.duration > 0
                 ? formatDuration(build.duration)
-                : '';
+                : "";
             const estimatedText =
               build.building && build.estimatedDuration > 0
                 ? formatDuration(build.estimatedDuration)
-                : '';
+                : "";
 
             return (
               <tr
                 key={build.number}
-                className={
-                  build.building ? 'build-row--building' : undefined
-                }
+                className={build.building ? "build-row--building" : undefined}
               >
                 {/* S — Status ball icon */}
                 <td className="jenkins-table__cell--tight jenkins-table__icon">
@@ -448,7 +441,7 @@ function BuildListTable({
                   ) : (
                     <span>
                       {statusText}
-                      {durationText ? ` (${durationText})` : ''}
+                      {durationText ? ` (${durationText})` : ""}
                     </span>
                   )}
                 </td>

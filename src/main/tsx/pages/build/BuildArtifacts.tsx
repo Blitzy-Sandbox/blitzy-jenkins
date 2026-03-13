@@ -32,14 +32,14 @@
  * @module pages/build/BuildArtifacts
  */
 
-import React, { useMemo } from 'react';
-import Layout from '@/layout/Layout';
-import { SidePanel } from '@/layout/SidePanel';
-import { MainPanel } from '@/layout/MainPanel';
-import { useStaplerQuery } from '@/hooks/useStaplerQuery';
-import { useI18n } from '@/hooks/useI18n';
-import { useJenkinsConfig } from '@/providers/JenkinsConfigProvider';
-import type { Build, Artifact } from '@/types/models';
+import React, { useMemo } from "react";
+import Layout from "@/layout/Layout";
+import { SidePanel } from "@/layout/SidePanel";
+import { MainPanel } from "@/layout/MainPanel";
+import { useStaplerQuery } from "@/hooks/useStaplerQuery";
+import { useI18n } from "@/hooks/useI18n";
+import { useJenkinsConfig } from "@/providers/JenkinsConfigProvider";
+import type { Build, Artifact } from "@/types/models";
 
 // ---------------------------------------------------------------------------
 // Exported Props Interface
@@ -94,13 +94,13 @@ interface ArtifactWithMetadata extends Artifact {
  */
 function humanReadableByteSize(bytes: number | undefined | null): string {
   if (bytes == null || bytes < 0) {
-    return '0 B';
+    return "0 B";
   }
   if (bytes === 0) {
-    return '0 B';
+    return "0 B";
   }
 
-  const units: readonly string[] = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+  const units: readonly string[] = ["B", "KB", "MB", "GB", "TB", "PB"];
   let unitIndex = 0;
   let size = bytes;
 
@@ -142,7 +142,7 @@ function extractBuildApiPath(buildUrl: string, baseUrl: string): string {
   let path = buildUrl;
 
   // Handle absolute URLs — extract the pathname portion
-  if (path.startsWith('http://') || path.startsWith('https://')) {
+  if (path.startsWith("http://") || path.startsWith("https://")) {
     try {
       const parsed = new URL(path);
       path = parsed.pathname;
@@ -152,17 +152,17 @@ function extractBuildApiPath(buildUrl: string, baseUrl: string): string {
   }
 
   // Strip the Jenkins context path prefix (e.g., "/jenkins") if present
-  if (baseUrl && baseUrl !== '/' && path.startsWith(baseUrl)) {
+  if (baseUrl && baseUrl !== "/" && path.startsWith(baseUrl)) {
     path = path.slice(baseUrl.length);
   }
 
   // Ensure leading slash
-  if (!path.startsWith('/')) {
+  if (!path.startsWith("/")) {
     path = `/${path}`;
   }
 
   // Remove trailing slashes for clean concatenation
-  return path.replace(/\/+$/, '');
+  return path.replace(/\/+$/, "");
 }
 
 // ---------------------------------------------------------------------------
@@ -233,7 +233,7 @@ export default function BuildArtifacts({
     if (jobName != null && buildNumber != null) {
       return `/job/${encodeURIComponent(jobName)}/${buildNumber}`;
     }
-    return '';
+    return "";
   }, [buildUrl, jobName, buildNumber, baseUrl]);
 
   // ---------- Fetch build data from Stapler REST API ----------
@@ -245,20 +245,24 @@ export default function BuildArtifacts({
    *   - fullDisplayName — page title (e.g., "my-pipeline #42")
    *   - url — canonical build URL for constructing download links
    */
-  const { data: buildData, isLoading, isError } = useStaplerQuery<Build>({
+  const {
+    data: buildData,
+    isLoading,
+    isError,
+  } = useStaplerQuery<Build>({
     url: apiPath
       ? `${apiPath}/api/json?tree=artifacts[displayPath,fileName,relativePath],fullDisplayName,url`
-      : '',
-    queryKey: ['build-artifacts', apiPath],
-    enabled: apiPath !== '',
+      : "",
+    queryKey: ["build-artifacts", apiPath],
+    enabled: apiPath !== "",
   });
 
   // ---------- Memoized computed values ----------
 
   /** Page title: "{fullDisplayName} Artifacts" or just "Artifacts" */
   const pageTitle = useMemo((): string => {
-    const displayName = buildData?.fullDisplayName ?? '';
-    const artifactsLabel = t('Artifacts') ?? 'Artifacts';
+    const displayName = buildData?.fullDisplayName ?? "";
+    const artifactsLabel = t("Artifacts") ?? "Artifacts";
     return displayName ? `${displayName} ${artifactsLabel}` : artifactsLabel;
   }, [buildData?.fullDisplayName, t]);
 
@@ -273,7 +277,7 @@ export default function BuildArtifacts({
    */
   const artifactBaseUrl = useMemo((): string => {
     if (buildData?.url) {
-      const url = buildData.url.endsWith('/')
+      const url = buildData.url.endsWith("/")
         ? buildData.url
         : `${buildData.url}/`;
       return `${url}artifact/`;
@@ -281,7 +285,7 @@ export default function BuildArtifacts({
     if (apiPath) {
       return `${baseUrl}${apiPath}/artifact/`;
     }
-    return '';
+    return "";
   }, [buildData, apiPath, baseUrl]);
 
   /**
@@ -295,10 +299,10 @@ export default function BuildArtifacts({
   );
 
   /** Localized caption text for the build artifacts heading */
-  const captionText: string = t('Build Artifacts') ?? 'Build Artifacts';
+  const captionText: string = t("Build Artifacts") ?? "Build Artifacts";
 
   /** Localized "view" link text for the artifact view action */
-  const viewLinkText: string = t('view') ?? 'view';
+  const viewLinkText: string = t("view") ?? "view";
 
   // ---------- Side panel navigation ----------
 
@@ -312,34 +316,41 @@ export default function BuildArtifacts({
   const sideNavigation = useMemo((): React.ReactNode => {
     const buildDisplayName =
       buildData?.fullDisplayName ??
-      (buildNumber != null ? `#${buildNumber}` : '');
+      (buildNumber != null ? `#${buildNumber}` : "");
     const buildPageUrl =
-      buildData?.url ?? (apiPath ? `${baseUrl}${apiPath}/` : '');
+      buildData?.url ?? (apiPath ? `${baseUrl}${apiPath}/` : "");
 
     return (
-      <nav aria-label={t('Build navigation') ?? 'Build navigation'}>
+      <nav aria-label={t("Build navigation") ?? "Build navigation"}>
         {buildPageUrl && (
           <a href={buildPageUrl}>
-            {buildDisplayName || (t('Back to Build') ?? 'Back to Build')}
+            {buildDisplayName || (t("Back to Build") ?? "Back to Build")}
           </a>
         )}
       </nav>
     );
-  }, [buildData?.fullDisplayName, buildData?.url, buildNumber, apiPath, baseUrl, t]);
+  }, [
+    buildData?.fullDisplayName,
+    buildData?.url,
+    buildNumber,
+    apiPath,
+    baseUrl,
+    t,
+  ]);
 
   // ---------- Loading state ----------
 
   if (isLoading) {
     return (
       <Layout
-        title={t('Artifacts') ?? 'Artifacts'}
+        title={t("Artifacts") ?? "Artifacts"}
         type="two-column"
         sidePanel={sideNavigation}
       >
         <div
           className="jenkins-spinner"
           role="status"
-          aria-label={t('Loading') ?? 'Loading'}
+          aria-label={t("Loading") ?? "Loading"}
         />
       </Layout>
     );
@@ -350,14 +361,14 @@ export default function BuildArtifacts({
   if (isError) {
     return (
       <Layout
-        title={t('Artifacts') ?? 'Artifacts'}
+        title={t("Artifacts") ?? "Artifacts"}
         type="two-column"
         sidePanel={sideNavigation}
       >
         <div role="alert">
           <p>
-            {t('Unable to load build artifacts') ??
-              'Unable to load build artifacts. You may not have permission to view this content.'}
+            {t("Unable to load build artifacts") ??
+              "Unable to load build artifacts. You may not have permission to view this content."}
           </p>
         </div>
       </Layout>
@@ -405,7 +416,7 @@ export default function BuildArtifacts({
                 <td className="fileSize">
                   {artifact.fileSize != null
                     ? humanReadableByteSize(artifact.fileSize)
-                    : ''}
+                    : ""}
                 </td>
 
                 {/* View link — replaces the view action from artifactList.jelly
@@ -423,8 +434,8 @@ export default function BuildArtifacts({
         </table>
       ) : (
         <p>
-          {t('No artifacts available for this build.') ??
-            'No artifacts available for this build.'}
+          {t("No artifacts available for this build.") ??
+            "No artifacts available for this build."}
         </p>
       )}
     </Layout>

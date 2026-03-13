@@ -353,8 +353,7 @@ export default function SetupWizard(): React.JSX.Element {
             "An error occurred while communicating with the server.",
         );
       } else {
-        const prefix =
-          translations["installWizard_error_message"] ?? "Error: ";
+        const prefix = translations["installWizard_error_message"] ?? "Error: ";
         setErrorMessage(prefix + message);
       }
       setCurrentStep("error");
@@ -372,32 +371,29 @@ export default function SetupWizard(): React.JSX.Element {
    *
    * @param state - The install state string from the Stapler response.
    */
-  const showStatePanel = useCallback(
-    (state?: string): void => {
-      switch (state) {
-        case "DEFAULT":
-          setCurrentStep("welcome");
-          break;
-        case "CREATE_ADMIN_USER":
-          setCurrentStep("first-user");
-          break;
-        case "CONFIGURE_INSTANCE":
-          setCurrentStep("configure-instance");
-          break;
-        case "RUNNING":
-        case "INITIAL_SETUP_COMPLETED":
-          setCurrentStep("setup-complete");
-          break;
-        case "INITIAL_PLUGINS_INSTALLING":
-          setCurrentStep("installing");
-          break;
-        default:
-          setCurrentStep("welcome");
-          break;
-      }
-    },
-    [],
-  );
+  const showStatePanel = useCallback((state?: string): void => {
+    switch (state) {
+      case "DEFAULT":
+        setCurrentStep("welcome");
+        break;
+      case "CREATE_ADMIN_USER":
+        setCurrentStep("first-user");
+        break;
+      case "CONFIGURE_INSTANCE":
+        setCurrentStep("configure-instance");
+        break;
+      case "RUNNING":
+      case "INITIAL_SETUP_COMPLETED":
+        setCurrentStep("setup-complete");
+        break;
+      case "INITIAL_PLUGINS_INSTALLING":
+        setCurrentStep("installing");
+        break;
+      default:
+        setCurrentStep("welcome");
+        break;
+    }
+  }, []);
 
   // ---------------------------------------------------------------------------
   // Helper: Connectivity Test
@@ -411,13 +407,11 @@ export default function SetupWizard(): React.JSX.Element {
    */
   const testConnectivity = useCallback(async (): Promise<boolean> => {
     try {
-      const crumbField =
-        document.head?.dataset?.crumbname ?? "Jenkins-Crumb";
+      const crumbField = document.head?.dataset?.crumbname ?? "Jenkins-Crumb";
       const crumbValue = document.head?.dataset?.crumbvalue ?? "";
 
       const response = await fetch(
-        (baseUrl ?? "") +
-          "/updateCenter/connectionStatus?siteId=default",
+        (baseUrl ?? "") + "/updateCenter/connectionStatus?siteId=default",
         {
           method: "POST",
           headers: {
@@ -475,18 +469,15 @@ export default function SetupWizard(): React.JSX.Element {
         setSelectedPluginNames(pluginNames);
 
         // Trigger the install mutation — returns correlationId
-        const newCorrelationId =
-          await pluginInstallMutation.mutateAsync({
-            plugins: pluginNames,
-          });
+        const newCorrelationId = await pluginInstallMutation.mutateAsync({
+          plugins: pluginNames,
+        });
         setCorrelationId(newCorrelationId);
 
         // Transition to installing step
         setCurrentStep("installing");
       } catch (err) {
-        handleError(
-          err instanceof Error ? err : new Error(String(err)),
-        );
+        handleError(err instanceof Error ? err : new Error(String(err)));
       }
     },
     [availablePluginsMap, pluginInstallMutation, handleError],
@@ -533,12 +524,9 @@ export default function SetupWizard(): React.JSX.Element {
   /**
    * Handle plugin selection changes from PluginSelectionPanel.
    */
-  const handleSelectionChange = useCallback(
-    (newSelection: string[]): void => {
-      setSelectedPluginNames(newSelection);
-    },
-    [],
-  );
+  const handleSelectionChange = useCallback((newSelection: string[]): void => {
+    setSelectedPluginNames(newSelection);
+  }, []);
 
   /**
    * Handle installation completion from ProgressPanel.
@@ -589,7 +577,12 @@ export default function SetupWizard(): React.JSX.Element {
     } catch (err) {
       handleError(err instanceof Error ? err : new Error(String(err)));
     }
-  }, [installPluginsDoneMutation, installStatusQuery, showStatePanel, handleError]);
+  }, [
+    installPluginsDoneMutation,
+    installStatusQuery,
+    showStatePanel,
+    handleError,
+  ]);
 
   /**
    * Handle first user save success. Transitions to configure-instance step.
@@ -602,8 +595,7 @@ export default function SetupWizard(): React.JSX.Element {
     // Crumb refresh is handled internally by useSaveFirstUser hook.
     // Sync our local crumb awareness.
     try {
-      const crumbField =
-        document.head?.dataset?.crumbname ?? "Jenkins-Crumb";
+      const crumbField = document.head?.dataset?.crumbname ?? "Jenkins-Crumb";
       const crumbValue = document.head?.dataset?.crumbvalue ?? "";
       if (crumbField && crumbValue) {
         updateCrumb(crumbField, crumbValue);
@@ -622,14 +614,11 @@ export default function SetupWizard(): React.JSX.Element {
     try {
       // Fetch the Jenkins root URL to auto-populate the configure-instance panel
       // Source lines 1055-1073: GET /api/json?tree=url
-      const response = await fetch(
-        (baseUrl ?? "") + "/api/json?tree=url",
-        {
-          headers: {
-            Accept: "application/json",
-          },
+      const response = await fetch((baseUrl ?? "") + "/api/json?tree=url", {
+        headers: {
+          Accept: "application/json",
         },
-      );
+      });
       if (response.ok) {
         const data: { url?: string } = await response.json();
         if (data.url) {
@@ -661,8 +650,7 @@ export default function SetupWizard(): React.JSX.Element {
   const handleSaveConfigureInstance = useCallback((): void => {
     // Crumb refresh is handled internally by useSaveConfigureInstance hook
     try {
-      const crumbField =
-        document.head?.dataset?.crumbname ?? "Jenkins-Crumb";
+      const crumbField = document.head?.dataset?.crumbname ?? "Jenkins-Crumb";
       const crumbValue = document.head?.dataset?.crumbvalue ?? "";
       if (crumbField && crumbValue) {
         updateCrumb(crumbField, crumbValue);
@@ -865,9 +853,7 @@ export default function SetupWizard(): React.JSX.Element {
       try {
         // Step 1: Load translations
         // Source: lines 1437-1450
-        const bundle = await loadBundle(
-          "jenkins.install.pluginSetupWizard",
-        );
+        const bundle = await loadBundle("jenkins.install.pluginSetupWizard");
         if (cancelled) {
           return;
         }
@@ -925,7 +911,11 @@ export default function SetupWizard(): React.JSX.Element {
         }
         const installStatus = statusResult.data;
 
-        if (installStatus && installStatus.jobs && installStatus.jobs.length > 0) {
+        if (
+          installStatus &&
+          installStatus.jobs &&
+          installStatus.jobs.length > 0
+        ) {
           // There are active/completed installation jobs
           if (installingPlugins.length === 0) {
             // Rebuild installing plugins from the jobs
@@ -976,9 +966,7 @@ export default function SetupWizard(): React.JSX.Element {
         showStatePanel();
       } catch (err) {
         if (!cancelled) {
-          handleError(
-            err instanceof Error ? err : new Error(String(err)),
-          );
+          handleError(err instanceof Error ? err : new Error(String(err)));
         }
       }
     };
@@ -1004,7 +992,9 @@ export default function SetupWizard(): React.JSX.Element {
       // Loading — replaces loadingPanel.hbs
       // -----------------------------------------------------------------------
       case "loading":
-        return <Spinner text={translations["installWizard_installing"] ?? ""} />;
+        return (
+          <Spinner text={translations["installWizard_installing"] ?? ""} />
+        );
 
       // -----------------------------------------------------------------------
       // Welcome — delegates to WelcomePanel
@@ -1150,9 +1140,7 @@ export default function SetupWizard(): React.JSX.Element {
     return (
       <>
         <div className="modal-header">
-          <h1>
-            {translations["installWizard_error_title"] ?? "Error"}
-          </h1>
+          <h1>{translations["installWizard_error_title"] ?? "Error"}</h1>
         </div>
         <div className="modal-body">
           <h3>
@@ -1195,15 +1183,11 @@ export default function SetupWizard(): React.JSX.Element {
     return (
       <>
         <div className="modal-header">
-          <h1>
-            {translations["installWizard_offline_title"] ?? "Offline"}
-          </h1>
+          <h1>{translations["installWizard_offline_title"] ?? "Offline"}</h1>
         </div>
         <div className="modal-body">
           {/* Source: offlinePanel.hbs uses triple-mustache {{{message}}} for HTML content */}
-          <div
-            dangerouslySetInnerHTML={{ __html: offlineMessage }}
-          />
+          <div dangerouslySetInnerHTML={{ __html: offlineMessage }} />
         </div>
         <div className="modal-footer">
           <button
@@ -1280,8 +1264,7 @@ export default function SetupWizard(): React.JSX.Element {
             className="btn btn-primary"
             onClick={handleResumeInstallation}
           >
-            {translations["installWizard_incompleteInstall_resume"] ??
-              "Resume"}
+            {translations["installWizard_incompleteInstall_resume"] ?? "Resume"}
           </button>
         </div>
       </>
@@ -1300,10 +1283,10 @@ export default function SetupWizard(): React.JSX.Element {
         <div className="modal-header">
           <h1>
             {hasFailures
-              ? translations["installWizard_installComplete_title_failures"] ??
-                "Installation Complete (with errors)"
-              : translations["installWizard_installComplete_title"] ??
-                "Installation Complete"}
+              ? (translations["installWizard_installComplete_title_failures"] ??
+                "Installation Complete (with errors)")
+              : (translations["installWizard_installComplete_title"] ??
+                "Installation Complete")}
           </h1>
         </div>
         <div className="modal-body">
@@ -1315,9 +1298,7 @@ export default function SetupWizard(): React.JSX.Element {
               </p>
               <ul className="failed-plugins">
                 {failedPluginNames.map((name) => (
-                  <li key={name}>
-                    {availablePluginsMap[name]?.title ?? name}
-                  </li>
+                  <li key={name}>{availablePluginsMap[name]?.title ?? name}</li>
                 ))}
               </ul>
             </>
@@ -1336,8 +1317,7 @@ export default function SetupWizard(): React.JSX.Element {
                 className="btn btn-default"
                 onClick={handleRetryFailedPlugins}
               >
-                {translations["installWizard_installComplete_retry"] ??
-                  "Retry"}
+                {translations["installWizard_installComplete_retry"] ?? "Retry"}
               </button>
               <button
                 type="button"
@@ -1399,8 +1379,7 @@ export default function SetupWizard(): React.JSX.Element {
           {/* Jenkins Version Footer — source lines 309-324 */}
           {jenkinsVersion && (
             <div className="jenkins-version">
-              {translations["installWizard_jenkinsVersionTitle"] ??
-                "Jenkins"}{" "}
+              {translations["installWizard_jenkinsVersionTitle"] ?? "Jenkins"}{" "}
               {jenkinsVersion}
             </div>
           )}

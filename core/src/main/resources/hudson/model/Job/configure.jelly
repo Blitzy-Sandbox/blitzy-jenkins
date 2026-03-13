@@ -44,6 +44,7 @@ THE SOFTWARE.
     </l:side-panel>
 
     <l:main-panel>
+      <div id="react-root" data-view-type="job-configure" data-model-url="${rootURL}/job/${it.name}/api/json"></div>
       <f:form method="post" class="jenkins-form" action="configSubmit" name="config" tableClass="config-table">
         <l:app-bar title="${%General}" headingLevel="h2">
           <p:config-disableBuild />

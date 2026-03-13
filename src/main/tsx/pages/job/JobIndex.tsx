@@ -28,16 +28,16 @@ import React, {
   useMemo,
   useCallback,
   useRef,
-} from 'react';
-import Layout from '@/layout/Layout';
-import { Skeleton } from '@/layout/Skeleton';
-import EditableDescription from '@/hudson/EditableDescription';
-import { useStaplerQuery } from '@/hooks/useStaplerQuery';
-import { useI18n } from '@/hooks/useI18n';
-import { useJenkinsNavigation } from '@/hooks/useJenkinsNavigation';
-import type { Job, Build, JobProperty, BallColor } from '@/types/models';
-import { getBaseUrl } from '@/utils/baseUrl';
-import { INFO } from '@/utils/symbols';
+} from "react";
+import Layout from "@/layout/Layout";
+import { Skeleton } from "@/layout/Skeleton";
+import EditableDescription from "@/hudson/EditableDescription";
+import { useStaplerQuery } from "@/hooks/useStaplerQuery";
+import { useI18n } from "@/hooks/useI18n";
+import { useJenkinsNavigation } from "@/hooks/useJenkinsNavigation";
+import type { Job, Build, JobProperty, BallColor } from "@/types/models";
+import { getBaseUrl } from "@/utils/baseUrl";
+import { INFO } from "@/utils/symbols";
 
 // =============================================================================
 // Type Definitions
@@ -75,8 +75,8 @@ export interface JobIndexProps {
  */
 interface QueryParameters {
   search?: string;
-  'older-than'?: string;
-  'newer-than'?: string;
+  "older-than"?: string;
+  "newer-than"?: string;
 }
 
 /**
@@ -117,20 +117,20 @@ const DEBOUNCE_DELAY_MS = 150;
  * Mirrors the server-side BallColor.getDescription() output.
  */
 const BALL_COLOR_DESCRIPTIONS: Record<string, string> = {
-  blue: 'Success',
-  blue_anime: 'In progress',
-  yellow: 'Unstable',
-  yellow_anime: 'In progress',
-  red: 'Failed',
-  red_anime: 'In progress',
-  grey: 'Pending',
-  grey_anime: 'In progress',
-  disabled: 'Disabled',
-  disabled_anime: 'In progress',
-  aborted: 'Aborted',
-  aborted_anime: 'In progress',
-  nobuilt: 'Not built',
-  nobuilt_anime: 'In progress',
+  blue: "Success",
+  blue_anime: "In progress",
+  yellow: "Unstable",
+  yellow_anime: "In progress",
+  red: "Failed",
+  red_anime: "In progress",
+  grey: "Pending",
+  grey_anime: "In progress",
+  disabled: "Disabled",
+  disabled_anime: "In progress",
+  aborted: "Aborted",
+  aborted_anime: "In progress",
+  nobuilt: "Not built",
+  nobuilt_anime: "In progress",
 };
 
 // =============================================================================
@@ -147,12 +147,12 @@ const BALL_COLOR_DESCRIPTIONS: Record<string, string> = {
 function toQueryString(params: QueryParameters): string {
   const searchParams = new URLSearchParams();
   Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== '') {
+    if (value !== undefined && value !== "") {
       searchParams.set(key, value);
     }
   });
   const str = searchParams.toString();
-  return str ? '?' + str : '';
+  return str ? "?" + str : "";
 }
 
 /**
@@ -166,16 +166,16 @@ function toQueryString(params: QueryParameters): string {
  */
 function breakableName(name: string): React.ReactNode[] {
   const segments: React.ReactNode[] = [];
-  let current = '';
+  let current = "";
   for (let i = 0; i < name.length; i++) {
     const ch = name[i];
-    const prev = i > 0 ? name[i - 1] : '';
+    const prev = i > 0 ? name[i - 1] : "";
     // Insert break opportunity before: uppercase after lowercase, after / - _
     if (
-      (ch >= 'A' && ch <= 'Z' && prev >= 'a' && prev <= 'z') ||
-      prev === '/' ||
-      prev === '-' ||
-      prev === '_'
+      (ch >= "A" && ch <= "Z" && prev >= "a" && prev <= "z") ||
+      prev === "/" ||
+      prev === "-" ||
+      prev === "_"
     ) {
       segments.push(current);
       segments.push(<wbr key={`wbr-${i}`} />);
@@ -197,7 +197,7 @@ function breakableName(name: string): React.ReactNode[] {
  * @returns Display description used in tooltips and ARIA labels.
  */
 function getBallColorDescription(color: BallColor | string): string {
-  return BALL_COLOR_DESCRIPTIONS[color] ?? 'Unknown';
+  return BALL_COLOR_DESCRIPTIONS[color] ?? "Unknown";
 }
 
 /**
@@ -226,30 +226,22 @@ function buildPermalinkList(job: Job): Permalink[] {
     }
   };
 
-  addPermalink('lastBuild', 'Last Build', job.lastBuild);
+  addPermalink("lastBuild", "Last Build", job.lastBuild);
+  addPermalink("lastStableBuild", "Last Stable Build", job.lastStableBuild);
   addPermalink(
-    'lastStableBuild',
-    'Last Stable Build',
-    job.lastStableBuild,
-  );
-  addPermalink(
-    'lastSuccessfulBuild',
-    'Last Successful Build',
+    "lastSuccessfulBuild",
+    "Last Successful Build",
     job.lastSuccessfulBuild,
   );
+  addPermalink("lastFailedBuild", "Last Failed Build", job.lastFailedBuild);
   addPermalink(
-    'lastFailedBuild',
-    'Last Failed Build',
-    job.lastFailedBuild,
-  );
-  addPermalink(
-    'lastUnstableBuild',
-    'Last Unstable Build',
+    "lastUnstableBuild",
+    "Last Unstable Build",
     job.lastUnstableBuild,
   );
   addPermalink(
-    'lastCompletedBuild',
-    'Last Completed Build',
+    "lastCompletedBuild",
+    "Last Completed Build",
     job.lastCompletedBuild,
   );
 
@@ -285,10 +277,10 @@ function JobPropertySummaries({
         if (!property._class) {
           return null;
         }
-        const shortClassName = property._class.split('.').pop() ?? '';
+        const shortClassName = property._class.split(".").pop() ?? "";
         return (
           <div
-            key={property._class + '-' + String(index)}
+            key={property._class + "-" + String(index)}
             className="job-property-summary"
             data-class={property._class}
           >
@@ -298,7 +290,9 @@ function JobPropertySummaries({
                 response may include a rendered HTML fragment; if it
                 does not, we render a labelled placeholder that can be
                 picked up by the Jenkins plugin infrastructure. */}
-            <span className="job-property-summary__label">{shortClassName}</span>
+            <span className="job-property-summary__label">
+              {shortClassName}
+            </span>
           </div>
         );
       })}
@@ -329,14 +323,14 @@ function PermalinksSection({
   }
 
   return (
-    <section aria-label={t('Permalinks') ?? 'Permalinks'}>
-      <h2 className="permalinks-header">{t('Permalinks') ?? 'Permalinks'}</h2>
+    <section aria-label={t("Permalinks") ?? "Permalinks"}>
+      <h2 className="permalinks-header">{t("Permalinks") ?? "Permalinks"}</h2>
       <ul className="permalinks-list">
         {permalinks.map((pl) => (
           <li key={pl.id}>
-            {pl.displayName}{' '}
-            <a href={baseUrl + '/' + pl.buildUrl}>
-              {'#' + String(pl.buildNumber)}
+            {pl.displayName}{" "}
+            <a href={baseUrl + "/" + pl.buildUrl}>
+              {"#" + String(pl.buildNumber)}
             </a>
           </li>
         ))}
@@ -369,14 +363,14 @@ function BuildsCard({ jobUrl }: BuildsCardProps): React.ReactElement {
   const rootUrl = getBaseUrl();
 
   // Construct the ajaxBuildHistory URL
-  const ajaxUrl = rootUrl + '/' + jobUrl + '/ajaxBuildHistory';
+  const ajaxUrl = rootUrl + "/" + jobUrl + "/ajaxBuildHistory";
 
   // ---- State (replaces imperative DOM caching from builds-card.js) --------
-  const [buildsHtml, setBuildsHtml] = useState<string>('');
+  const [buildsHtml, setBuildsHtml] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [hasNoBuilds, setHasNoBuilds] = useState<boolean>(false);
-  const [searchInput, setSearchInput] = useState<string>('');
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchInput, setSearchInput] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [cardControls, setCardControls] = useState<CardControlsOptions>({
     pageHasUp: false,
     pageHasDown: false,
@@ -385,7 +379,7 @@ function BuildsCard({ jobUrl }: BuildsCardProps): React.ReactElement {
   });
 
   // Refs for mutable state accessed inside callbacks / timers
-  const searchQueryRef = useRef<string>('');
+  const searchQueryRef = useRef<string>("");
   const cardControlsRef = useRef<CardControlsOptions>(cardControls);
   const isMountedRef = useRef<boolean>(true);
   const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -435,12 +429,12 @@ function BuildsCard({ jobUrl }: BuildsCardProps): React.ReactElement {
         // BigInt arithmetic — exact mirror of builds-card.js line 48:
         //   params["older-than"] = String(BigInt(pageEntryNewest) + 1n);
         try {
-          params['older-than'] = String(
+          params["older-than"] = String(
             BigInt(currentControls.pageEntryNewest) + 1n,
           );
         } catch {
           // If the value is not a valid BigInt, fall back to raw string
-          params['older-than'] = currentControls.pageEntryNewest;
+          params["older-than"] = currentControls.pageEntryNewest;
         }
       }
 
@@ -449,7 +443,7 @@ function BuildsCard({ jobUrl }: BuildsCardProps): React.ReactElement {
       const url = ajaxUrl + toQueryString(params);
 
       fetch(url, {
-        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        headers: { "X-Requested-With": "XMLHttpRequest" },
       })
         .then((response) => response.text())
         .then((html) => {
@@ -461,7 +455,7 @@ function BuildsCard({ jobUrl }: BuildsCardProps): React.ReactElement {
 
           if (!trimmed) {
             // Empty response — no builds — mirrors builds-card.js lines 59-70
-            setBuildsHtml('');
+            setBuildsHtml("");
             setHasNoBuilds(true);
             setIsLoading(false);
           } else {
@@ -469,21 +463,20 @@ function BuildsCard({ jobUrl }: BuildsCardProps): React.ReactElement {
             // Mirrors builds-card.js lines 72-87
             const parser = new DOMParser();
             const doc = parser.parseFromString(
-              '<div>' + trimmed + '</div>',
-              'text/html',
+              "<div>" + trimmed + "</div>",
+              "text/html",
             );
             const innerChild = doc.body.firstElementChild?.firstElementChild;
 
             if (innerChild instanceof HTMLElement) {
               const newControls: CardControlsOptions = {
-                pageHasUp: innerChild.dataset.pageHasUp === 'true',
-                pageHasDown: innerChild.dataset.pageHasDown === 'true',
+                pageHasUp: innerChild.dataset.pageHasUp === "true",
+                pageHasDown: innerChild.dataset.pageHasDown === "true",
                 pageEntryNewest: innerChild.dataset.pageEntryNewest || false,
                 pageEntryOldest: innerChild.dataset.pageEntryOldest || false,
               };
               setCardControls(newControls);
               cardControlsRef.current = newControls;
-
             }
 
             setBuildsHtml(trimmed);
@@ -527,11 +520,11 @@ function BuildsCard({ jobUrl }: BuildsCardProps): React.ReactElement {
       }
       loadBuilds();
     };
-    window.addEventListener('focus', handleFocus);
+    window.addEventListener("focus", handleFocus);
 
     return () => {
       isMountedRef.current = false;
-      window.removeEventListener('focus', handleFocus);
+      window.removeEventListener("focus", handleFocus);
       if (refreshTimerRef.current !== null) {
         clearTimeout(refreshTimerRef.current);
       }
@@ -572,13 +565,13 @@ function BuildsCard({ jobUrl }: BuildsCardProps): React.ReactElement {
   // ---- Pagination handlers ------------------------------------------------
   const handleNewerPage = useCallback(() => {
     if (cardControls.pageEntryNewest) {
-      loadBuilds({ 'newer-than': cardControls.pageEntryNewest as string });
+      loadBuilds({ "newer-than": cardControls.pageEntryNewest as string });
     }
   }, [cardControls.pageEntryNewest, loadBuilds]);
 
   const handleOlderPage = useCallback(() => {
     if (cardControls.pageEntryOldest) {
-      loadBuilds({ 'older-than': cardControls.pageEntryOldest as string });
+      loadBuilds({ "older-than": cardControls.pageEntryOldest as string });
     }
   }, [cardControls.pageEntryOldest, loadBuilds]);
 
@@ -591,24 +584,24 @@ function BuildsCard({ jobUrl }: BuildsCardProps): React.ReactElement {
       id="buildHistoryPage"
       data-page-ajax={ajaxUrl}
       className={
-        'app-builds-container' +
-        (isLoading ? ' app-builds-container--loading' : '')
+        "app-builds-container" +
+        (isLoading ? " app-builds-container--loading" : "")
       }
     >
       {/* Search bar — mirrors builds-card.js lines 141-150 */}
       <div
         className={
-          'jenkins-search' + (isSearching ? ' jenkins-search--loading' : '')
+          "jenkins-search" + (isSearching ? " jenkins-search--loading" : "")
         }
       >
         <input
           id="jenkins-build-history"
           type="text"
           className="jenkins-search__input"
-          placeholder={t('Search builds') ?? 'Search builds'}
+          placeholder={t("Search builds") ?? "Search builds"}
           value={searchInput}
           onChange={handleSearchInput}
-          aria-label={t('Search builds') ?? 'Search builds'}
+          aria-label={t("Search builds") ?? "Search builds"}
         />
       </div>
 
@@ -620,7 +613,7 @@ function BuildsCard({ jobUrl }: BuildsCardProps): React.ReactElement {
               className="app-builds-container__no-builds__icon"
               dangerouslySetInnerHTML={{ __html: INFO }}
             />
-            <p>{t('No builds')}</p>
+            <p>{t("No builds")}</p>
           </div>
         ) : null}
 
@@ -640,39 +633,39 @@ function BuildsCard({ jobUrl }: BuildsCardProps): React.ReactElement {
         id="controls"
         className={
           !cardControls.pageHasUp && !cardControls.pageHasDown
-            ? 'jenkins-hidden'
-            : ''
+            ? "jenkins-hidden"
+            : ""
         }
       >
         <button
           id="up"
           type="button"
           className={
-            'app-builds-container__button' +
+            "app-builds-container__button" +
             (!cardControls.pageHasUp
-              ? ' app-builds-container__button--disabled'
-              : '')
+              ? " app-builds-container__button--disabled"
+              : "")
           }
           disabled={!cardControls.pageHasUp}
           onClick={handleNewerPage}
-          aria-label={t('Previous builds page') ?? 'Previous builds page'}
+          aria-label={t("Previous builds page") ?? "Previous builds page"}
         >
-          {t('Previous') ?? 'Previous'}
+          {t("Previous") ?? "Previous"}
         </button>
         <button
           id="down"
           type="button"
           className={
-            'app-builds-container__button' +
+            "app-builds-container__button" +
             (!cardControls.pageHasDown
-              ? ' app-builds-container__button--disabled'
-              : '')
+              ? " app-builds-container__button--disabled"
+              : "")
           }
           disabled={!cardControls.pageHasDown}
           onClick={handleOlderPage}
-          aria-label={t('Next builds page') ?? 'Next builds page'}
+          aria-label={t("Next builds page") ?? "Next builds page"}
         >
-          {t('Next') ?? 'Next'}
+          {t("Next") ?? "Next"}
         </button>
       </div>
     </div>
@@ -706,19 +699,17 @@ function JobIndex({
   const { baseUrl } = useJenkinsNavigation();
 
   // ---- Data fetching — GET {jobUrl}/api/json (Phase 2) --------------------
-  const {
-    data: jobData,
-    isLoading: isJobLoading,
-  } = useStaplerQuery<Job>({
-    url: baseUrl + '/' + jobUrl + '/api/json',
-    queryKey: ['job', jobUrl],
+  const { data: jobData, isLoading: isJobLoading } = useStaplerQuery<Job>({
+    url: baseUrl + "/" + jobUrl + "/api/json",
+    queryKey: ["job", jobUrl],
   });
 
   // ---- Derived values -----------------------------------------------------
   const lastBuild: Build | null | undefined = jobData?.lastBuild ?? null;
-  const lastBuildColor: string = jobData?.color ?? 'grey';
-  const iconClassName = 'symbol-status-' + lastBuildColor.replace(/_anime$/, '');
-  const isAnimated = lastBuildColor.endsWith('_anime');
+  const lastBuildColor: string = jobData?.color ?? "grey";
+  const iconClassName =
+    "symbol-status-" + lastBuildColor.replace(/_anime$/, "");
+  const isAnimated = lastBuildColor.endsWith("_anime");
   const iconDescription = getBallColorDescription(lastBuildColor);
   const permalinks: Permalink[] = useMemo(
     () => (jobData ? buildPermalinkList(jobData) : []),
@@ -728,8 +719,8 @@ function JobIndex({
   // Page title — mirrors Jelly line 34
   const pageTitle = useMemo(() => {
     const suffix = parentFullDisplayName
-      ? ' [' + parentFullDisplayName + ']'
-      : '';
+      ? " [" + parentFullDisplayName + "]"
+      : "";
     return displayName + suffix;
   }, [displayName, parentFullDisplayName]);
 
@@ -748,7 +739,7 @@ function JobIndex({
   // architecture these links are generated by the Java model — the Layout
   // component renders whatever children are placed in the sidePanel slot.
   const sidePanelContent = (
-    <nav aria-label={t('Job actions') ?? 'Job actions'}>
+    <nav aria-label={t("Job actions") ?? "Job actions"}>
       <div className="task-link-container">
         {/* Task links are typically injected server-side.  In the React
             migration the Jelly shell passes them as data attributes or
@@ -762,7 +753,7 @@ function JobIndex({
   const showFullName =
     jobData &&
     fullName !== fullDisplayName &&
-    jobData._class !== 'hudson.matrix.MatrixConfiguration';
+    jobData._class !== "hudson.matrix.MatrixConfiguration";
 
   // ---- Experimental new job page flag (index.jelly lines 27-32) -----------
   // When the flag is enabled, the Jelly template uses a `<j:choose>` to
@@ -773,29 +764,22 @@ function JobIndex({
 
   // ---- Render (traditional layout — index.jelly lines 33-74) -------------
   return (
-    <Layout
-      title={pageTitle}
-      type="two-column"
-      sidePanel={sidePanelContent}
-    >
+    <Layout title={pageTitle} type="two-column" sidePanel={sidePanelContent}>
       {/* ---- App bar with last build status (index.jelly lines 38-53) ---- */}
       <div
         className="jenkins-app-bar"
-        data-new-job-page={newJobPage ? 'true' : undefined}
+        data-new-job-page={newJobPage ? "true" : undefined}
       >
         <div className="jenkins-app-bar__content jenkins-build-caption">
           {lastBuild ? (
             <a
-              href={baseUrl + '/' + lastBuild.url}
+              href={baseUrl + "/" + lastBuild.url}
               className="jenkins-!-display-contents"
               tabIndex={-1}
               aria-hidden="true"
             >
               <span
-                className={
-                  iconClassName +
-                  (isAnimated ? ' loading' : '')
-                }
+                className={iconClassName + (isAnimated ? " loading" : "")}
                 title={iconDescription}
                 role="img"
                 aria-label={iconDescription}
@@ -809,9 +793,9 @@ function JobIndex({
         <div className="jenkins-app-bar__controls">
           {hasConfigurePermission ? (
             <EditableDescription
-              description={jobData?.description ?? ''}
+              description={jobData?.description ?? ""}
               hasPermission={hasConfigurePermission}
-              submissionUrl={baseUrl + '/' + jobUrl + '/submitDescription'}
+              submissionUrl={baseUrl + "/" + jobUrl + "/submitDescription"}
               hideButton={false}
             />
           ) : null}
@@ -821,17 +805,17 @@ function JobIndex({
       {/* ---- Full project name (index.jelly lines 55-64) ---- */}
       {showFullName ? (
         <div className="job-full-name">
-          {isTopLevel ? t('Project name') : t('Full project name')}
-          {': '}
+          {isTopLevel ? t("Project name") : t("Full project name")}
+          {": "}
           {fullName}
         </div>
       ) : null}
 
       {/* ---- Editable description (index.jelly line 65) ---- */}
       <EditableDescription
-        description={jobData?.description ?? ''}
+        description={jobData?.description ?? ""}
         hasPermission={hasConfigurePermission}
-        submissionUrl={baseUrl + '/' + jobUrl + '/submitDescription'}
+        submissionUrl={baseUrl + "/" + jobUrl + "/submitDescription"}
         hideButton={true}
       />
 

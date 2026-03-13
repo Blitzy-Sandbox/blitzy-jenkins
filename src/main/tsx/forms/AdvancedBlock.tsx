@@ -1,5 +1,5 @@
-import { useState, useId, useCallback, type ReactNode } from 'react';
-import { useI18n } from '@/hooks/useI18n';
+import { useState, useId, useCallback, type ReactNode } from "react";
+import { useI18n } from "@/hooks/useI18n";
 
 /**
  * Props for the {@link AdvancedBlock} component.
@@ -158,7 +158,7 @@ export function AdvancedBlock({
    * 2. Localised "Advanced" string from the i18n system
    * 3. Hard-coded "Advanced" fallback if i18n is unavailable
    */
-  const buttonText: string = title ?? t('Advanced') ?? 'Advanced';
+  const buttonText: string = title ?? t("Advanced") ?? "Advanced";
 
   /**
    * Whether any fields within this advanced block have been customized
@@ -175,14 +175,14 @@ export function AdvancedBlock({
    * default when i18n data is not yet loaded.
    */
   const badgeTooltip: string | undefined = hasCustomizedFields
-    ? (t('customizedFields') ?? 'Customized fields')
+    ? (t("customizedFields") ?? "Customized fields")
     : undefined;
 
   /**
    * Localised "Edited" label text.
    * Uses the `Edited` i18n key, matching the Jelly `${%Edited}` pattern.
    */
-  const editedText: string = t('Edited') ?? 'Edited';
+  const editedText: string = t("Edited") ?? "Edited";
 
   /* ── Render ──────────────────────────────────────────────────────── */
 
@@ -191,7 +191,7 @@ export function AdvancedBlock({
       {/* ── Toggle row: expand button + edited badge ──────────────── */}
       <div
         className="advancedLink jenkins-buttons-row"
-        style={expanded ? { display: 'none' } : undefined}
+        style={expanded ? { display: "none" } : undefined}
         inert={expanded ? true : undefined}
       >
         {/*
@@ -212,11 +212,7 @@ export function AdvancedBlock({
            * the surrounding text. No explicit width/height so that CSS
            * controls sizing via the parent button's font metrics.
            */}
-          <svg
-            className="svg-icon"
-            aria-hidden="true"
-            focusable="false"
-          >
+          <svg className="svg-icon" aria-hidden="true" focusable="false">
             <use href="#symbol-chevron-down" />
           </svg>
         </button>
@@ -232,8 +228,8 @@ export function AdvancedBlock({
         <span
           className={
             hasCustomizedFields
-              ? 'jenkins-edited-section-label'
-              : 'jenkins-edited-section-label jenkins-hidden'
+              ? "jenkins-edited-section-label"
+              : "jenkins-edited-section-label jenkins-hidden"
           }
           id={badgeId}
           title={badgeTooltip}
@@ -242,11 +238,7 @@ export function AdvancedBlock({
            * Edit icon — references the Jenkins SVG symbol sprite sheet,
            * matching Jelly's <l:icon src="symbol-edit"/>.
            */}
-          <svg
-            className="svg-icon"
-            aria-hidden="true"
-            focusable="false"
-          >
+          <svg className="svg-icon" aria-hidden="true" focusable="false">
             <use href="#symbol-edit" />
           </svg>
           {editedText}
@@ -256,7 +248,7 @@ export function AdvancedBlock({
       {/* ── Expandable body ───────────────────────────────────────── */}
       <div
         className="advancedBody"
-        style={expanded ? undefined : { display: 'none' }}
+        style={expanded ? undefined : { display: "none" }}
         inert={expanded ? undefined : true}
       >
         <div className="tbody dropdownList-container">
@@ -285,7 +277,7 @@ export function AdvancedBlock({
         <div
           className="advanced-customized-fields-info"
           data-id={badgeId}
-          data-customized-fields={customizedFields.join(', ')}
+          data-customized-fields={customizedFields.join(", ")}
         />
       )}
     </div>

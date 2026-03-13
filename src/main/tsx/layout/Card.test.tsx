@@ -11,9 +11,7 @@ import { Card } from "./Card";
 
 describe("Card", () => {
   it("renders with jenkins-card CSS class", () => {
-    const { container } = render(
-      <Card title="Test Card">Body content</Card>,
-    );
+    const { container } = render(<Card title="Test Card">Body content</Card>);
     expect(container.querySelector(".jenkins-card")).not.toBeNull();
   });
 
@@ -73,10 +71,7 @@ describe("Card", () => {
 
   it("renders controls in the controls area", () => {
     const { container } = render(
-      <Card
-        title="Title"
-        controls={<button type="button">Action</button>}
-      >
+      <Card title="Title" controls={<button type="button">Action</button>}>
         Content
       </Card>,
     );
@@ -92,6 +87,8 @@ describe("Card", () => {
       </Card>,
     );
     const contentDiv = container.querySelector(".jenkins-card__content");
-    expect(contentDiv?.querySelector("[data-testid='content-marker']")).not.toBeNull();
+    expect(
+      contentDiv?.querySelector("[data-testid='content-marker']"),
+    ).not.toBeNull();
   });
 });

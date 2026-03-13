@@ -29,27 +29,27 @@ import React, {
   useActionState,
   useRef,
   useMemo,
-} from 'react';
+} from "react";
 
 /* Layout components ------------------------------------------------------- */
-import Layout from '@/layout/Layout';
-import { Skeleton } from '@/layout/Skeleton';
+import Layout from "@/layout/Layout";
+import { Skeleton } from "@/layout/Skeleton";
 
 /* Form components --------------------------------------------------------- */
-import { FormEntry } from '@/forms/FormEntry';
-import { FormSection } from '@/forms/FormSection';
-import { TextArea } from '@/forms/TextArea';
-import { HeteroList } from '@/forms/HeteroList';
-import type { Descriptor, HeteroItem } from '@/forms/HeteroList';
-import { Checkbox } from '@/forms/Checkbox';
+import { FormEntry } from "@/forms/FormEntry";
+import { FormSection } from "@/forms/FormSection";
+import { TextArea } from "@/forms/TextArea";
+import { HeteroList } from "@/forms/HeteroList";
+import type { Descriptor, HeteroItem } from "@/forms/HeteroList";
+import { Checkbox } from "@/forms/Checkbox";
 
 /* Hooks ------------------------------------------------------------------- */
-import { useStaplerQuery } from '@/hooks/useStaplerQuery';
-import { useStaplerMutation } from '@/hooks/useStaplerMutation';
-import { useI18n } from '@/hooks/useI18n';
+import { useStaplerQuery } from "@/hooks/useStaplerQuery";
+import { useStaplerMutation } from "@/hooks/useStaplerMutation";
+import { useI18n } from "@/hooks/useI18n";
 
 /* Types ------------------------------------------------------------------- */
-import type { Job } from '@/types/models';
+import type { Job } from "@/types/models";
 
 /* ========================================================================= */
 /*  Exported type definitions                                                 */
@@ -59,13 +59,13 @@ import type { Job } from '@/types/models';
  * Base description type extracted from the Job model.
  * Ensures configuration data alignment with the Job REST API contract.
  */
-type JobDescription = NonNullable<Job['description']>;
+type JobDescription = NonNullable<Job["description"]>;
 
 /**
  * Base job property type from the Job model.
  * Extended with descriptor metadata in {@link JobConfigData}.
  */
-type JobPropertyBase = Job['property'][number];
+type JobPropertyBase = Job["property"][number];
 
 /**
  * Props for the {@link JobConfigure} component.
@@ -129,7 +129,7 @@ interface SidebarItem {
 /** Form action state tracked by React 19 useActionState. */
 interface FormActionState {
   /** Current status of the form submission */
-  status: 'idle' | 'submitting' | 'success' | 'error';
+  status: "idle" | "submitting" | "success" | "error";
   /** Error message if status is 'error', null otherwise */
   error: string | null;
 }
@@ -140,7 +140,7 @@ interface FormActionState {
 
 /** Initial state for the useActionState hook. */
 const INITIAL_FORM_STATE: FormActionState = {
-  status: 'idle',
+  status: "idle",
   error: null,
 };
 
@@ -165,25 +165,25 @@ const DEFAULT_SIDEBAR_ICON = (
   >
     <path
       d={
-        'M262.29 192.31a64 64 0 1057.4 57.4 64.13 64.13 0 00-57.4-57.4z' +
-        'M416.39 256a154.34 154.34 0 01-1.53 20.79l45.21 35.46a10.81 ' +
-        '10.81 0 012.45 13.75l-42.77 74a10.81 10.81 0 01-13.14 4.59l' +
-        '-44.9-18.08a16.11 16.11 0 00-15.17 1.75A164.48 164.48 0 ' +
-        '01325 400.8a15.94 15.94 0 00-8.82 12.14l-6.73 47.89a11.08 ' +
-        '11.08 0 01-10.68 9.17h-85.54a11.11 11.11 0 01-10.69-8.87l' +
-        '-6.72-47.82a16.07 16.07 0 00-9-12.22 155.3 155.3 0 01-21.46' +
-        '-12.57 16 16 0 00-15.11-1.71l-44.89 18.07a10.81 10.81 0 ' +
-        '01-13.14-4.58l-42.77-74a10.8 10.8 0 012.45-13.75l38.21-30' +
-        'a16.05 16.05 0 006-14.08c-.36-4.17-.58-8.33-.58-12.5s.21-' +
-        '8.27.58-12.35a16 16 0 00-6.07-13.94l-38.19-30A10.81 10.81' +
-        ' 0 0149.48 186l42.77-74a10.81 10.81 0 0113.14-4.59l44.9 ' +
-        '18.08a16.11 16.11 0 0015.17-1.75A164.48 164.48 0 01187 ' +
-        '111.2a15.94 15.94 0 008.82-12.14l6.73-47.89A11.08 11.08 ' +
-        '0 01213.23 42h85.54a11.11 11.11 0 0110.69 8.87l6.72 47.82' +
-        'a16.07 16.07 0 009 12.22 155.3 155.3 0 0121.46 12.57 16 ' +
-        '16 0 0015.11 1.71l44.89-18.07a10.81 10.81 0 0113.14 4.58' +
-        'l42.77 74a10.8 10.8 0 01-2.45 13.75l-38.21 30a16.05 16.05' +
-        ' 0 00-6.05 14.08c.33 4.14.55 8.3.55 12.47z'
+        "M262.29 192.31a64 64 0 1057.4 57.4 64.13 64.13 0 00-57.4-57.4z" +
+        "M416.39 256a154.34 154.34 0 01-1.53 20.79l45.21 35.46a10.81 " +
+        "10.81 0 012.45 13.75l-42.77 74a10.81 10.81 0 01-13.14 4.59l" +
+        "-44.9-18.08a16.11 16.11 0 00-15.17 1.75A164.48 164.48 0 " +
+        "01325 400.8a15.94 15.94 0 00-8.82 12.14l-6.73 47.89a11.08 " +
+        "11.08 0 01-10.68 9.17h-85.54a11.11 11.11 0 01-10.69-8.87l" +
+        "-6.72-47.82a16.07 16.07 0 00-9-12.22 155.3 155.3 0 01-21.46" +
+        "-12.57 16 16 0 00-15.11-1.71l-44.89 18.07a10.81 10.81 0 " +
+        "01-13.14-4.58l-42.77-74a10.8 10.8 0 012.45-13.75l38.21-30" +
+        "a16.05 16.05 0 006-14.08c-.36-4.17-.58-8.33-.58-12.5s.21-" +
+        "8.27.58-12.35a16 16 0 00-6.07-13.94l-38.19-30A10.81 10.81" +
+        " 0 0149.48 186l42.77-74a10.81 10.81 0 0113.14-4.59l44.9 " +
+        "18.08a16.11 16.11 0 0015.17-1.75A164.48 164.48 0 01187 " +
+        "111.2a15.94 15.94 0 008.82-12.14l6.73-47.89A11.08 11.08 " +
+        "0 01213.23 42h85.54a11.11 11.11 0 0110.69 8.87l6.72 47.82" +
+        "a16.07 16.07 0 009 12.22 155.3 155.3 0 0121.46 12.57 16 " +
+        "16 0 0015.11 1.71l44.89-18.07a10.81 10.81 0 0113.14 4.58" +
+        "l42.77 74a10.8 10.8 0 01-2.45 13.75l-38.21 30a16.05 16.05" +
+        " 0 00-6.05 14.08c.33 4.14.55 8.3.55 12.47z"
       }
       fill="none"
       stroke="currentColor"
@@ -237,7 +237,7 @@ export default function JobConfigure({
     isError,
   } = useStaplerQuery<JobConfigData>({
     url: `${jobUrl}/api/json?tree=description,disabled,property[*]`,
-    queryKey: ['jobConfig', jobUrl],
+    queryKey: ["jobConfig", jobUrl],
   });
 
   /**
@@ -248,7 +248,7 @@ export default function JobConfigure({
     descriptors: Descriptor[];
   }>({
     url: `${jobUrl}/descriptorByName/hudson.model.Job/property/descriptorList`,
-    queryKey: ['jobPropertyDescriptors', jobUrl],
+    queryKey: ["jobPropertyDescriptors", jobUrl],
     enabled: !isLoading,
   });
 
@@ -259,23 +259,23 @@ export default function JobConfigure({
   /* ---------------------------------------------------------------------- */
   const applyMutation = useStaplerMutation<string, FormData>({
     url: `${jobUrl}/configSubmit`,
-    contentType: 'form-urlencoded',
-    responseType: 'text',
+    contentType: "form-urlencoded",
+    responseType: "text",
     onSuccess: () => {
-      setApplyNotification(t('Saved') ?? 'Saved');
+      setApplyNotification(t("Saved") ?? "Saved");
       window.setTimeout(() => setApplyNotification(null), 3000);
     },
     onError: (err: Error) => {
-      setApplyNotification(err.message || 'Error saving configuration');
+      setApplyNotification(err.message || "Error saving configuration");
     },
   });
 
   /* ---------------------------------------------------------------------- */
   /*  Local state                                                            */
   /* ---------------------------------------------------------------------- */
-  const [description, setDescription] = useState<string>('');
+  const [description, setDescription] = useState<string>("");
   const [disabled, setDisabled] = useState<boolean>(false);
-  const [activeSection, setActiveSection] = useState<string>('general');
+  const [activeSection, setActiveSection] = useState<string>("general");
   const [applyNotification, setApplyNotification] = useState<string | null>(
     null,
   );
@@ -292,7 +292,7 @@ export default function JobConfigure({
   >(undefined);
   if (configData && configData !== lastSyncedConfig) {
     setLastSyncedConfig(configData);
-    setDescription(configData.description ?? '');
+    setDescription(configData.description ?? "");
     setDisabled(configData.disabled ?? false);
   }
 
@@ -308,7 +308,7 @@ export default function JobConfigure({
     }
 
     const items: SidebarItem[] = [
-      { id: 'general', title: t('General') ?? 'General' },
+      { id: "general", title: t("General") ?? "General" },
     ];
 
     // Add per-property sidebar entries from job property descriptors.
@@ -339,7 +339,7 @@ export default function JobConfigure({
 
     const handleScroll = () => {
       const scrollY = Math.max(window.scrollY, 0);
-      let selected = sidebarItems[0]?.id ?? 'general';
+      let selected = sidebarItems[0]?.id ?? "general";
 
       for (let i = sidebarItems.length - 1; i >= 0; i -= 1) {
         const el = document.getElementById(sidebarItems[i].id);
@@ -359,8 +359,8 @@ export default function JobConfigure({
       setActiveSection((prev) => (prev !== selected ? selected : prev));
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [sidebarItems]);
 
   /* ---------------------------------------------------------------------- */
@@ -376,13 +376,11 @@ export default function JobConfigure({
 
       if (index === 0) {
         // First section scrolls to top of page (matches original behavior)
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: "smooth" });
       } else {
         const sectionTop =
-          element.getBoundingClientRect().top +
-          window.scrollY -
-          SCROLL_OFFSET;
-        window.scrollTo({ top: sectionTop, behavior: 'smooth' });
+          element.getBoundingClientRect().top + window.scrollY - SCROLL_OFFSET;
+        window.scrollTo({ top: sectionTop, behavior: "smooth" });
       }
       setActiveSection(sectionId);
     },
@@ -401,35 +399,32 @@ export default function JobConfigure({
       try {
         // Inject CSRF crumb from DOM head dataset
         const crumbHeaderName =
-          document.head.dataset.crumbHeader ?? 'Jenkins-Crumb';
-        const crumbValue = document.head.dataset.crumbValue ?? '';
+          document.head.dataset.crumbHeader ?? "Jenkins-Crumb";
+        const crumbValue = document.head.dataset.crumbValue ?? "";
 
         const response = await fetch(`${jobUrl}/configSubmit`, {
-          method: 'POST',
+          method: "POST",
           body: formData,
           headers: {
             [crumbHeaderName]: crumbValue,
           },
-          redirect: 'follow',
+          redirect: "follow",
         });
 
         if (response.ok || response.redirected) {
           // Redirect to job page on success (mirrors Jelly POST redirect)
-          window.location.href = response.redirected
-            ? response.url
-            : jobUrl;
-          return { status: 'success', error: null };
+          window.location.href = response.redirected ? response.url : jobUrl;
+          return { status: "success", error: null };
         }
 
         const errorText = await response.text();
         return {
-          status: 'error',
+          status: "error",
           error: errorText || `Save failed (HTTP ${response.status})`,
         };
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : String(err);
-        return { status: 'error', error: message };
+        const message = err instanceof Error ? err.message : String(err);
+        return { status: "error", error: message };
       }
     },
     INITIAL_FORM_STATE,
@@ -473,11 +468,11 @@ export default function JobConfigure({
   /* ---------------------------------------------------------------------- */
   if (!hasExtendedReadPermission) {
     return (
-      <Layout title={`${t('Config') ?? 'Config'} ${displayName}`}>
+      <Layout title={`${t("Config") ?? "Config"} ${displayName}`}>
         <div className="jenkins-not-accessible" role="alert">
           <p>
-            {t('AccessDenied') ??
-              'Access denied. You need the Extended Read permission to view this page.'}
+            {t("AccessDenied") ??
+              "Access denied. You need the Extended Read permission to view this page."}
           </p>
         </div>
       </Layout>
@@ -487,10 +482,10 @@ export default function JobConfigure({
   /* ---------------------------------------------------------------------- */
   /*  Derived values                                                         */
   /* ---------------------------------------------------------------------- */
-  const pageTitle = `${t('Config') ?? 'Config'} ${displayName}`;
+  const pageTitle = `${t("Config") ?? "Config"} ${displayName}`;
   const breadcrumbTitle = readOnlyMode
-    ? (t('Configuration') ?? 'Configuration')
-    : (t('Configure') ?? 'Configure');
+    ? (t("Configuration") ?? "Configuration")
+    : (t("Configure") ?? "Configure");
 
   // Map config data properties to HeteroList items
   const heteroItems: HeteroItem[] = (configData?.properties ?? [])
@@ -507,8 +502,7 @@ export default function JobConfigure({
       data: prop.instance ?? {},
     }));
 
-  const availableDescriptors: Descriptor[] =
-    descriptorsData?.descriptors ?? [];
+  const availableDescriptors: Descriptor[] = descriptorsData?.descriptors ?? [];
 
   /* ---------------------------------------------------------------------- */
   /*  Sidebar content                                                        */
@@ -539,13 +533,11 @@ export default function JobConfigure({
                   type="button"
                   data-section-id={item.id}
                   className={`task-link${
-                    activeSection === item.id ? ' task-link--active' : ''
+                    activeSection === item.id ? " task-link--active" : ""
                   }`}
                   onClick={() => scrollToSection(item.id, index)}
                 >
-                  <span className="task-icon-link">
-                    {DEFAULT_SIDEBAR_ICON}
-                  </span>
+                  <span className="task-icon-link">{DEFAULT_SIDEBAR_ICON}</span>
                   <span className="task-link-text">{item.title}</span>
                 </button>
               </span>
@@ -575,8 +567,8 @@ export default function JobConfigure({
       <Layout title={pageTitle} sidePanel={sidebarContent}>
         <div className="jenkins-alert jenkins-alert--error" role="alert">
           <p>
-            {t('ErrorLoadingConfiguration') ??
-              'Error loading job configuration. Please try again.'}
+            {t("ErrorLoadingConfiguration") ??
+              "Error loading job configuration. Please try again."}
           </p>
         </div>
       </Layout>
@@ -597,16 +589,14 @@ export default function JobConfigure({
         {/* ================================================================ */}
         {/* General section — mirrors configure.jelly lines 46-55             */}
         {/* ================================================================ */}
-        <FormSection name="general" title={t('General') ?? 'General'}>
+        <FormSection name="general" title={t("General") ?? "General"}>
           <div id="general" className="jenkins-app-bar">
             <div className="jenkins-app-bar__content">
               {/* config-disableBuild — mirrors configure.jelly line 49 */}
               <Checkbox
                 name="disable"
                 checked={disabled}
-                label={
-                  t('DisableThisProject') ?? 'Disable this project'
-                }
+                label={t("DisableThisProject") ?? "Disable this project"}
                 disabled={readOnlyMode}
                 onChange={handleDisabledChange}
               />
@@ -619,7 +609,7 @@ export default function JobConfigure({
         {/* ================================================================ */}
         <div className="jenkins-section jenkins-section--no-border jenkins-!-margin-top-3">
           <FormEntry
-            title={t('Description') ?? 'Description'}
+            title={t("Description") ?? "Description"}
             help={configData.markupFormatterHelpUrl}
           >
             <TextArea
@@ -648,7 +638,7 @@ export default function JobConfigure({
             key={item.descriptor.id}
             id={`property-${index}`}
             aria-hidden="true"
-            style={{ position: 'relative' }}
+            style={{ position: "relative" }}
           />
         ))}
 
@@ -689,8 +679,8 @@ export default function JobConfigure({
               disabled={isSaving}
             >
               {isSaving
-                ? (t('Saving') ?? 'Saving\u2026')
-                : (t('Save') ?? 'Save')}
+                ? (t("Saving") ?? "Saving\u2026")
+                : (t("Save") ?? "Save")}
             </button>
 
             {/* Apply — AJAX POST via useStaplerMutation (no redirect) */}
@@ -702,8 +692,8 @@ export default function JobConfigure({
               disabled={applyMutation.isPending}
             >
               {applyMutation.isPending
-                ? (t('Applying') ?? 'Applying\u2026')
-                : (t('Apply') ?? 'Apply')}
+                ? (t("Applying") ?? "Applying\u2026")
+                : (t("Apply") ?? "Apply")}
             </button>
           </div>
         )}
@@ -713,21 +703,21 @@ export default function JobConfigure({
           <div
             className={`jenkins-notification ${
               applyMutation.isError
-                ? 'jenkins-notification--error'
-                : 'jenkins-notification--success'
+                ? "jenkins-notification--error"
+                : "jenkins-notification--success"
             }`}
             role="status"
             aria-live="polite"
           >
             {applyMutation.isError && applyMutation.error != null
               ? (applyMutation.error as Error).message ||
-                'Error saving configuration'
+                "Error saving configuration"
               : applyNotification}
           </div>
         )}
 
         {/* Save error display */}
-        {saveState.status === 'error' && saveState.error != null && (
+        {saveState.status === "error" && saveState.error != null && (
           <div className="jenkins-alert jenkins-alert--error" role="alert">
             <p>{saveState.error}</p>
           </div>

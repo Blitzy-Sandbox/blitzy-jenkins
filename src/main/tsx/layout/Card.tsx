@@ -52,11 +52,7 @@ export function Card({
           >
             {title}
             {/* SVG chevron icon matching <l:icon src="symbol-chevron-forward" /> */}
-            <svg
-              className="svg-icon"
-              aria-hidden="true"
-              focusable="false"
-            >
+            <svg className="svg-icon" aria-hidden="true" focusable="false">
               <use href="#symbol-chevron-forward" />
             </svg>
           </a>

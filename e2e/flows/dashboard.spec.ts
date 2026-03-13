@@ -246,7 +246,9 @@ test.describe("Dashboard User Flows", () => {
     // Verify at least one breadcrumb element exists within the breadcrumb bar.
     // Breadcrumb items are typically <li> elements or anchor elements within
     // the breadcrumb container.
-    const breadcrumbItems = breadcrumbs.locator("li, a, .jenkins-breadcrumbs__list-item");
+    const breadcrumbItems = breadcrumbs.locator(
+      "li, a, .jenkins-breadcrumbs__list-item",
+    );
     const itemCount = await breadcrumbItems.count();
     expect(itemCount).toBeGreaterThan(0);
   });

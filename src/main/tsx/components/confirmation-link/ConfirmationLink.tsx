@@ -117,13 +117,10 @@ const ConfirmationLink: React.FC<ConfirmationLinkProps> = ({
   // Click handler — source lines 14–15
   // Prevents default anchor navigation and opens the confirmation dialog.
   // -------------------------------------------------------------------------
-  const handleClick = useCallback(
-    (e: React.MouseEvent<HTMLAnchorElement>) => {
-      e.preventDefault();
-      setIsDialogOpen(true);
-    },
-    [],
-  );
+  const handleClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    setIsDialogOpen(true);
+  }, []);
 
   // -------------------------------------------------------------------------
   // Confirm handler — source lines 17–25
@@ -190,9 +187,7 @@ const ConfirmationLink: React.FC<ConfirmationLinkProps> = ({
       <a
         href={url}
         className={
-          className
-            ? `confirmation-link ${className}`
-            : "confirmation-link"
+          className ? `confirmation-link ${className}` : "confirmation-link"
         }
         data-post={post ? "true" : undefined}
         data-url={url}

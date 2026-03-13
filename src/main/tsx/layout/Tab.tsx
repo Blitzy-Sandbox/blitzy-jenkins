@@ -100,11 +100,7 @@ export default function Tab({
         name={groupName}
         defaultChecked={active}
       />
-      <a
-        href={href}
-        className={name === "+" ? "addTab" : ""}
-        title={title}
-      >
+      <a href={href} className={name === "+" ? "addTab" : ""} title={title}>
         {name}
       </a>
     </div>

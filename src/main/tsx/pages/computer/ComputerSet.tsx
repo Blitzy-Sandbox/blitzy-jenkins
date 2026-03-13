@@ -6,10 +6,7 @@ import { useJenkinsNavigation } from "@/hooks/useJenkinsNavigation";
 import Layout from "@/layout/Layout";
 import Dialog from "@/components/dialogs/Dialog";
 import { Skeleton } from "@/layout/Skeleton";
-import type {
-  Computer,
-  ComputerSet as ComputerSetModel,
-} from "@/types/models";
+import type { Computer, ComputerSet as ComputerSetModel } from "@/types/models";
 
 // ============================================================================
 // Types & Interfaces
@@ -318,9 +315,7 @@ const ComputerSet: React.FC<ComputerSetProps> = ({ initialData }) => {
             <a
               className="jenkins-button"
               href={buildUrl("/computer/configure")}
-              title={
-                t("Configure Node Monitors") ?? "Configure Node Monitors"
-              }
+              title={t("Configure Node Monitors") ?? "Configure Node Monitors"}
             >
               {t("Configure Monitors") ?? "Configure Monitors"}
             </a>
@@ -358,7 +353,8 @@ const ComputerSet: React.FC<ComputerSetProps> = ({ initialData }) => {
       {data && data.totalExecutors > 0 && (
         <div className="jenkins-!-margin-bottom-2">
           <span>
-            {t("Executors") ?? "Executors"}: {data.busyExecutors} / {data.totalExecutors}
+            {t("Executors") ?? "Executors"}: {data.busyExecutors} /{" "}
+            {data.totalExecutors}
           </span>
         </div>
       )}
@@ -376,9 +372,7 @@ const ComputerSet: React.FC<ComputerSetProps> = ({ initialData }) => {
         <thead>
           <tr>
             {/* Status column — "S" header (tight cell) */}
-            <th className="jenkins-table__cell--tight">
-              {t("S") ?? "S"}
-            </th>
+            <th className="jenkins-table__cell--tight">{t("S") ?? "S"}</th>
             {/* Name column — primary sort column per Jelly line 72 */}
             <th>{t("Name") ?? "Name"}</th>
             {/* Dynamic monitor columns derived from monitorData keys */}
@@ -401,10 +395,7 @@ const ComputerSet: React.FC<ComputerSetProps> = ({ initialData }) => {
         </thead>
         <tbody>
           {data?.computer?.map((computer: Computer) => (
-            <tr
-              key={computer.displayName}
-              id={`node_${computer.displayName}`}
-            >
+            <tr key={computer.displayName} id={`node_${computer.displayName}`}>
               {/* Status icon cell — mirrors index.jelly lines 85-89.
                   data-sort-value enables sortable.js to sort by icon state.
                   Tooltip shows offlineCauseReason when the node is offline. */}
@@ -420,10 +411,7 @@ const ComputerSet: React.FC<ComputerSetProps> = ({ initialData }) => {
                       : ""
                   }
                 >
-                  <svg
-                    className="svg-icon"
-                    aria-hidden="true"
-                  >
+                  <svg className="svg-icon" aria-hidden="true">
                     <use href={`#${computer.iconClassName ?? ""}`} />
                   </svg>
                 </div>
@@ -447,10 +435,7 @@ const ComputerSet: React.FC<ComputerSetProps> = ({ initialData }) => {
                   Each cell renders the formatted value from monitorData. */}
               {monitorColumns.map((col) => (
                 <td key={col.key} style={{ textAlign: "right" }}>
-                  {renderMonitorValue(
-                    col.key,
-                    computer.monitorData?.[col.key],
-                  )}
+                  {renderMonitorValue(col.key, computer.monitorData?.[col.key])}
                 </td>
               ))}
 

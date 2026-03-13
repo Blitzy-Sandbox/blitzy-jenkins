@@ -163,9 +163,7 @@ function ViewTabs({
           name={view.name}
           href={buildUrl(view.url)}
           active={
-            currentView !== undefined
-              ? view.name === currentView.name
-              : false
+            currentView !== undefined ? view.name === currentView.name : false
           }
           index={index}
         />
@@ -225,9 +223,7 @@ function ListView({
    * based on the recurse setting; this state controls client-side
    * indentation display for nested job items.
    */
-  const [displayNested, setDisplayNested] = useState<boolean>(
-    recurse ?? false,
-  );
+  const [displayNested, setDisplayNested] = useState<boolean>(recurse ?? false);
 
   /**
    * Fetch ListView-specific data (jobs, columns) from the view's REST API
@@ -268,8 +264,7 @@ function ListView({
    * there are multiple views available for navigation, matching the
    * Jelly `showViewTabs="true"` attribute from main.jelly line 33.
    */
-  const showViewTabs: boolean =
-    views !== undefined && views.length > 0;
+  const showViewTabs: boolean = views !== undefined && views.length > 0;
 
   // ---------------------------------------------------------------------------
   // State 1: Broken / Error
@@ -288,9 +283,7 @@ function ListView({
         <div className="dashboard">
           <div
             className="jenkins-spinner"
-            aria-label={
-              t("Loading") ?? "Loading view data\u2026"
-            }
+            aria-label={t("Loading") ?? "Loading view data\u2026"}
           />
         </div>
       );

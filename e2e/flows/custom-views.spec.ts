@@ -236,9 +236,9 @@ test.describe("Custom Views User Flows", () => {
     expect(currentUrl).toMatch(/configure|view/i);
 
     // If on the configure page, save the configuration
-    const saveButton = jenkinsPage.page.locator(
-      'button[type="submit"]',
-    ).filter({ hasText: /Save|Apply|OK/i });
+    const saveButton = jenkinsPage.page
+      .locator('button[type="submit"]')
+      .filter({ hasText: /Save|Apply|OK/i });
     const saveCount = await saveButton.count();
     if (saveCount > 0) {
       await saveButton.first().click();
@@ -332,9 +332,9 @@ test.describe("Custom Views User Flows", () => {
     await jenkinsPage.waitForPageLoad();
 
     // Save the configuration (will have default filter settings)
-    const saveButton = jenkinsPage.page.locator(
-      'button[type="submit"]',
-    ).filter({ hasText: /Save|OK/i });
+    const saveButton = jenkinsPage.page
+      .locator('button[type="submit"]')
+      .filter({ hasText: /Save|OK/i });
     const saveCount = await saveButton.count();
     if (saveCount > 0) {
       await saveButton.first().click();
@@ -506,9 +506,9 @@ test.describe("Custom Views User Flows", () => {
     await jenkinsPage.waitForPageLoad();
 
     // Save configuration
-    const saveButton = jenkinsPage.page.locator(
-      'button[type="submit"]',
-    ).filter({ hasText: /Save|OK/i });
+    const saveButton = jenkinsPage.page
+      .locator('button[type="submit"]')
+      .filter({ hasText: /Save|OK/i });
     const saveCount = await saveButton.count();
     if (saveCount > 0) {
       await saveButton.first().click();
@@ -522,9 +522,11 @@ test.describe("Custom Views User Flows", () => {
     // Locate the "Delete View" link in the side panel tasks.
     // Jenkins renders this as a task link in the #tasks section of
     // the side panel for views that are deletable.
-    const deleteViewLink = jenkinsPage.page.locator(
-      '#tasks a[href*="delete"], .task-link[href*="delete"], a.task-link',
-    ).filter({ hasText: /Delete View/i });
+    const deleteViewLink = jenkinsPage.page
+      .locator(
+        '#tasks a[href*="delete"], .task-link[href*="delete"], a.task-link',
+      )
+      .filter({ hasText: /Delete View/i });
     const deleteViewCount = await deleteViewLink.count();
 
     if (deleteViewCount > 0) {
@@ -533,9 +535,9 @@ test.describe("Custom Views User Flows", () => {
 
       // If a confirmation dialog or page appears, confirm the deletion.
       // Jenkins may show a confirmation form with a submit button.
-      const confirmButton = jenkinsPage.page.locator(
-        'button[type="submit"], input[type="submit"]',
-      ).filter({ hasText: /Yes|Delete|OK|Confirm/i });
+      const confirmButton = jenkinsPage.page
+        .locator('button[type="submit"], input[type="submit"]')
+        .filter({ hasText: /Yes|Delete|OK|Confirm/i });
       const confirmCount = await confirmButton.count();
       if (confirmCount > 0) {
         await confirmButton.first().click();
@@ -574,9 +576,7 @@ test.describe("Custom Views User Flows", () => {
       }
     } else {
       // Fallback: delete via direct URL navigation
-      await jenkinsPage.goto(
-        `/view/${encodeURIComponent(viewName)}/delete`,
-      );
+      await jenkinsPage.goto(`/view/${encodeURIComponent(viewName)}/delete`);
       await jenkinsPage.waitForPageLoad();
 
       const fallbackSubmit = jenkinsPage.page.locator(
@@ -629,9 +629,7 @@ test.describe("Custom Views User Flows", () => {
 
     // Navigate to the view's configure page
     // URL pattern: /view/{viewName}/configure
-    await jenkinsPage.goto(
-      `/view/${encodeURIComponent(viewName)}/configure`,
-    );
+    await jenkinsPage.goto(`/view/${encodeURIComponent(viewName)}/configure`);
     await jenkinsPage.waitForPageLoad();
 
     // Assert the configuration form renders

@@ -29,20 +29,20 @@
  * @module pages/build/BuildIndex
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from "react";
 
-import { useStaplerQuery } from '@/hooks/useStaplerQuery';
-import { useStaplerMutation } from '@/hooks/useStaplerMutation';
-import { useI18n } from '@/hooks/useI18n';
-import { useJenkinsConfig } from '@/providers/JenkinsConfigProvider';
+import { useStaplerQuery } from "@/hooks/useStaplerQuery";
+import { useStaplerMutation } from "@/hooks/useStaplerMutation";
+import { useI18n } from "@/hooks/useI18n";
+import { useJenkinsConfig } from "@/providers/JenkinsConfigProvider";
 
-import Layout from '@/layout/Layout';
-import SidePanel from '@/layout/SidePanel';
-import MainPanel from '@/layout/MainPanel';
+import Layout from "@/layout/Layout";
+import SidePanel from "@/layout/SidePanel";
+import MainPanel from "@/layout/MainPanel";
 
-import ArtifactList from '@/hudson/ArtifactList';
-import BuildProgressBar from '@/hudson/BuildProgressBar';
-import EditableDescription from '@/hudson/EditableDescription';
+import ArtifactList from "@/hudson/ArtifactList";
+import BuildProgressBar from "@/hudson/BuildProgressBar";
+import EditableDescription from "@/hudson/EditableDescription";
 
 import type {
   Build,
@@ -51,7 +51,7 @@ import type {
   Action,
   ChangeSetList,
   ExecutorInfo,
-} from '@/types/models';
+} from "@/types/models";
 
 // =============================================================================
 // Exported Interfaces
@@ -137,25 +137,25 @@ export interface BuildData extends Build {
  * `index.jelly` lines 35–80.
  */
 const BUILD_API_TREE = [
-  'displayName',
-  'fullDisplayName',
-  'description',
-  'building',
-  'result',
-  'timestamp',
-  'duration',
-  'estimatedDuration',
-  'url',
-  'artifacts[displayPath,fileName,relativePath]',
-  'actions[_class]',
-  'changeSets[kind,items[commitId,msg,author[fullName]]]',
-  'executor[progress,likelyStuck,number,idle,currentExecutable[number,url]]',
-  'keepLog',
-  'number',
-  'builtOn',
-  'timestampString',
-  'durationString',
-].join(',');
+  "displayName",
+  "fullDisplayName",
+  "description",
+  "building",
+  "result",
+  "timestamp",
+  "duration",
+  "estimatedDuration",
+  "url",
+  "artifacts[displayPath,fileName,relativePath]",
+  "actions[_class]",
+  "changeSets[kind,items[commitId,msg,author[fullName]]]",
+  "executor[progress,likelyStuck,number,idle,currentExecutable[number,url]]",
+  "keepLog",
+  "number",
+  "builtOn",
+  "timestampString",
+  "durationString",
+].join(",");
 
 // =============================================================================
 // Helper Functions
@@ -170,8 +170,12 @@ const BUILD_API_TREE = [
  * @example formatDuration(83000) // "1 min 23 sec"
  */
 function formatDuration(ms: number): string {
-  if (ms < 0) { return '0 ms'; }
-  if (ms < 1000) { return `${ms} ms`; }
+  if (ms < 0) {
+    return "0 ms";
+  }
+  if (ms < 1000) {
+    return `${ms} ms`;
+  }
 
   const totalSeconds = Math.floor(ms / 1000);
   if (totalSeconds < 60) {
@@ -181,9 +185,7 @@ function formatDuration(ms: number): string {
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
   if (minutes < 60) {
-    return seconds > 0
-      ? `${minutes} min ${seconds} sec`
-      : `${minutes} min`;
+    return seconds > 0 ? `${minutes} min ${seconds} sec` : `${minutes} min`;
   }
 
   const hours = Math.floor(minutes / 60);
@@ -197,8 +199,8 @@ function formatDuration(ms: number): string {
   const days = Math.floor(hours / 24);
   const remainingHours = hours % 24;
   return remainingHours > 0
-    ? `${days} day${days !== 1 ? 's' : ''} ${remainingHours} hr`
-    : `${days} day${days !== 1 ? 's' : ''}`;
+    ? `${days} day${days !== 1 ? "s" : ""} ${remainingHours} hr`
+    : `${days} day${days !== 1 ? "s" : ""}`;
 }
 
 /**
@@ -225,11 +227,11 @@ function getRelativeTimeString(timestamp: number): string {
  */
 function getActionLabel(actionClass: string): string | null {
   const classMap: Record<string, string> = {
-    'hudson.model.CauseAction': 'Build Cause',
-    'hudson.tasks.junit.TestResultAction': 'Test Result',
-    'hudson.tasks.test.AggregatedTestResultAction': 'Aggregated Test Result',
-    'hudson.plugins.git.GitTagAction': 'Git Build Data',
-    'hudson.scm.SCMRevisionState$None': '',
+    "hudson.model.CauseAction": "Build Cause",
+    "hudson.tasks.junit.TestResultAction": "Test Result",
+    "hudson.tasks.test.AggregatedTestResultAction": "Aggregated Test Result",
+    "hudson.plugins.git.GitTagAction": "Git Build Data",
+    "hudson.scm.SCMRevisionState$None": "",
   };
   return classMap[actionClass] ?? null;
 }
@@ -242,17 +244,17 @@ function getActionLabel(actionClass: string): string | null {
  */
 function extractParentUrl(buildUrl: string): string {
   // Normalise: strip protocol+host if present, then remove trailing slash
-  const path = buildUrl
-    .replace(/^https?:\/\/[^/]+/, '')
-    .replace(/\/+$/, '');
+  const path = buildUrl.replace(/^https?:\/\/[^/]+/, "").replace(/\/+$/, "");
 
   // Remove the last path segment (build number)
-  const lastSlash = path.lastIndexOf('/');
-  if (lastSlash <= 0) { return ''; }
+  const lastSlash = path.lastIndexOf("/");
+  if (lastSlash <= 0) {
+    return "";
+  }
 
   // Return without leading slash to match Jenkins relative URL convention
   const parent = path.substring(0, lastSlash + 1);
-  return parent.startsWith('/') ? parent.substring(1) : parent;
+  return parent.startsWith("/") ? parent.substring(1) : parent;
 }
 
 // =============================================================================
@@ -294,13 +296,13 @@ export default function BuildIndex({
   const buildUrl = useMemo<string>(() => {
     if (buildUrlProp) {
       // Ensure trailing slash for consistent URL concatenation
-      return buildUrlProp.endsWith('/') ? buildUrlProp : `${buildUrlProp}/`;
+      return buildUrlProp.endsWith("/") ? buildUrlProp : `${buildUrlProp}/`;
     }
     if (jobName != null && buildNumber != null) {
-      const base = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+      const base = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
       return `${base}job/${encodeURIComponent(jobName)}/${buildNumber}/`;
     }
-    return '';
+    return "";
   }, [buildUrlProp, jobName, buildNumber, baseUrl]);
 
   /** Parent job URL for build-time-trend link and navigation. */
@@ -329,7 +331,7 @@ export default function BuildIndex({
     isError,
     error,
   } = useStaplerQuery<BuildData>({
-    queryKey: ['build', buildUrl],
+    queryKey: ["build", buildUrl],
     url: `${buildUrl}api/json?tree=${BUILD_API_TREE}`,
     enabled: buildUrl.length > 0,
     refetchInterval: isPolling ? 5000 : false,
@@ -378,11 +380,13 @@ export default function BuildIndex({
    * dateStyle="medium" timeStyle="medium"/>` from index.jelly line 47.
    */
   const formattedDate = useMemo<string>(() => {
-    if (!buildTimestamp) { return ''; }
+    if (!buildTimestamp) {
+      return "";
+    }
     try {
       return new Intl.DateTimeFormat(undefined, {
-        dateStyle: 'medium',
-        timeStyle: 'medium',
+        dateStyle: "medium",
+        timeStyle: "medium",
       }).format(new Date(buildTimestamp));
     } catch {
       return new Date(buildTimestamp).toLocaleString();
@@ -391,7 +395,9 @@ export default function BuildIndex({
 
   /** ISO-8601 timestamp for the `<time>` element's `dateTime` attribute. */
   const isoTimestamp = useMemo<string>(() => {
-    if (!buildTimestamp) { return ''; }
+    if (!buildTimestamp) {
+      return "";
+    }
     return new Date(buildTimestamp).toISOString();
   }, [buildTimestamp]);
 
@@ -400,11 +406,14 @@ export default function BuildIndex({
    * `timestampString` and falls back to client-side computation.
    */
   const startedAgoText = useMemo<string>(() => {
-    if (!build) { return ''; }
-    const relative = build.timestampString ?? getRelativeTimeString(build.timestamp);
-    const pattern = t('startedAgo');
+    if (!build) {
+      return "";
+    }
+    const relative =
+      build.timestampString ?? getRelativeTimeString(build.timestamp);
+    const pattern = t("startedAgo");
     if (pattern) {
-      return pattern.replace('{0}', relative);
+      return pattern.replace("{0}", relative);
     }
     return `Started ${relative} ago`;
   }, [build, t]);
@@ -413,13 +422,15 @@ export default function BuildIndex({
    * "Took X" or "Being executed for X" timing string.
    */
   const timingText = useMemo<{ label: string; link: boolean }>(() => {
-    if (!build) { return { label: '', link: false }; }
+    if (!build) {
+      return { label: "", link: false };
+    }
 
     if (build.building) {
       const elapsed = getRelativeTimeString(build.timestamp);
-      const pattern = t('beingExecuted');
+      const pattern = t("beingExecuted");
       const label = pattern
-        ? pattern.replace('{0}', elapsed)
+        ? pattern.replace("{0}", elapsed)
         : `Being executed for ${elapsed}`;
       return { label, link: false };
     }
@@ -433,7 +444,7 @@ export default function BuildIndex({
   // ---------------------------------------------------------------------------
 
   /** Page title following the `{fullDisplayName} - Jenkins` pattern. */
-  const pageTitle = build?.fullDisplayName ?? build?.displayName ?? '';
+  const pageTitle = build?.fullDisplayName ?? build?.displayName ?? "";
 
   // ---------------------------------------------------------------------------
   //  Loading state
@@ -446,7 +457,7 @@ export default function BuildIndex({
           <div
             className="jenkins-spinner"
             role="status"
-            aria-label={t('Loading') ?? 'Loading build data…'}
+            aria-label={t("Loading") ?? "Loading build data…"}
           />
         </MainPanel>
       </Layout>
@@ -463,8 +474,8 @@ export default function BuildIndex({
         <MainPanel>
           <div className="jenkins-!-alert" role="alert">
             <p>
-              {t('Failed to load build data') ?? 'Failed to load build data'}
-              {error?.message ? `: ${error.message}` : ''}
+              {t("Failed to load build data") ?? "Failed to load build data"}
+              {error?.message ? `: ${error.message}` : ""}
             </p>
           </div>
         </MainPanel>
@@ -481,7 +492,7 @@ export default function BuildIndex({
       <Layout title="Build Not Found">
         <MainPanel>
           <div className="jenkins-!-alert" role="alert">
-            <p>{t('Build not found') ?? 'Build not found'}</p>
+            <p>{t("Build not found") ?? "Build not found"}</p>
           </div>
         </MainPanel>
       </Layout>
@@ -500,7 +511,7 @@ export default function BuildIndex({
         <div className="task">
           <a href={`${baseUrl}/${parentUrl}`} className="task-link">
             <span className="task-link-text">
-              {t('Back to Project') ?? 'Back to Project'}
+              {t("Back to Project") ?? "Back to Project"}
             </span>
           </a>
         </div>
@@ -509,7 +520,7 @@ export default function BuildIndex({
         <div className="task">
           <a href={`${buildUrl}console`} className="task-link">
             <span className="task-link-text">
-              {t('Console Output') ?? 'Console Output'}
+              {t("Console Output") ?? "Console Output"}
             </span>
           </a>
         </div>
@@ -519,7 +530,7 @@ export default function BuildIndex({
           <div className="task">
             <a href={`${buildUrl}changes`} className="task-link">
               <span className="task-link-text">
-                {t('Changes') ?? 'Changes'}
+                {t("Changes") ?? "Changes"}
               </span>
             </a>
           </div>
@@ -530,7 +541,7 @@ export default function BuildIndex({
           <div className="task">
             <a href={`${buildUrl}artifact/`} className="task-link">
               <span className="task-link-text">
-                {t('Build Artifacts') ?? 'Build Artifacts'}
+                {t("Build Artifacts") ?? "Build Artifacts"}
               </span>
             </a>
           </div>
@@ -540,7 +551,7 @@ export default function BuildIndex({
         <div className="task">
           <a href={`${buildUrl}confirmDelete`} className="task-link">
             <span className="task-link-text">
-              {t('Delete Build') ?? 'Delete Build'}
+              {t("Delete Build") ?? "Delete Build"}
             </span>
           </a>
         </div>
@@ -553,7 +564,7 @@ export default function BuildIndex({
               className="task-link"
             >
               <span className="task-link-text">
-                {t('Previous Build') ?? 'Previous Build'}
+                {t("Previous Build") ?? "Previous Build"}
               </span>
             </a>
           </div>
@@ -566,7 +577,7 @@ export default function BuildIndex({
             className="task-link"
           >
             <span className="task-link-text">
-              {t('Next Build') ?? 'Next Build'}
+              {t("Next Build") ?? "Next Build"}
             </span>
           </a>
         </div>
@@ -596,7 +607,7 @@ export default function BuildIndex({
             {keepLog
               ? (t("Don't keep this build forever") ??
                 "Don't keep this build forever")
-              : (t('Keep this build forever') ?? 'Keep this build forever')}
+              : (t("Keep this build forever") ?? "Keep this build forever")}
           </button>
         </div>
 
@@ -608,9 +619,9 @@ export default function BuildIndex({
         <div className="build-caption page-header">
           <h1>
             {build.displayName}
-            {' ('}
+            {" ("}
             <time dateTime={isoTimestamp}>{formattedDate}</time>
-            {')'}
+            {")"}
           </h1>
         </div>
 
@@ -636,19 +647,19 @@ export default function BuildIndex({
         {/* ---------------------------------------------------------------- */}
         <div
           style={{
-            float: 'right',
+            float: "right",
             zIndex: 1,
-            position: 'relative',
-            marginLeft: '1em',
+            position: "relative",
+            marginLeft: "1em",
           }}
         >
-          <div style={{ marginTop: '1em' }}>{startedAgoText}</div>
+          <div style={{ marginTop: "1em" }}>{startedAgoText}</div>
           <div>
             {build.building ? (
               <span>{timingText.label}</span>
             ) : (
               <span>
-                {t('Took') ?? 'Took'}{' '}
+                {t("Took") ?? "Took"}{" "}
                 <a href={`${baseUrl}/${parentUrl}buildTimeTrend`}>
                   {timingText.label}
                 </a>
@@ -657,9 +668,11 @@ export default function BuildIndex({
             {/* Built-on node information */}
             {build.builtOn && (
               <span>
-                {' '}
-                {t('on') ?? 'on'}{' '}
-                <a href={`${baseUrl}/computer/${encodeURIComponent(build.builtOn)}`}>
+                {" "}
+                {t("on") ?? "on"}{" "}
+                <a
+                  href={`${baseUrl}/computer/${encodeURIComponent(build.builtOn)}`}
+                >
                   {build.builtOn}
                 </a>
               </span>
@@ -674,7 +687,7 @@ export default function BuildIndex({
         {/* ---------------------------------------------------------------- */}
         <ArtifactList
           build={build}
-          caption={t('Build Artifacts') ?? 'Build Artifacts'}
+          caption={t("Build Artifacts") ?? "Build Artifacts"}
           buildUrl={buildUrl}
         />
 
@@ -689,12 +702,16 @@ export default function BuildIndex({
           <div className="build-action-summaries">
             {build.actions
               .filter((action) => {
-                if (!action._class) { return false; }
+                if (!action._class) {
+                  return false;
+                }
                 return getActionLabel(action._class) !== null;
               })
               .map((action, index) => {
-                const label = getActionLabel(action._class ?? '');
-                if (!label) { return null; }
+                const label = getActionLabel(action._class ?? "");
+                if (!label) {
+                  return null;
+                }
                 return (
                   <div
                     key={`action-${action._class}-${index}`}

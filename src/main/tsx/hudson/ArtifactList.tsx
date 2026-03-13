@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { useStaplerQuery } from '@/hooks/useStaplerQuery';
-import { useI18n } from '@/hooks/useI18n';
-import type { Build, Artifact } from '@/types/models';
-import { getBaseUrl } from '@/utils/baseUrl';
+import { useState } from "react";
+import { useStaplerQuery } from "@/hooks/useStaplerQuery";
+import { useI18n } from "@/hooks/useI18n";
+import type { Build, Artifact } from "@/types/models";
+import { getBaseUrl } from "@/utils/baseUrl";
 
 // ---------------------------------------------------------------------------
 // Public Interface
@@ -91,9 +91,9 @@ const MAX_DISPLAY_COUNT = 200;
  */
 function normalizeUrl(url: string): string {
   if (!url) {
-    return '';
+    return "";
   }
-  return url.endsWith('/') ? url : `${url}/`;
+  return url.endsWith("/") ? url : `${url}/`;
 }
 
 /**
@@ -108,14 +108,14 @@ function normalizeUrl(url: string): string {
  */
 function buildArtifactTree(artifacts: Artifact[]): ArtifactTreeNode[] {
   const root: ArtifactTreeNode = {
-    name: '',
-    path: '',
+    name: "",
+    path: "",
     isDirectory: true,
     children: [],
   };
 
   for (const artifact of artifacts) {
-    const segments = artifact.relativePath.split('/');
+    const segments = artifact.relativePath.split("/");
     let current = root;
 
     for (let depth = 0; depth < segments.length; depth++) {
@@ -137,9 +137,7 @@ function buildArtifactTree(artifacts: Artifact[]): ArtifactTreeNode[] {
           (child) => child.isDirectory && child.name === segment,
         );
         if (!dirNode) {
-          const dirPath = current.path
-            ? `${current.path}/${segment}`
-            : segment;
+          const dirPath = current.path ? `${current.path}/${segment}` : segment;
           dirNode = {
             name: segment,
             path: dirPath,
@@ -223,13 +221,12 @@ function ArtifactTreeBranch({
         type="button"
         className="artifact-tree-toggle jenkins-button jenkins-button--tertiary"
         onClick={handleToggle}
-        aria-label={`${expanded ? 'Collapse' : 'Expand'} directory ${node.name}`}
+        aria-label={`${expanded ? "Collapse" : "Expand"} directory ${node.name}`}
       >
         {/* Triangle indicator: ▶ collapsed / ▼ expanded */}
         <span className="artifact-tree-icon" aria-hidden="true">
-          {expanded ? '\u25BC' : '\u25B6'}
-        </span>
-        {' '}
+          {expanded ? "\u25BC" : "\u25B6"}
+        </span>{" "}
         {node.name}/
       </button>
 
@@ -300,13 +297,13 @@ export default function ArtifactList({
     ? normalizeUrl(buildUrl)
     : build
       ? normalizeUrl(build.url)
-      : '';
+      : "";
 
   // Fetch artifacts from the Stapler REST API.
   // Replaces the legacy artifactList.js  fetch() → innerHTML pattern with
   // React Query declarative caching and background refetch.
   const { data, isLoading, isError } = useStaplerQuery<ArtifactsApiResponse>({
-    queryKey: ['artifacts', effectiveBuildUrl],
+    queryKey: ["artifacts", effectiveBuildUrl],
     url: `${effectiveBuildUrl}api/json?tree=artifacts[relativePath,displayPath,fileName]`,
     enabled: !!build && effectiveBuildUrl.length > 0,
   });
@@ -332,7 +329,7 @@ export default function ArtifactList({
         <div
           className="jenkins-spinner"
           role="status"
-          aria-label={t('Loading') || 'Loading artifacts\u2026'}
+          aria-label={t("Loading") || "Loading artifacts\u2026"}
         />
       </div>
     );
@@ -344,7 +341,7 @@ export default function ArtifactList({
       <div className="artifact-list">
         <h2>{caption}</h2>
         <p className="error" role="alert">
-          {t('ErrorLoadingArtifacts') || 'Unable to load artifacts.'}
+          {t("ErrorLoadingArtifacts") || "Unable to load artifacts."}
         </p>
       </div>
     );
@@ -402,8 +399,7 @@ export default function ArtifactList({
       {isTruncated && (
         <p className="artifact-view-all">
           <a href={artifactDirectoryUrl}>
-            {t('ViewAllArtifacts') ||
-              `View all ${artifacts.length} artifacts`}
+            {t("ViewAllArtifacts") || `View all ${artifacts.length} artifacts`}
           </a>
         </p>
       )}

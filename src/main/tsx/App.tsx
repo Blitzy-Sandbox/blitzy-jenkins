@@ -40,33 +40,33 @@
  * @module App
  */
 
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 // Layout — outermost page shell
-import Layout from '@/layout/Layout';
+import Layout from "@/layout/Layout";
 
 // Global/persistent components rendered in the App tree
-import CommandPalette from '@/components/command-palette/CommandPalette';
-import Notifications from '@/components/notifications/Notifications';
-import Header from '@/components/header/Header';
+import CommandPalette from "@/components/command-palette/CommandPalette";
+import Notifications from "@/components/notifications/Notifications";
+import Header from "@/components/header/Header";
 
 // Tooltip — default export for registry, named TooltipManager for global DOM observation
-import Tooltip, { TooltipManager } from '@/components/tooltips/Tooltip';
+import Tooltip, { TooltipManager } from "@/components/tooltips/Tooltip";
 
 // Dialog — default export for registry, named functions for imperative global setup
 import Dialog, {
   initDialogGlobals,
   initDialogOpeners,
-} from '@/components/dialogs/Dialog';
+} from "@/components/dialogs/Dialog";
 
 // Per-instance components — used declaratively in child component trees,
 // exposed via the component registry for Jelly interop
-import Dropdown from '@/components/dropdowns/Dropdown';
-import SearchBar from '@/components/search-bar/SearchBar';
-import StopButtonLink from '@/components/stop-button-link/StopButtonLink';
-import ConfirmationLink from '@/components/confirmation-link/ConfirmationLink';
-import Defer from '@/components/defer/Defer';
-import RowSelectionController from '@/components/row-selection-controller/RowSelectionController';
+import Dropdown from "@/components/dropdowns/Dropdown";
+import SearchBar from "@/components/search-bar/SearchBar";
+import StopButtonLink from "@/components/stop-button-link/StopButtonLink";
+import ConfirmationLink from "@/components/confirmation-link/ConfirmationLink";
+import Defer from "@/components/defer/Defer";
+import RowSelectionController from "@/components/row-selection-controller/RowSelectionController";
 
 // ---------------------------------------------------------------------------
 // Window Type Augmentation

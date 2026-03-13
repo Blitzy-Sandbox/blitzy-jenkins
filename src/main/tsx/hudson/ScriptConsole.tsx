@@ -25,10 +25,17 @@
  * @module hudson/ScriptConsole
  */
 
-import { useState, useCallback, useRef, type ReactNode, type ReactElement, type FormEvent } from 'react';
-import { useStaplerMutation } from '@/hooks/useStaplerMutation';
-import { useCrumb } from '@/hooks/useCrumb';
-import { useI18n } from '@/hooks/useI18n';
+import {
+  useState,
+  useCallback,
+  useRef,
+  type ReactNode,
+  type ReactElement,
+  type FormEvent,
+} from "react";
+import { useStaplerMutation } from "@/hooks/useStaplerMutation";
+import { useCrumb } from "@/hooks/useCrumb";
+import { useI18n } from "@/hooks/useI18n";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -141,7 +148,7 @@ function ScriptConsole(props: ScriptConsoleProps): ReactElement {
   const {
     scriptUrl,
     channelAvailable = true,
-    initialScript = '',
+    initialScript = "",
     title: titleOverride,
     children,
   } = props;
@@ -186,8 +193,8 @@ function ScriptConsole(props: ScriptConsoleProps): ReactElement {
    */
   const scriptMutation = useStaplerMutation<string, string>({
     url: scriptUrl,
-    contentType: 'form-urlencoded',
-    responseType: 'text',
+    contentType: "form-urlencoded",
+    responseType: "text",
     onSuccess: (data: string) => {
       setOutput(data);
     },
@@ -215,7 +222,7 @@ function ScriptConsole(props: ScriptConsoleProps): ReactElement {
       // Construct form-urlencoded body with script text and CSRF crumb
       // Mirrors the Jelly form fields: <textarea name="script"> + hidden crumb field
       const formBody = new URLSearchParams();
-      formBody.append('script', scriptText);
+      formBody.append("script", scriptText);
       if (crumbFieldName && crumbValue) {
         formBody.append(crumbFieldName, crumbValue);
       }
@@ -258,21 +265,21 @@ function ScriptConsole(props: ScriptConsoleProps): ReactElement {
 
   /** Resolved page title: prop override > i18n lookup > fallback */
   const pageTitle: string =
-    titleOverride ?? t('scriptConsole') ?? 'Script Console';
+    titleOverride ?? t("scriptConsole") ?? "Script Console";
 
   /** Localized description paragraphs */
-  const description: string = t('description') ?? '';
-  const description2: string = t('description2') ?? '';
+  const description: string = t("description") ?? "";
+  const description2: string = t("description2") ?? "";
 
   /** Localized button and label text */
-  const runButtonLabel: string = t('Run') ?? 'Run';
-  const resultHeading: string = t('Result') ?? 'Result';
+  const runButtonLabel: string = t("Run") ?? "Run";
+  const resultHeading: string = t("Result") ?? "Result";
   const copyTooltipText: string = copySuccess
-    ? (t('successfullyCopied') ?? 'Copied!')
-    : (t('clickToCopy') ?? 'Copy to clipboard');
+    ? (t("successfullyCopied") ?? "Copied!")
+    : (t("clickToCopy") ?? "Copy to clipboard");
   const offlineMessage: string =
-    t('impossibleOffline') ??
-    'This operation is not available because the channel is offline.';
+    t("impossibleOffline") ??
+    "This operation is not available because the channel is offline.";
 
   // -------------------------------------------------------------------------
   // Render — Offline State
@@ -305,11 +312,7 @@ function ScriptConsole(props: ScriptConsoleProps): ReactElement {
       {description2 && <p>{description2}</p>}
 
       {/* Script execution form — mirrors <form action="script" method="post"> (line 59) */}
-      <form
-        action="script"
-        method="post"
-        onSubmit={handleSubmit}
-      >
+      <form action="script" method="post" onSubmit={handleSubmit}>
         {/*
          * Textarea for Groovy script input.
          * Preserves id="script", name="script", class="script" for
@@ -321,13 +324,15 @@ function ScriptConsole(props: ScriptConsoleProps): ReactElement {
           name="script"
           className="script"
           value={scriptText}
-          onChange={(e) => { setScriptText(e.target.value); }}
+          onChange={(e) => {
+            setScriptText(e.target.value);
+          }}
           rows={20}
           aria-label={pageTitle}
         />
 
         {/* Submit button aligned right — mirrors <div align="right"> (line 61-63) */}
-        <div style={{ textAlign: 'end' }}>
+        <div style={{ textAlign: "end" }}>
           <button
             type="submit"
             className="jenkins-button jenkins-button--primary"
@@ -342,8 +347,7 @@ function ScriptConsole(props: ScriptConsoleProps): ReactElement {
       {output !== null && (
         <section aria-label={resultHeading}>
           <h2>
-            {resultHeading}
-            {' '}
+            {resultHeading}{" "}
             {/* Copy button — replaces <l:copyButton> (line 70) */}
             <button
               type="button"
@@ -352,9 +356,7 @@ function ScriptConsole(props: ScriptConsoleProps): ReactElement {
               title={copyTooltipText}
               aria-label={copyTooltipText}
             >
-              {copySuccess
-                ? (t('successfullyCopied') ?? 'Copied!')
-                : '📋'}
+              {copySuccess ? (t("successfullyCopied") ?? "Copied!") : "📋"}
             </button>
           </h2>
 

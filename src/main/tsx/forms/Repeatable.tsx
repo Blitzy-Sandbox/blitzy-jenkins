@@ -1,5 +1,11 @@
-import { useState, useCallback, useMemo, type ReactNode, type DragEvent } from 'react';
-import { useI18n } from '@/hooks/useI18n';
+import {
+  useState,
+  useCallback,
+  useMemo,
+  type ReactNode,
+  type DragEvent,
+} from "react";
+import { useI18n } from "@/hooks/useI18n";
 
 /**
  * Props for the Repeatable component.
@@ -150,15 +156,15 @@ interface TrackedEntry<T> {
  */
 function getPositionalClasses(index: number, total: number): string {
   if (total === 1) {
-    return 'first last only';
+    return "first last only";
   }
   if (index === 0) {
-    return 'first';
+    return "first";
   }
   if (index === total - 1) {
-    return 'last';
+    return "last";
   }
-  return 'middle';
+  return "middle";
 }
 
 /**
@@ -283,7 +289,7 @@ export function Repeatable<T>({
    * - When field is set: name = field
    * - Otherwise: name = attrs.name ?: attrs.var
    */
-  const resolvedName: string = field ?? name ?? itemVar ?? '';
+  const resolvedName: string = field ?? name ?? itemVar ?? "";
 
   /* ── State: tracked entries with stable keys ───────────────────── */
 
@@ -322,7 +328,10 @@ export function Repeatable<T>({
    * the entries array changes (add, delete, or reorder).
    */
   const positionalClasses: string[] = useMemo(
-    () => entries.map((_entry, index) => getPositionalClasses(index, entries.length)),
+    () =>
+      entries.map((_entry, index) =>
+        getPositionalClasses(index, entries.length),
+      ),
     [entries],
   );
 
@@ -332,7 +341,7 @@ export function Repeatable<T>({
    * Matches the Jelly pattern: `${attrs.add?:'%Add'}`
    */
   const addButtonLabel: string = useMemo(
-    () => addText ?? t('Add') ?? 'Add',
+    () => addText ?? t("Add") ?? "Add",
     [addText, t],
   );
 
@@ -341,7 +350,10 @@ export function Repeatable<T>({
    * header is present, enabling the drag-and-drop SCSS rules.
    */
   const containerClassName: string = useMemo(
-    () => (header != null ? 'repeated-container with-drag-drop' : 'repeated-container'),
+    () =>
+      header != null
+        ? "repeated-container with-drag-drop"
+        : "repeated-container",
     [header],
   );
 
@@ -406,8 +418,8 @@ export function Repeatable<T>({
   const handleDragStart = useCallback(
     (event: DragEvent<HTMLDivElement>, index: number) => {
       setDragIndex(index);
-      event.dataTransfer.effectAllowed = 'move';
-      event.dataTransfer.setData('text/plain', String(index));
+      event.dataTransfer.effectAllowed = "move";
+      event.dataTransfer.setData("text/plain", String(index));
     },
     [],
   );
@@ -418,7 +430,7 @@ export function Repeatable<T>({
    */
   const handleDragOver = useCallback((event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    event.dataTransfer.dropEffect = 'move';
+    event.dataTransfer.dropEffect = "move";
   }, []);
 
   /**
@@ -496,9 +508,7 @@ export function Repeatable<T>({
           className="jenkins-button repeatable-add repeatable-add-top"
           onClick={handleAddTop}
         >
-          <AddIcon />
-          {' '}
-          {addButtonLabel}
+          <AddIcon /> {addButtonLabel}
         </button>
       )}
 
@@ -512,12 +522,12 @@ export function Repeatable<T>({
       {entries.map((entry, index) => {
         const isDragging = dragIndex === index;
         const chunkClasses = [
-          'repeated-chunk',
+          "repeated-chunk",
           positionalClasses[index],
-          isDragging ? 'repeated-chunk--sortable-chosen' : '',
+          isDragging ? "repeated-chunk--sortable-chosen" : "",
         ]
           .filter(Boolean)
-          .join(' ');
+          .join(" ");
 
         return (
           <div
@@ -525,7 +535,11 @@ export function Repeatable<T>({
             className={chunkClasses}
             data-name={resolvedName}
             onDragOver={header != null ? handleDragOver : undefined}
-            onDrop={header != null ? (e: DragEvent<HTMLDivElement>) => handleDrop(e, index) : undefined}
+            onDrop={
+              header != null
+                ? (e: DragEvent<HTMLDivElement>) => handleDrop(e, index)
+                : undefined
+            }
           >
             <div className="repeated-chunk__header">
               {header != null && (
@@ -536,7 +550,9 @@ export function Repeatable<T>({
                     role="button"
                     tabIndex={0}
                     aria-label={`Reorder ${header}`}
-                    onDragStart={(e: DragEvent<HTMLDivElement>) => handleDragStart(e, index)}
+                    onDragStart={(e: DragEvent<HTMLDivElement>) =>
+                      handleDragStart(e, index)
+                    }
                     onDragEnd={handleDragEnd}
                     onKeyDown={(e) => {
                       /*
@@ -546,7 +562,7 @@ export function Repeatable<T>({
                        * additional ARIA live-region announcements which
                        * would be handled by a dedicated reorder hook.
                        */
-                      if (e.key === 'Enter' || e.key === ' ') {
+                      if (e.key === "Enter" || e.key === " ") {
                         e.preventDefault();
                       }
                     }}
@@ -594,9 +610,7 @@ export function Repeatable<T>({
           className="jenkins-button repeatable-add"
           onClick={handleAddBottom}
         >
-          <AddIcon />
-          {' '}
-          {addButtonLabel}
+          <AddIcon /> {addButtonLabel}
         </button>
       )}
     </div>

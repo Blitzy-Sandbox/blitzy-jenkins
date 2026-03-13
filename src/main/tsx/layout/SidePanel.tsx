@@ -60,10 +60,7 @@ export interface SidePanelProps {
  * @param props - {@link SidePanelProps}
  * @returns The side-panel container element.
  */
-export function SidePanel({
-  sticky = false,
-  children,
-}: SidePanelProps) {
+export function SidePanel({ sticky = false, children }: SidePanelProps) {
   return (
     <div
       id="side-panel"

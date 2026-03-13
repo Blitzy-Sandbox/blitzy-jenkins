@@ -23,9 +23,9 @@
  * @module useI18n
  */
 
-import { useCallback } from 'react';
+import { useCallback } from "react";
 
-import type { JenkinsHeadDataset } from '@/types/jenkins';
+import type { JenkinsHeadDataset } from "@/types/jenkins";
 
 /**
  * Return type for the {@link useI18n} hook.
@@ -140,11 +140,11 @@ export function useI18n(): UseI18nReturn {
    * a TypeError on `null.getAttribute()`).
    */
   const t = useCallback((key: string): string | null => {
-    const i18nElement = document.querySelector('#i18n');
+    const i18nElement = document.querySelector("#i18n");
     if (!i18nElement) {
       return null;
     }
-    return i18nElement.getAttribute('data-' + key);
+    return i18nElement.getAttribute("data-" + key);
   }, []);
 
   /**
@@ -164,17 +164,17 @@ export function useI18n(): UseI18nReturn {
       // Read base URL from document.head.dataset.rooturl
       // Mirrors jenkins.js line 13: document.head.dataset.rooturl
       const baseUrl =
-        (document.head.dataset as JenkinsHeadDataset).rooturl ?? '';
+        (document.head.dataset as JenkinsHeadDataset).rooturl ?? "";
 
       // Fetch resource bundle from Stapler endpoint
       // Mirrors jenkins.js line 104: jenkins.get("/i18n/resourceBundle?baseName=" + bundleName, ...)
       const response = await fetch(
         `${baseUrl}/i18n/resourceBundle?baseName=${encodeURIComponent(bundleName)}`,
         {
-          method: 'GET',
-          cache: 'no-cache',
+          method: "GET",
+          cache: "no-cache",
           headers: {
-            Accept: 'application/json',
+            Accept: "application/json",
           },
         },
       );
@@ -188,9 +188,9 @@ export function useI18n(): UseI18nReturn {
       const data: ResourceBundleResponse = await response.json();
 
       // Validate response status — mirrors jenkins.js lines 105-109
-      if (data.status !== 'ok') {
+      if (data.status !== "ok") {
         throw new Error(
-          `Unable to load localization data: ${data.message ?? 'Unknown error'}`,
+          `Unable to load localization data: ${data.message ?? "Unknown error"}`,
         );
       }
 
@@ -210,11 +210,8 @@ export function useI18n(): UseI18nReturn {
       // across 50+ locales — components always render meaningful text even
       // when a translation is not yet available for the current locale.
       return new Proxy(bundleData, {
-        get(
-          target: Record<string, string>,
-          property: string | symbol,
-        ): string {
-          if (typeof property === 'string') {
+        get(target: Record<string, string>, property: string | symbol): string {
+          if (typeof property === "string") {
             if (property in target) {
               return target[property];
             }

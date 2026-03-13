@@ -37,7 +37,7 @@ describe("xmlEscape", () => {
   });
 
   it("escapes mixed special characters", () => {
-    expect(xmlEscape("it's a <test> & \"demo\"")).toBe(
+    expect(xmlEscape('it\'s a <test> & "demo"')).toBe(
       "it&apos;s a &lt;test&gt; &amp; &quot;demo&quot;",
     );
   });

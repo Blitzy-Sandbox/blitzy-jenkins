@@ -54,7 +54,7 @@
 // available in the document. The SCSS files are preserved unchanged from
 // the existing architecture — React components apply the same class names
 // that Jelly templates used, ensuring zero visual regression.
-import '../scss/styles.scss';
+import "../scss/styles.scss";
 
 // ---------------------------------------------------------------------------
 // React 19 DOM Renderer
@@ -64,7 +64,7 @@ import '../scss/styles.scss';
 // used jQuery DOM manipulation instead). createRoot enables concurrent
 // features including automatic batching across promises, setTimeout, and
 // native event handlers.
-import { createRoot } from 'react-dom/client';
+import { createRoot } from "react-dom/client";
 
 // ---------------------------------------------------------------------------
 // Root Application Component
@@ -74,7 +74,7 @@ import { createRoot } from 'react-dom/client';
 // Notifications, TooltipManager) declaratively. It also exposes a component
 // registry on window.__jenkinsComponents for Jelly interop during the
 // progressive migration period.
-import App from './App';
+import App from "./App";
 
 // ---------------------------------------------------------------------------
 // Provider Hierarchy Components (outermost → innermost)
@@ -84,18 +84,18 @@ import App from './App';
 // defaults matching the legacy jQuery AJAX patterns: staleTime 0 (mirrors
 // cache: false), retry 1 for queries, retry 0 for mutations, no refetch
 // on window focus. Includes React Query Devtools in development mode.
-import { QueryProvider } from './providers/QueryProvider';
+import { QueryProvider } from "./providers/QueryProvider";
 
 // JenkinsConfigProvider — second layer. Reads baseUrl, resUrl, imagesUrl,
 // and CSRF crumb from document.head.dataset (set by Jelly <l:layout> tag).
 // Provides refreshCrumb() to update both React state and window.crumb for
 // backward compatibility with the plugin ecosystem.
-import { JenkinsConfigProvider } from './providers/JenkinsConfigProvider';
+import { JenkinsConfigProvider } from "./providers/JenkinsConfigProvider";
 
 // I18nProvider — innermost provider. Provides getI18n() for synchronous
 // DOM-based translation lookup and loadTranslations() for async resource
 // bundle fetching with Proxy-wrapped missing-key fallback.
-import { I18nProvider } from './providers/I18nProvider';
+import { I18nProvider } from "./providers/I18nProvider";
 
 // ---------------------------------------------------------------------------
 // Application Bootstrap
@@ -113,7 +113,7 @@ import { I18nProvider } from './providers/I18nProvider';
  * be included globally via a single `<script>` tag without causing errors
  * on non-migrated pages.
  */
-const container = document.getElementById('react-root');
+const container = document.getElementById("react-root");
 
 if (container) {
   /**

@@ -47,12 +47,12 @@
  * @module pages/manage-jenkins/ManageJenkins
  */
 
-import { useCallback } from 'react';
-import SearchBar from '@/components/search-bar/SearchBar';
-import { useStaplerQuery } from '@/hooks/useStaplerQuery';
-import { useI18n } from '@/hooks/useI18n';
-import { useJenkinsConfig } from '@/providers/JenkinsConfigProvider';
-import Layout from '@/layout/Layout';
+import { useCallback } from "react";
+import SearchBar from "@/components/search-bar/SearchBar";
+import { useStaplerQuery } from "@/hooks/useStaplerQuery";
+import { useI18n } from "@/hooks/useI18n";
+import { useJenkinsConfig } from "@/providers/JenkinsConfigProvider";
+import Layout from "@/layout/Layout";
 
 // =============================================================================
 // Type Definitions
@@ -145,7 +145,7 @@ interface ManageJenkinsProps {
  * @returns The fully resolved URL
  */
 function resolveUrl(url: string, baseUrl: string): string {
-  if (url.startsWith('/')) {
+  if (url.startsWith("/")) {
     return baseUrl + url;
   }
   return url;
@@ -178,8 +178,8 @@ export function ManageJenkins({ className }: ManageJenkinsProps) {
   // Jelly. The staleTime of 60s reflects that management categories change
   // infrequently during a session.
   const { data: manageData, isLoading } = useStaplerQuery<ManageApiResponse>({
-    url: '/manage/api/json',
-    queryKey: ['manage', 'categories'],
+    url: "/manage/api/json",
+    queryKey: ["manage", "categories"],
     staleTime: 60 * 1000,
   });
 
@@ -216,7 +216,7 @@ export function ManageJenkins({ className }: ManageJenkinsProps) {
           // Returns raw HTML string for SearchBar to render via dangerouslySetInnerHTML
           icon: item.iconClassName
             ? `<svg class="svg-icon"><use href="#${item.iconClassName}" /></svg>`
-            : '',
+            : "",
           // Source lines 14-18: textContent from <dt> or .task-link-text
           label: item.displayName,
         });
@@ -225,26 +225,29 @@ export function ManageJenkins({ className }: ManageJenkinsProps) {
 
     // CRITICAL: Filter out items whose URL ends with '#'
     // EXACT match to source line 20: .filter((item) => !item.url.endsWith("#"))
-    return items.filter((item) => !item.url.endsWith('#'));
+    return items.filter((item) => !item.url.endsWith("#"));
   }, [manageData, baseUrl]);
 
   // ---------------------------------------------------------------------------
   // Render
   // ---------------------------------------------------------------------------
   return (
-    <Layout title={t('manage-jenkins') ?? 'Manage Jenkins'}>
+    <Layout title={t("manage-jenkins") ?? "Manage Jenkins"}>
       <div className={className}>
         {/* Search bar — replaces source line 1: document.querySelector("#settings-search-bar")
             The SearchBar component receives the suggestions callback and handles
             filtering, keyboard navigation, and dropdown rendering internally. */}
         <SearchBar
           suggestions={suggestions}
-          placeholder={t('search-manage-jenkins') ?? 'Search settings'}
+          placeholder={t("search-manage-jenkins") ?? "Search settings"}
         />
 
         {/* Loading state indicator */}
         {isLoading && (
-          <div className="jenkins-spinner" aria-label="Loading management categories">
+          <div
+            className="jenkins-spinner"
+            aria-label="Loading management categories"
+          >
             <span>Loading…</span>
           </div>
         )}
@@ -270,7 +273,9 @@ export function ManageJenkins({ className }: ManageJenkinsProps) {
           >
             <h2 className="jenkins-section__title">{category.name}</h2>
             {category.description && (
-              <p className="jenkins-section__description">{category.description}</p>
+              <p className="jenkins-section__description">
+                {category.description}
+              </p>
             )}
             <div className="jenkins-section__items">
               {category.items.map((item) => (

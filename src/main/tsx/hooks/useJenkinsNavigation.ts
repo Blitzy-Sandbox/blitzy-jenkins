@@ -43,9 +43,9 @@
  * @module hooks/useJenkinsNavigation
  */
 
-import { useCallback, useMemo } from 'react';
-import { useJenkinsConfig } from '@/providers/JenkinsConfigProvider';
-import { combinePath as combinePathUtil } from '@/utils/path';
+import { useCallback, useMemo } from "react";
+import { useJenkinsConfig } from "@/providers/JenkinsConfigProvider";
+import { combinePath as combinePathUtil } from "@/utils/path";
 
 // ---------------------------------------------------------------------------
 // Return Type Interface

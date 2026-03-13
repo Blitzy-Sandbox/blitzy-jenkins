@@ -24,20 +24,20 @@
  * @module pages/build/BuildChanges
  */
 
-import { useMemo } from 'react';
+import { useMemo } from "react";
 
-import Layout from '@/layout/Layout';
-import { SidePanel } from '@/layout/SidePanel';
-import { MainPanel } from '@/layout/MainPanel';
-import { useStaplerQuery } from '@/hooks/useStaplerQuery';
-import { useI18n } from '@/hooks/useI18n';
-import { useJenkinsConfig } from '@/providers/JenkinsConfigProvider';
+import Layout from "@/layout/Layout";
+import { SidePanel } from "@/layout/SidePanel";
+import { MainPanel } from "@/layout/MainPanel";
+import { useStaplerQuery } from "@/hooks/useStaplerQuery";
+import { useI18n } from "@/hooks/useI18n";
+import { useJenkinsConfig } from "@/providers/JenkinsConfigProvider";
 import type {
   Build,
   ChangeSetList,
   ChangeSetItem,
   UserInfo,
-} from '@/types/models';
+} from "@/types/models";
 
 /*
  * Layout internally composes SidePanel and MainPanel (see Layout.tsx lines
@@ -61,7 +61,7 @@ void MainPanel;
  *   `<j:set var="changeSets" value="${it.object.changeSets}" />`
  */
 const TREE_PARAM =
-  'changeSets[kind,items[commitId,msg,author[fullName,absoluteUrl],affectedPaths,timestamp]],displayName,url';
+  "changeSets[kind,items[commitId,msg,author[fullName,absoluteUrl],affectedPaths,timestamp]],displayName,url";
 
 /**
  * Git commit SHA abbreviation length.  Standard 7-character prefix provides
@@ -103,15 +103,12 @@ export interface BuildChangesProps {
  *   2. `buildUrl` is already a relative path → strips leading baseUrl.
  *   3. Neither supplied → constructs from `jobName` + `buildNumber`.
  */
-function resolveBuildPath(
-  props: BuildChangesProps,
-  baseUrl: string,
-): string {
+function resolveBuildPath(props: BuildChangesProps, baseUrl: string): string {
   if (props.buildUrl) {
     let path = props.buildUrl;
 
     /* Absolute URL → extract pathname */
-    if (path.startsWith('http://') || path.startsWith('https://')) {
+    if (path.startsWith("http://") || path.startsWith("https://")) {
       try {
         path = new URL(path).pathname;
       } catch {
@@ -124,14 +121,14 @@ function resolveBuildPath(
       path = path.substring(baseUrl.length);
     }
 
-    if (!path.startsWith('/')) {
+    if (!path.startsWith("/")) {
       path = `/${path}`;
     }
-    return path.endsWith('/') ? path : `${path}/`;
+    return path.endsWith("/") ? path : `${path}/`;
   }
 
   /* Construct from job name + build number */
-  const encodedJob = encodeURIComponent(props.jobName ?? '');
+  const encodedJob = encodeURIComponent(props.jobName ?? "");
   return `/job/${encodedJob}/${String(props.buildNumber ?? 0)}/`;
 }
 
@@ -141,7 +138,7 @@ function resolveBuildPath(
  * Other SCM kinds return the identifier unchanged.
  */
 function abbreviateCommitId(commitId: string, kind: string): string {
-  if (kind === 'git' && commitId.length > GIT_COMMIT_ABBREV_LENGTH) {
+  if (kind === "git" && commitId.length > GIT_COMMIT_ABBREV_LENGTH) {
     return commitId.substring(0, GIT_COMMIT_ABBREV_LENGTH);
   }
   return commitId;
@@ -153,7 +150,7 @@ function abbreviateCommitId(commitId: string, kind: string): string {
  */
 function formatTimestamp(timestamp: number | undefined): string {
   if (!timestamp) {
-    return '';
+    return "";
   }
   return new Date(timestamp).toLocaleString();
 }
@@ -177,14 +174,14 @@ function ChangeSetEntryView({
   kind: string;
 }): React.JSX.Element {
   const author: UserInfo = item.author;
-  const commitId: string = item.commitId ?? '';
+  const commitId: string = item.commitId ?? "";
   const affectedPaths: string[] = item.affectedPaths ?? [];
   const timestamp: number | undefined = item.timestamp;
 
   return (
     <div className="change">
       {/* Commit ID — abbreviated for git, full for other SCMs */}
-      {commitId !== '' && (
+      {commitId !== "" && (
         <div className="change-commit-id">
           <code>{abbreviateCommitId(commitId, kind)}</code>
         </div>
@@ -202,7 +199,7 @@ function ChangeSetEntryView({
         )}
         {timestamp ? (
           <time dateTime={new Date(timestamp).toISOString()}>
-            {' — '}
+            {" — "}
             {formatTimestamp(timestamp)}
           </time>
         ) : null}
@@ -254,7 +251,10 @@ export default function BuildChanges({
   /* ------------------------------------------------------------------ */
   /*  Resolve paths for API request and console link                      */
   /* ------------------------------------------------------------------ */
-  const buildPath = resolveBuildPath({ jobName, buildNumber, buildUrl }, baseUrl);
+  const buildPath = resolveBuildPath(
+    { jobName, buildNumber, buildUrl },
+    baseUrl,
+  );
   const apiUrl = `${buildPath}api/json?tree=${encodeURIComponent(TREE_PARAM)}`;
 
   /*
@@ -271,7 +271,10 @@ export default function BuildChanges({
   /* ------------------------------------------------------------------ */
   const { data, isLoading, isError } = useStaplerQuery<Build>({
     url: apiUrl,
-    queryKey: ['build-changes', buildUrl ?? `${jobName ?? ''}-${String(buildNumber ?? '')}`],
+    queryKey: [
+      "build-changes",
+      buildUrl ?? `${jobName ?? ""}-${String(buildNumber ?? "")}`,
+    ],
     enabled: !!(buildUrl || (jobName && buildNumber)),
   });
 
@@ -288,12 +291,12 @@ export default function BuildChanges({
   }, [data]);
 
   const hasChanges = changeSets.length > 0;
-  const displayName: string = data?.displayName ?? '';
+  const displayName: string = data?.displayName ?? "";
 
   /* Localised strings — mirrors Jelly ${%key} patterns */
-  const changesLabel = t('Changes') ?? 'Changes';
-  const failedToDetMsg = t('Failed to determine') ?? 'Failed to determine';
-  const logLinkText = t('log') ?? 'log';
+  const changesLabel = t("Changes") ?? "Changes";
+  const failedToDetMsg = t("Failed to determine") ?? "Failed to determine";
+  const logLinkText = t("log") ?? "log";
 
   const pageTitle = displayName
     ? `${displayName} ${changesLabel}`
@@ -328,7 +331,7 @@ export default function BuildChanges({
       {isError && (
         <div className="jenkins-notice jenkins-notice--error" role="alert">
           <div className="jenkins-notice__content">
-            <p>{t('Failed to load changes') ?? 'Failed to load changes'}</p>
+            <p>{t("Failed to load changes") ?? "Failed to load changes"}</p>
           </div>
         </div>
       )}
@@ -350,26 +353,22 @@ export default function BuildChanges({
              */
             <div className="jenkins-card">
               <div className="jenkins-card__content">
-                {changeSets.map(
-                  (changeSet: ChangeSetList, csIndex: number) => (
-                    <div
-                      key={`changeset-${changeSet.kind}-${String(csIndex)}`}
-                      className="changeset-container"
-                    >
-                      {changeSet.items.map(
-                        (item: ChangeSetItem, itemIndex: number) => (
-                          <ChangeSetEntryView
-                            key={
-                              item.commitId ?? `item-${String(itemIndex)}`
-                            }
-                            item={item}
-                            kind={changeSet.kind}
-                          />
-                        ),
-                      )}
-                    </div>
-                  ),
-                )}
+                {changeSets.map((changeSet: ChangeSetList, csIndex: number) => (
+                  <div
+                    key={`changeset-${changeSet.kind}-${String(csIndex)}`}
+                    className="changeset-container"
+                  >
+                    {changeSet.items.map(
+                      (item: ChangeSetItem, itemIndex: number) => (
+                        <ChangeSetEntryView
+                          key={item.commitId ?? `item-${String(itemIndex)}`}
+                          item={item}
+                          kind={changeSet.kind}
+                        />
+                      ),
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           ) : (

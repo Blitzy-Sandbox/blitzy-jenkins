@@ -128,8 +128,7 @@ export default function BreadcrumbBar({
           //   (!hasLink && !attrs.hasMenu) || (isCurrent && !inPageNav)
           // In the React version there is no `inPageNav` concept for auto
           // items — in-page breadcrumbs are injected via `children`.
-          const renderAsSpan =
-            (!hasLink && !item.hasMenu) || isCurrent;
+          const renderAsSpan = (!hasLink && !item.hasMenu) || isCurrent;
 
           return (
             <li
@@ -162,9 +161,7 @@ export default function BreadcrumbBar({
                       data-iscurrent={isCurrent ? "true" : "false"}
                       data-base={currentPath}
                       data-model={item.hasMenu ? "true" : undefined}
-                      data-children={
-                        item.hasChildrenMenu ? "true" : undefined
-                      }
+                      data-children={item.hasChildrenMenu ? "true" : undefined}
                     >
                       {/* Mirrors <l:icon class="icon-sm ..." src="symbol-chevron-down" /> */}
                       <svg

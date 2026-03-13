@@ -33,13 +33,18 @@
  * @module hudson/Queue
  */
 
-import { useState, useCallback, type ReactElement, type MouseEvent } from 'react';
-import { useStaplerQuery } from '@/hooks/useStaplerQuery';
-import { useStaplerMutation } from '@/hooks/useStaplerMutation';
-import { useI18n } from '@/hooks/useI18n';
-import type { QueueItem, QueueTask } from '@/types/models';
-import { CLOSE } from '@/utils/symbols';
-import { getBaseUrl } from '@/utils/baseUrl';
+import {
+  useState,
+  useCallback,
+  type ReactElement,
+  type MouseEvent,
+} from "react";
+import { useStaplerQuery } from "@/hooks/useStaplerQuery";
+import { useStaplerMutation } from "@/hooks/useStaplerMutation";
+import { useI18n } from "@/hooks/useI18n";
+import type { QueueItem, QueueTask } from "@/types/models";
+import { CLOSE } from "@/utils/symbols";
+import { getBaseUrl } from "@/utils/baseUrl";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -118,7 +123,7 @@ const QUEUE_REFRESH_INTERVAL_MS = 5000;
  * Linked from the hourglass icon on stuck queue items (queue.jelly line 85).
  */
 const EXECUTOR_STARVATION_URL =
-  'https://www.jenkins.io/redirect/troubleshooting/executor-starvation';
+  "https://www.jenkins.io/redirect/troubleshooting/executor-starvation";
 
 /**
  * Hourglass SVG icon markup for stuck queue items.
@@ -130,13 +135,13 @@ const EXECUTOR_STARVATION_URL =
 const HOURGLASS_SVG =
   '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">' +
   '<path d="M145.61 464h220.78c19.8 0 35.55-16.29 33.42-35.06C386.06 308 304 310 ' +
-  '304 256s83.11-51 95.8-172.94c2-18.78-13.61-35.06-33.41-35.06H145.61c-19.8 0-35.37 ' +
-  '16.28-33.41 35.06C124.89 205 208 201 208 256s-82.06 52-95.8 172.94c-2.14 18.77 ' +
+  "304 256s83.11-51 95.8-172.94c2-18.78-13.61-35.06-33.41-35.06H145.61c-19.8 0-35.37 " +
+  "16.28-33.41 35.06C124.89 205 208 201 208 256s-82.06 52-95.8 172.94c-2.14 18.77 " +
   '13.61 35.06 33.41 35.06z" fill="none" stroke="currentColor" stroke-linecap="round" ' +
   'stroke-linejoin="round" stroke-width="32"/>' +
   '<path fill="currentColor" d="M343.3 432H169.13c-15.6 0-20-18-9.06-29.16C186.55 376 ' +
-  '240 356.78 240 326V224c0-19.85-38-35-61.51-67.2-3.88-5.31-3.49-12.8 6.37-12.8h142.73' +
-  'c8.41 0 10.23 7.43 6.4 12.75C310.82 189 272 204.05 272 224v102c0 30.53 55.71 47 80.4 ' +
+  "240 356.78 240 326V224c0-19.85-38-35-61.51-67.2-3.88-5.31-3.49-12.8 6.37-12.8h142.73" +
+  "c8.41 0 10.23 7.43 6.4 12.75C310.82 189 272 204.05 272 224v102c0 30.53 55.71 47 80.4 " +
   '76.87 9.95 12.04 6.47 29.13-9.1 29.13z"/></svg>';
 
 // ---------------------------------------------------------------------------
@@ -162,10 +167,12 @@ function getCausesDescription(item: QueueItem): string {
     // Structural check for CauseAction shape: { causes: Array<{ shortDescription }> }
     if (
       action != null &&
-      'causes' in action &&
+      "causes" in action &&
       Array.isArray((action as Record<string, unknown>).causes)
     ) {
-      const causes = (action as { causes: Array<{ shortDescription?: string }> }).causes;
+      const causes = (
+        action as { causes: Array<{ shortDescription?: string }> }
+      ).causes;
       for (const cause of causes) {
         if (cause.shortDescription) {
           descriptions.push(cause.shortDescription);
@@ -174,7 +181,7 @@ function getCausesDescription(item: QueueItem): string {
     }
   }
 
-  return descriptions.join(', ');
+  return descriptions.join(", ");
 }
 
 /**
@@ -192,7 +199,7 @@ function formatInQueueDuration(inQueueSince: number): string {
   const totalSeconds = Math.floor(elapsedMs / 1000);
 
   if (totalSeconds < 1) {
-    return '0 sec';
+    return "0 sec";
   }
 
   const hours = Math.floor(totalSeconds / 3600);
@@ -211,7 +218,7 @@ function formatInQueueDuration(inQueueSince: number): string {
     parts.push(`${String(seconds)} sec`);
   }
 
-  return parts.join(' ') || '0 sec';
+  return parts.join(" ") || "0 sec";
 }
 
 /**
@@ -226,8 +233,8 @@ function formatInQueueDuration(inQueueSince: number): string {
  */
 function buildItemTooltip(item: QueueItem, waitingForLabel: string): string {
   const causes = getCausesDescription(item);
-  const why = item.why ?? '';
-  const params = item.params ?? '';
+  const why = item.why ?? "";
+  const params = item.params ?? "";
   const inQueueFor = formatInQueueDuration(item.inQueueSince);
 
   // Join non-empty parts with space, matching Jelly space concatenation
@@ -241,16 +248,14 @@ function buildItemTooltip(item: QueueItem, waitingForLabel: string): string {
   if (params) {
     descriptionParts.push(params);
   }
-  const mainDescription = descriptionParts.join(' ');
+  const mainDescription = descriptionParts.join(" ");
 
   // Format the "Waiting for" line, replacing {0} placeholder if present
-  const waitingLine = waitingForLabel.includes('{0}')
-    ? waitingForLabel.replace('{0}', inQueueFor)
+  const waitingLine = waitingForLabel.includes("{0}")
+    ? waitingForLabel.replace("{0}", inQueueFor)
     : `${waitingForLabel}(${inQueueFor})`;
 
-  return mainDescription
-    ? `${mainDescription}\n${waitingLine}`
-    : waitingLine;
+  return mainDescription ? `${mainDescription}\n${waitingLine}` : waitingLine;
 }
 
 // ---------------------------------------------------------------------------
@@ -307,8 +312,8 @@ export default function Queue(props: QueueProps): ReactElement {
     isLoading,
     isFetching,
   } = useStaplerQuery<QueueApiResponse>({
-    url: 'queue/api/json',
-    queryKey: ['buildQueue'],
+    url: "queue/api/json",
+    queryKey: ["buildQueue"],
     refetchInterval: QUEUE_REFRESH_INTERVAL_MS,
     enabled: !!viewUrl,
   });
@@ -328,8 +333,8 @@ export default function Queue(props: QueueProps): ReactElement {
   // -------------------------------------------------------------------------
 
   const cancelItemMutation = useStaplerMutation<void, string>({
-    url: 'queue/cancelItem',
-    contentType: 'form-urlencoded',
+    url: "queue/cancelItem",
+    contentType: "form-urlencoded",
   });
 
   // -------------------------------------------------------------------------
@@ -341,8 +346,8 @@ export default function Queue(props: QueueProps): ReactElement {
   // -------------------------------------------------------------------------
 
   const cancelQuietDownMutation = useStaplerMutation<void, string>({
-    url: 'cancelQuietDown',
-    contentType: 'form-urlencoded',
+    url: "cancelQuietDown",
+    contentType: "form-urlencoded",
   });
 
   // -------------------------------------------------------------------------
@@ -366,27 +371,24 @@ export default function Queue(props: QueueProps): ReactElement {
       }
 
       const displayName =
-        item.task?.name ?? t('Unknown Task') ?? 'Unknown Task';
+        item.task?.name ?? t("Unknown Task") ?? "Unknown Task";
 
       // Build the confirmation message from the i18n "confirm" key.
       // The Jelly pattern: confirm="${%confirm(item.displayName)}"
       // The i18n value typically contains a {0} placeholder for the item name.
-      const rawConfirm = t('confirm');
+      const rawConfirm = t("confirm");
       const message =
-        rawConfirm != null && rawConfirm.includes('{0}')
-          ? rawConfirm.replace('{0}', displayName)
-          : rawConfirm ?? `Cancel ${displayName}?`;
+        rawConfirm != null && rawConfirm.includes("{0}")
+          ? rawConfirm.replace("{0}", displayName)
+          : (rawConfirm ?? `Cancel ${displayName}?`);
 
       // Attempt Jenkins dialog system first; fall back to window.confirm
-      const jenkinsDialog = (
-        window as unknown as Record<string, unknown>
-      ).dialog as
-        | { confirm?: (q: string) => Promise<void> }
-        | undefined;
+      const jenkinsDialog = (window as unknown as Record<string, unknown>)
+        .dialog as { confirm?: (q: string) => Promise<void> } | undefined;
 
       if (
         jenkinsDialog != null &&
-        typeof jenkinsDialog.confirm === 'function'
+        typeof jenkinsDialog.confirm === "function"
       ) {
         jenkinsDialog.confirm(message).then(() => {
           cancelItemMutation.mutate(`id=${String(item.id)}`);
@@ -412,7 +414,7 @@ export default function Queue(props: QueueProps): ReactElement {
       if (cancelQuietDownMutation.isPending) {
         return;
       }
-      cancelQuietDownMutation.mutate('');
+      cancelQuietDownMutation.mutate("");
     },
     [cancelQuietDownMutation],
   );
@@ -427,24 +429,22 @@ export default function Queue(props: QueueProps): ReactElement {
 
   const itemCount = displayItems.length;
   const title = filtered
-    ? `${t('Filtered Build Queue') ?? 'Filtered Build Queue'} (${String(itemCount)})`
-    : `${t('Build Queue') ?? 'Build Queue'} (${String(itemCount)})`;
+    ? `${t("Filtered Build Queue") ?? "Filtered Build Queue"} (${String(itemCount)})`
+    : `${t("Build Queue") ?? "Build Queue"} (${String(itemCount)})`;
 
   // -------------------------------------------------------------------------
   // Pre-resolve localized labels to avoid repeated t() calls in render
   // -------------------------------------------------------------------------
 
-  const waitingForLabel = t('WaitingFor') ?? 'Waiting for ';
-  const unknownTaskLabel = t('Unknown Task') ?? 'Unknown Task';
-  const cancelBuildLabel = t('Cancel this build') ?? 'Cancel this build';
+  const waitingForLabel = t("WaitingFor") ?? "Waiting for ";
+  const unknownTaskLabel = t("Unknown Task") ?? "Unknown Task";
+  const cancelBuildLabel = t("Cancel this build") ?? "Cancel this build";
   const emptyQueueLabel =
-    t('No builds in the queue.') ?? 'No builds in the queue.';
+    t("No builds in the queue.") ?? "No builds in the queue.";
   const shutdownLabel =
-    t(
-      'Jenkins is going to shut down. No further builds will be performed.',
-    ) ??
-    'Jenkins is going to shut down. No further builds will be performed.';
-  const cancelLabel = t('cancel') ?? 'cancel';
+    t("Jenkins is going to shut down. No further builds will be performed.") ??
+    "Jenkins is going to shut down. No further builds will be performed.";
+  const cancelLabel = t("cancel") ?? "cancel";
 
   // -------------------------------------------------------------------------
   // Render
@@ -463,7 +463,7 @@ export default function Queue(props: QueueProps): ReactElement {
 
   return (
     <div
-      className={`pane-frame ${expanded ? 'expanded' : 'collapsed'}`}
+      className={`pane-frame ${expanded ? "expanded" : "collapsed"}`}
       id="buildQueue"
     >
       <div className="pane-header">
@@ -495,12 +495,12 @@ export default function Queue(props: QueueProps): ReactElement {
                 <td
                   className="pane"
                   colSpan={2}
-                  style={{ whiteSpace: 'normal' }}
+                  style={{ whiteSpace: "normal" }}
                 >
                   {shutdownLabel}
                   {hasManagePermission && (
                     <>
-                      {' '}
+                      {" "}
                       <a
                         href={`${rootUrl}/cancelQuietDown`}
                         className="post"
@@ -533,7 +533,7 @@ export default function Queue(props: QueueProps): ReactElement {
             {isLoading && displayItems.length === 0 && (
               <tr>
                 <td className="pane" colSpan={2}>
-                  {isFetching ? '...' : ''}
+                  {isFetching ? "..." : ""}
                 </td>
               </tr>
             )}
@@ -555,13 +555,11 @@ export default function Queue(props: QueueProps): ReactElement {
               // In the REST API, items without read permission typically
               // lack task details or are excluded entirely.
               const hasTaskInfo =
-                task != null &&
-                task.name != null &&
-                task.url != null;
+                task != null && task.name != null && task.url != null;
 
               const tooltipText = hasTaskInfo
                 ? buildItemTooltip(item, waitingForLabel)
-                : '';
+                : "";
 
               const taskDisplayName = hasTaskInfo
                 ? task.name
@@ -572,7 +570,7 @@ export default function Queue(props: QueueProps): ReactElement {
                   {/* Task name cell */}
                   <td
                     className="pane pane-grow"
-                    style={{ whiteSpace: 'normal' }}
+                    style={{ whiteSpace: "normal" }}
                   >
                     {hasTaskInfo && task != null ? (
                       <a
@@ -594,8 +592,8 @@ export default function Queue(props: QueueProps): ReactElement {
                       className="pane"
                       width={16}
                       style={{
-                        textAlign: 'center',
-                        verticalAlign: 'middle',
+                        textAlign: "center",
+                        verticalAlign: "middle",
                       }}
                     >
                       <a href={EXECUTOR_STARVATION_URL}>
@@ -615,8 +613,8 @@ export default function Queue(props: QueueProps): ReactElement {
                     className="pane"
                     width={16}
                     style={{
-                      textAlign: 'center',
-                      verticalAlign: 'middle',
+                      textAlign: "center",
+                      verticalAlign: "middle",
                     }}
                   >
                     <a

@@ -29,9 +29,9 @@
  * @module pages/cloud/CloudSet
  */
 
-import { useState, useEffect, useCallback } from 'react';
-import Layout from '@/layout/Layout';
-import { useStaplerQuery } from '@/hooks/useStaplerQuery';
+import { useState, useEffect, useCallback } from "react";
+import Layout from "@/layout/Layout";
+import { useStaplerQuery } from "@/hooks/useStaplerQuery";
 
 // =============================================================================
 // Type Definitions
@@ -129,8 +129,8 @@ export function CloudSet(): React.ReactElement {
    * provider's name and type.
    */
   const { data, isLoading } = useStaplerQuery<CloudSetData>({
-    url: '/cloud/api/json',
-    queryKey: ['cloud-set'],
+    url: "/cloud/api/json",
+    queryKey: ["cloud-set"],
   });
 
   /**
@@ -156,14 +156,14 @@ export function CloudSet(): React.ReactElement {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent): void => {
-      if (e.key === 'Escape' && draggedIndex !== null) {
+      if (e.key === "Escape" && draggedIndex !== null) {
         setDraggedIndex(null);
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [draggedIndex]);
 
@@ -192,8 +192,8 @@ export function CloudSet(): React.ReactElement {
     (index: number) =>
       (e: React.DragEvent<HTMLTableRowElement>): void => {
         setDraggedIndex(index);
-        e.dataTransfer.effectAllowed = 'move';
-        e.dataTransfer.setData('text/plain', String(index));
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setData("text/plain", String(index));
       },
     [],
   );
@@ -207,7 +207,7 @@ export function CloudSet(): React.ReactElement {
   const handleDragOver = useCallback(
     (e: React.DragEvent<HTMLTableRowElement>): void => {
       e.preventDefault();
-      e.dataTransfer.dropEffect = 'move';
+      e.dataTransfer.dropEffect = "move";
     },
     [],
   );
@@ -267,7 +267,10 @@ export function CloudSet(): React.ReactElement {
     <Layout title="Cloud Configuration">
       <div>
         {isLoading ? (
-          <div className="jenkins-spinner" aria-label="Loading cloud configurations">
+          <div
+            className="jenkins-spinner"
+            aria-label="Loading cloud configurations"
+          >
             Loading...
           </div>
         ) : (
@@ -298,8 +301,8 @@ export function CloudSet(): React.ReactElement {
                     onDragEnd={handleDragEnd}
                     className={
                       draggedIndex === index
-                        ? 'repeated-chunk--sortable-ghost'
-                        : ''
+                        ? "repeated-chunk--sortable-ghost"
+                        : ""
                     }
                   >
                     <td>
@@ -330,7 +333,7 @@ export function CloudSet(): React.ReactElement {
             <button
               id="saveButton"
               className={`jenkins-button jenkins-button--primary${
-                !showSaveButton ? ' jenkins-hidden' : ''
+                !showSaveButton ? " jenkins-hidden" : ""
               }`}
               type="submit"
             >

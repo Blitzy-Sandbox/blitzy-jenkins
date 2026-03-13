@@ -1,5 +1,5 @@
-import { useState, useCallback, type ReactNode, type ChangeEvent } from 'react';
-import { Checkbox } from './Checkbox';
+import { useState, useCallback, type ReactNode, type ChangeEvent } from "react";
+import { Checkbox } from "./Checkbox";
 
 /**
  * Props for the OptionalBlock component.
@@ -168,35 +168,35 @@ export function OptionalBlock({
    * represents a distinct JSON grouping boundary during form submission.
    */
   const checkboxRowClasses: string = [
-    'help-sibling',
-    'tr',
-    'optional-block-start',
-    'row-group-start',
-    !inline && 'row-set-start',
+    "help-sibling",
+    "tr",
+    "optional-block-start",
+    "row-group-start",
+    !inline && "row-set-start",
   ]
     .filter(Boolean)
-    .join(' ');
+    .join(" ");
 
   /*
    * End-marker classes — mirrors the Jelly closing `<div>` that marks
    * the end of the foldable block for the legacy behaviour system.
    */
   const endMarkerClasses: string = [
-    'tr',
-    !inline && 'row-set-end',
-    'rowvg-end',
-    'optional-block-end',
-    'row-group-end',
+    "tr",
+    !inline && "row-set-end",
+    "rowvg-end",
+    "optional-block-end",
+    "row-group-end",
   ]
     .filter(Boolean)
-    .join(' ');
+    .join(" ");
 
   return (
     <div className="optionalBlock-container jenkins-form-item">
       {/* ── Checkbox row with optional help link ──────────────────── */}
       <div
         className={checkboxRowClasses}
-        data-has-help={help != null ? 'true' : undefined}
+        data-has-help={help != null ? "true" : undefined}
       >
         <div className="jenkins-checkbox-help-wrapper">
           <Checkbox
@@ -227,7 +227,7 @@ export function OptionalBlock({
       {help != null && (
         <div
           className="help-area tr"
-          style={helpVisible ? undefined : { display: 'none' }}
+          style={helpVisible ? undefined : { display: "none" }}
         >
           <div className="help" data-help-url={help} />
         </div>
@@ -238,14 +238,14 @@ export function OptionalBlock({
 
       {/* ── Foldable content container ────────────────────────────── */}
       {/*
-        * When collapsed the container is hidden and marked `inert` so
-        * that child inputs are excluded from form submission and are
-        * unreachable by keyboard / assistive technology — matching the
-        * original Jelly behaviour of skipping collapsed fields.
-        */}
+       * When collapsed the container is hidden and marked `inert` so
+       * that child inputs are excluded from form submission and are
+       * unreachable by keyboard / assistive technology — matching the
+       * original Jelly behaviour of skipping collapsed fields.
+       */}
       <div
         className="form-container tr"
-        style={isContentVisible ? undefined : { display: 'none' }}
+        style={isContentVisible ? undefined : { display: "none" }}
         aria-hidden={!isContentVisible ? true : undefined}
         {...(!isContentVisible ? { inert: true } : {})}
       >

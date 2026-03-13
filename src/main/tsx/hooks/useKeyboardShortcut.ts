@@ -10,7 +10,7 @@
  *
  * @module useKeyboardShortcut
  */
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -68,9 +68,7 @@ interface UseKeyboardShortcutOptions {
 export function isMacPlatform(): boolean {
   const platform = navigator.platform.toUpperCase();
   return (
-    platform.indexOf('MAC') >= 0 ||
-    platform === 'IPHONE' ||
-    platform === 'IPAD'
+    platform.indexOf("MAC") >= 0 || platform === "IPHONE" || platform === "IPAD"
   );
 }
 
@@ -106,7 +104,7 @@ export function translateModifierKeysForUsersPlatform(
   keyboardShortcut: string,
 ): string {
   const useCmdKey = isMacPlatform();
-  return keyboardShortcut.replace(/CMD|CTRL/gi, useCmdKey ? 'CMD' : 'CTRL');
+  return keyboardShortcut.replace(/CMD|CTRL/gi, useCmdKey ? "CMD" : "CTRL");
 }
 
 // ---------------------------------------------------------------------------
@@ -132,10 +130,10 @@ export function translateModifierKeysForUsersPlatform(
  */
 function parseShortcut(shortcut: string): ParsedShortcut {
   const translated = translateModifierKeysForUsersPlatform(shortcut);
-  const parts = translated.split('+').map((part) => part.trim().toUpperCase());
+  const parts = translated.split("+").map((part) => part.trim().toUpperCase());
 
   const result: ParsedShortcut = {
-    key: '',
+    key: "",
     ctrlKey: false,
     metaKey: false,
     shiftKey: false,
@@ -144,16 +142,16 @@ function parseShortcut(shortcut: string): ParsedShortcut {
 
   for (const part of parts) {
     switch (part) {
-      case 'CMD':
+      case "CMD":
         result.metaKey = true;
         break;
-      case 'CTRL':
+      case "CTRL":
         result.ctrlKey = true;
         break;
-      case 'SHIFT':
+      case "SHIFT":
         result.shiftKey = true;
         break;
-      case 'ALT':
+      case "ALT":
         result.altKey = true;
         break;
       default:
@@ -241,9 +239,9 @@ export function useKeyboardShortcut(
       }
     };
 
-    document.addEventListener('keydown', handler);
+    document.addEventListener("keydown", handler);
     return () => {
-      document.removeEventListener('keydown', handler);
+      document.removeEventListener("keydown", handler);
     };
   }, [shortcut, enabled, preventDefault]);
 }

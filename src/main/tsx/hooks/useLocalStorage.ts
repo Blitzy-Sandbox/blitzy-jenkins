@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from "react";
 
 // ---------------------------------------------------------------------------
 // Internal: In-memory mock storage for environments where localStorage is
@@ -54,11 +54,11 @@ function getStorage(): Storage {
   try {
     const storage = window.localStorage;
     // Probe: some environments expose localStorage but throw on setItem.
-    storage.setItem('__jenkins_storage_test__', '__test__');
-    storage.removeItem('__jenkins_storage_test__');
+    storage.setItem("__jenkins_storage_test__", "__test__");
+    storage.removeItem("__jenkins_storage_test__");
     return storage;
   } catch {
-    console.warn('HTML5 localStorage not supported by this browser.');
+    console.warn("HTML5 localStorage not supported by this browser.");
     return createMockStorage();
   }
 }
@@ -75,7 +75,7 @@ const storage: Storage = getStorage();
 // localStorage keys in Jenkins core. Changing this prefix would break
 // compatibility with values written by the legacy JS modules.
 // ---------------------------------------------------------------------------
-const GLOBAL_PREFIX = 'jenkins:';
+const GLOBAL_PREFIX = "jenkins:";
 
 // ---------------------------------------------------------------------------
 // Public API
@@ -176,7 +176,7 @@ export function useLocalStorage(): UseLocalStorageReturn {
    *   `name = "jenkins:" + name + ":" + getWindow().location.href;`
    */
   const buildPageKey = (name: string): string =>
-    GLOBAL_PREFIX + name + ':' + window.location.href;
+    GLOBAL_PREFIX + name + ":" + window.location.href;
 
   /**
    * Store a value under a page-scoped key.

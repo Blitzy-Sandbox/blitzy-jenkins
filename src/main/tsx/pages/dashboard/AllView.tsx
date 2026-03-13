@@ -256,9 +256,7 @@ function EmptyState({
         {isTopLevel &&
           (canSetUpDistributedBuilds || hasItemCreatePermission) && (
             <>
-              <h1>
-                {t("Welcome to Jenkins!") ?? "Welcome to Jenkins!"}
-              </h1>
+              <h1>{t("Welcome to Jenkins!") ?? "Welcome to Jenkins!"}</h1>
               <p>
                 {t("noJobDescription") ??
                   "This page is where your Jenkins jobs will be displayed. To get started, you can set up distributed builds or start building a software project."}
@@ -267,8 +265,7 @@ function EmptyState({
               {/* Start Building section — noJob.groovy lines 26-38 */}
               <section className="empty-state-section">
                 <h2 className="h4">
-                  {t("startBuilding") ??
-                    "Start building your software project"}
+                  {t("startBuilding") ?? "Start building your software project"}
                 </h2>
                 <ul className="empty-state-section-list">
                   <li className="content-block">
@@ -299,9 +296,7 @@ function EmptyState({
                         href={buildUrl("/computer/new")}
                         className="content-block__link"
                       >
-                        <span>
-                          {t("setUpAgent") ?? "Set up an agent"}
-                        </span>
+                        <span>{t("setUpAgent") ?? "Set up an agent"}</span>
                         <span className="trailing-icon">
                           <JenkinsIcon name="computer" />
                         </span>
@@ -315,9 +310,7 @@ function EmptyState({
                           href={buildUrl("/cloud/")}
                           className="content-block__link"
                         >
-                          <span>
-                            {t("setUpCloud") ?? "Configure a cloud"}
-                          </span>
+                          <span>{t("setUpCloud") ?? "Configure a cloud"}</span>
                           <span className="trailing-icon">
                             <JenkinsIcon name="cloud" />
                           </span>
@@ -359,10 +352,7 @@ function EmptyState({
             </h2>
             <ul className="empty-state-section-list">
               <li className="content-block">
-                <a
-                  href={buildUrl("/newJob")}
-                  className="content-block__link"
-                >
+                <a href={buildUrl("/newJob")} className="content-block__link">
                   <span>{t("createJob") ?? "Create a job"}</span>
                   <span className="trailing-icon">
                     <JenkinsIcon name="add" />
@@ -379,15 +369,13 @@ function EmptyState({
          * ================================================================ */}
         {isAnonymous && !hasItemCreatePermission && (
           <>
-            <h1>
-              {t("Welcome to Jenkins!") ?? "Welcome to Jenkins!"}
-            </h1>
+            <h1>{t("Welcome to Jenkins!") ?? "Welcome to Jenkins!"}</h1>
             <p>
               {canSignUp
-                ? t("anonymousDescriptionSignUpEnabled") ??
-                  "Log in now to view or create jobs. If you don't already have an account, you can sign up."
-                : t("anonymousDescription") ??
-                  "Log in now to view or create jobs."}
+                ? (t("anonymousDescriptionSignUpEnabled") ??
+                  "Log in now to view or create jobs. If you don't already have an account, you can sign up.")
+                : (t("anonymousDescription") ??
+                  "Log in now to view or create jobs.")}
             </p>
 
             <section className="empty-state-section">
@@ -404,9 +392,7 @@ function EmptyState({
                     )}
                     className="content-block__link"
                   >
-                    <span>
-                      {t("Log in to Jenkins") ?? "Log in to Jenkins"}
-                    </span>
+                    <span>{t("Log in to Jenkins") ?? "Log in to Jenkins"}</span>
                     <span className="trailing-icon">
                       <JenkinsIcon name="arrow-right" className="icon-md" />
                     </span>
@@ -421,14 +407,10 @@ function EmptyState({
                       className="content-block__link"
                     >
                       <span>
-                        {t("Sign up for Jenkins") ??
-                          "Sign up for Jenkins"}
+                        {t("Sign up for Jenkins") ?? "Sign up for Jenkins"}
                       </span>
                       <span className="trailing-icon">
-                        <JenkinsIcon
-                          name="arrow-right"
-                          className="icon-md"
-                        />
+                        <JenkinsIcon name="arrow-right" className="icon-md" />
                       </span>
                     </a>
                   </li>
@@ -492,9 +474,7 @@ export default function AllView({
   // Mirrors main.jelly line 8-9: <j:when test="${items == null}"><p>${%broken}</p>
   // ==========================================================================
   if (items === null) {
-    return (
-      <p>{t("broken") ?? "Broken view: failed to load items."}</p>
-    );
+    return <p>{t("broken") ?? "Broken view: failed to load items."}</p>;
   }
 
   // ==========================================================================

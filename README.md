@@ -108,13 +108,13 @@ yarn lint:css
 
 The Jenkins core frontend uses **React 19** with **TypeScript** and **Vite 7** as the build tool:
 
-| Directory | Description |
-|-----------|-------------|
-| `src/main/tsx/` | React 19 + TypeScript frontend source (components, pages, hooks, providers, API layer) |
-| `src/main/scss/` | SCSS styling (preserved from the original architecture, consumed by React components) |
-| `war/src/main/webapp/jsbundles/` | Vite build output (production bundles) |
-| `e2e/` | Playwright E2E and visual regression tests |
-| `docs/` | Migration documentation |
+| Directory                        | Description                                                                            |
+| -------------------------------- | -------------------------------------------------------------------------------------- |
+| `src/main/tsx/`                  | React 19 + TypeScript frontend source (components, pages, hooks, providers, API layer) |
+| `src/main/scss/`                 | SCSS styling (preserved from the original architecture, consumed by React components)  |
+| `war/src/main/webapp/jsbundles/` | Vite build output (production bundles)                                                 |
+| `e2e/`                           | Playwright E2E and visual regression tests                                             |
+| `docs/`                          | Migration documentation                                                                |
 
 Key technologies:
 

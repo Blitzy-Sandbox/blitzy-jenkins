@@ -25,8 +25,8 @@
  * @module StopButtonLink
  */
 
-import { useCallback } from 'react';
-import { useCrumb } from '@/hooks/useCrumb';
+import { useCallback } from "react";
+import { useCrumb } from "@/hooks/useCrumb";
 
 // ---------------------------------------------------------------------------
 // Global type augmentation for window.dialog
@@ -183,12 +183,10 @@ export function StopButtonLink({
        */
       const executeAbort = (): void => {
         const headers: Record<string, string> =
-          crumbFieldName && crumbValue
-            ? { [crumbFieldName]: crumbValue }
-            : {};
+          crumbFieldName && crumbValue ? { [crumbFieldName]: crumbValue } : {};
 
         fetch(href, {
-          method: 'post',
+          method: "post",
           headers,
         });
       };
@@ -204,9 +202,9 @@ export function StopButtonLink({
         // for backward compatibility — plugins that override the dialog
         // behavior continue to work correctly.
         if (
-          typeof window !== 'undefined' &&
+          typeof window !== "undefined" &&
           window.dialog &&
-          typeof window.dialog.confirm === 'function'
+          typeof window.dialog.confirm === "function"
         ) {
           window.dialog.confirm(confirmMessage).then(() => {
             executeAbort();
@@ -227,7 +225,7 @@ export function StopButtonLink({
   // `src/main/scss/components/`.
   const combinedClassName: string = className
     ? `stop-button-link ${className}`
-    : 'stop-button-link';
+    : "stop-button-link";
 
   return (
     <a

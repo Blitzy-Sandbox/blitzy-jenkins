@@ -30,10 +30,10 @@
  * @module SystemInformation
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
-import { useJenkinsConfig } from '@/providers/JenkinsConfigProvider';
-import { useI18n } from '@/hooks/useI18n';
+import { useJenkinsConfig } from "@/providers/JenkinsConfigProvider";
+import { useI18n } from "@/hooks/useI18n";
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -56,7 +56,7 @@ const WIDTH_MARGIN = 30;
  * EXACT match to source line 13 URL path segment.
  */
 const GRAPH_ENDPOINT_PATH =
-  '/jenkins.diagnosis.MemoryUsageMonitorAction/heap/graph';
+  "/jenkins.diagnosis.MemoryUsageMonitorAction/heap/graph";
 
 // ---------------------------------------------------------------------------
 // Timespan Options
@@ -76,9 +76,9 @@ const TIMESPAN_OPTIONS: ReadonlyArray<{
   /** Fallback label when i18n key is not available */
   fallback: string;
 }> = [
-  { value: 'min', i18nKey: 'short', fallback: 'Short' },
-  { value: 'hour', i18nKey: 'medium', fallback: 'Medium' },
-  { value: 'day', i18nKey: 'long', fallback: 'Long' },
+  { value: "min", i18nKey: "short", fallback: "Short" },
+  { value: "hour", i18nKey: "medium", fallback: "Medium" },
+  { value: "day", i18nKey: "long", fallback: "Long" },
 ];
 
 // ---------------------------------------------------------------------------
@@ -128,7 +128,7 @@ export function SystemInformation({ className }: SystemInformationProps) {
    * Default "min" represents the initial dropdown option.
    * Replaces `timespanSelect.value` at source line 12.
    */
-  const [selectedTimespan, setSelectedTimespan] = useState<string>('min');
+  const [selectedTimespan, setSelectedTimespan] = useState<string>("min");
 
   /**
    * Calculated graph image width in pixels.
@@ -143,7 +143,7 @@ export function SystemInformation({ className }: SystemInformationProps) {
    * present in the DOM before the React component mounts.
    */
   const [imageWidth, setImageWidth] = useState<number>(() => {
-    const mainPanel = document.getElementById('main-panel');
+    const mainPanel = document.getElementById("main-panel");
     return mainPanel ? mainPanel.offsetWidth - WIDTH_MARGIN : 0;
   });
 
@@ -167,7 +167,7 @@ export function SystemInformation({ className }: SystemInformationProps) {
       return;
     }
     const frameId = requestAnimationFrame(() => {
-      const mainPanel = document.getElementById('main-panel');
+      const mainPanel = document.getElementById("main-panel");
       if (mainPanel) {
         setImageWidth(mainPanel.offsetWidth - WIDTH_MARGIN);
       }
@@ -242,7 +242,7 @@ export function SystemInformation({ className }: SystemInformationProps) {
             src={graphUrl}
             srcSet={`${graphUrl2x} 2x`}
             loading="lazy"
-            style={{ width: '100%' }}
+            style={{ width: "100%" }}
             alt="Memory usage graph"
             className="jenkins-graph-card"
           />

@@ -346,7 +346,10 @@ test.describe("Job Creation User Flows", () => {
     const submitButton = jenkinsPage.page.locator(
       ".bottom-sticker-inner button[type=submit]",
     );
-    await submitButton.waitFor({ state: "visible", timeout: ELEMENT_WAIT_TIMEOUT });
+    await submitButton.waitFor({
+      state: "visible",
+      timeout: ELEMENT_WAIT_TIMEOUT,
+    });
 
     // Allow time for the form validation state to refresh
     await jenkinsPage.page.waitForTimeout(500);

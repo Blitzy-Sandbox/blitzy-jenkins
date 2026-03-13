@@ -162,9 +162,7 @@ test.describe("Build History User Flows", () => {
     // Verify a timestamp or relative time is displayed somewhere in the row.
     // Timestamps can be in <time> elements, or in elements with .timestamp
     // class, or within generic text content showing relative time.
-    const timeElement = firstRow.locator(
-      "time, .timestamp, [data-timestamp]",
-    );
+    const timeElement = firstRow.locator("time, .timestamp, [data-timestamp]");
     const timeCount = await timeElement.count();
     if (timeCount > 0) {
       await expect(timeElement.first()).toBeVisible();
@@ -242,8 +240,7 @@ test.describe("Build History User Flows", () => {
 
     // Verify the "newer" button is now enabled (since we moved to older page)
     const isNewerEnabled = await newerButton.evaluate(
-      (el) =>
-        !el.classList.contains("app-builds-container__button--disabled"),
+      (el) => !el.classList.contains("app-builds-container__button--disabled"),
     );
     expect(isNewerEnabled).toBe(true);
 

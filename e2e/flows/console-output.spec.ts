@@ -159,7 +159,10 @@ echo "=== End of Console Output ==="</command>
         // Poll until build completes
         const startTime = Date.now();
         let buildComplete = false;
-        while (!buildComplete && Date.now() - startTime < BUILD_COMPLETION_TIMEOUT) {
+        while (
+          !buildComplete &&
+          Date.now() - startTime < BUILD_COMPLETION_TIMEOUT
+        ) {
           await jenkinsPage.page.waitForTimeout(BUILD_POLL_INTERVAL);
           const statusResponse = await jenkinsPage.page.request.get(
             `${jenkinsPage.page.url().split("/").slice(0, 3).join("/")}/job/${encodeURIComponent(TEST_JOB_NAME)}/api/json?tree=lastCompletedBuild[number]`,
@@ -180,7 +183,9 @@ echo "=== End of Console Output ==="</command>
   // Test: Console output page loads and displays output
   // -------------------------------------------------------------------------
 
-  test("should navigate to console output page and display build log", async ({ jenkinsPage }) => {
+  test("should navigate to console output page and display build log", async ({
+    jenkinsPage,
+  }) => {
     // Retrieve the last completed build number for navigation
     const apiResponse = await jenkinsPage.page.request.get(
       `${jenkinsPage.page.url().split("/").slice(0, 3).join("/")}/job/${encodeURIComponent(TEST_JOB_NAME)}/api/json?tree=lastCompletedBuild[number]`,
@@ -219,7 +224,9 @@ echo "=== End of Console Output ==="</command>
   // Test: Real-time streaming output appears for running builds
   // -------------------------------------------------------------------------
 
-  test("should show real-time streaming output for a running build", async ({ jenkinsPage }) => {
+  test("should show real-time streaming output for a running build", async ({
+    jenkinsPage,
+  }) => {
     // Create a streaming test job with delayed output if it doesn't exist
     const streamJobCheck = await jenkinsPage.page.request.get(
       `${jenkinsPage.page.url().split("/").slice(0, 3).join("/")}/job/${encodeURIComponent(STREAMING_JOB_NAME)}/api/json`,
@@ -336,7 +343,9 @@ echo "=== Streaming Output End ==="</command>
   // Test: Progressive text loading works
   // -------------------------------------------------------------------------
 
-  test("should progressively load console text as build runs", async ({ jenkinsPage }) => {
+  test("should progressively load console text as build runs", async ({
+    jenkinsPage,
+  }) => {
     // Trigger a new build of the streaming job for progressive text testing
     const crumbResponse = await jenkinsPage.page.request.get(
       `${jenkinsPage.page.url().split("/").slice(0, 3).join("/")}/crumbIssuer/api/json`,
@@ -467,7 +476,9 @@ echo "=== Streaming Output End ==="</command>
   // Test: Full console link navigates to consoleFull view
   // -------------------------------------------------------------------------
 
-  test("should navigate to full console output via link", async ({ jenkinsPage }) => {
+  test("should navigate to full console output via link", async ({
+    jenkinsPage,
+  }) => {
     // Retrieve the last completed build number
     const apiResponse = await jenkinsPage.page.request.get(
       `${jenkinsPage.page.url().split("/").slice(0, 3).join("/")}/job/${encodeURIComponent(TEST_JOB_NAME)}/api/json?tree=lastCompletedBuild[number]`,
@@ -492,15 +503,13 @@ echo "=== Streaming Output End ==="</command>
     const plainTextLink = jenkinsPage.page.locator(
       'a[href*="consoleText"]:not([download])',
     );
-    const fullLogLink = jenkinsPage.page.locator(
-      'a[href*="consoleFull"]',
-    );
+    const fullLogLink = jenkinsPage.page.locator('a[href*="consoleFull"]');
 
     // Check which link is available — consoleFull is only shown when
     // the console log exceeds the tail threshold (default 150KB).
     // For smaller logs, "View as plain text" is always available.
-    const hasFullLogLink = await fullLogLink.count() > 0;
-    const hasPlainTextLink = await plainTextLink.count() > 0;
+    const hasFullLogLink = (await fullLogLink.count()) > 0;
+    const hasPlainTextLink = (await plainTextLink.count()) > 0;
 
     if (hasFullLogLink) {
       // Click the full console log link (shown when output is truncated)
@@ -556,7 +565,9 @@ echo "=== Streaming Output End ==="</command>
   // Test: Console output preserves formatting
   // -------------------------------------------------------------------------
 
-  test("should render console output with preserved formatting", async ({ jenkinsPage }) => {
+  test("should render console output with preserved formatting", async ({
+    jenkinsPage,
+  }) => {
     // Retrieve the last completed build number
     const apiResponse = await jenkinsPage.page.request.get(
       `${jenkinsPage.page.url().split("/").slice(0, 3).join("/")}/job/${encodeURIComponent(TEST_JOB_NAME)}/api/json?tree=lastCompletedBuild[number]`,
@@ -610,7 +621,9 @@ echo "=== Streaming Output End ==="</command>
   // Test: Side panel shows build navigation on console page
   // -------------------------------------------------------------------------
 
-  test("should show build navigation in side panel on console page", async ({ jenkinsPage }) => {
+  test("should show build navigation in side panel on console page", async ({
+    jenkinsPage,
+  }) => {
     // Retrieve the last completed build number
     const apiResponse = await jenkinsPage.page.request.get(
       `${jenkinsPage.page.url().split("/").slice(0, 3).join("/")}/job/${encodeURIComponent(TEST_JOB_NAME)}/api/json?tree=lastCompletedBuild[number]`,

@@ -27,9 +27,9 @@
  * @module SubmitButton
  */
 
-import { useActionState } from 'react';
+import { useActionState } from "react";
 
-import { useI18n } from '@/hooks/useI18n';
+import { useI18n } from "@/hooks/useI18n";
 
 // ---------------------------------------------------------------------------
 // Props Interface
@@ -160,7 +160,7 @@ const noopAction: (prevState: null, formData: FormData) => null = () => null;
  * Icons with this prefix are rendered as inline SVG `<use>` elements;
  * all others are rendered as `<img>` elements.
  */
-const SYMBOL_PREFIX = 'symbol-';
+const SYMBOL_PREFIX = "symbol-";
 
 // ---------------------------------------------------------------------------
 // Component
@@ -209,7 +209,7 @@ const SYMBOL_PREFIX = 'symbol-';
  */
 export function SubmitButton({
   id,
-  name = 'Submit',
+  name = "Submit",
   value,
   primary = true,
   icon,
@@ -238,7 +238,7 @@ export function SubmitButton({
   // 1. Explicit `value` prop (user-provided text)
   // 2. i18n lookup for the 'Submit' key via `t()` (replaces `%Submit`)
   // 3. Hardcoded 'Submit' fallback if i18n element is absent from the DOM
-  const buttonText: string = value ?? t('Submit') ?? 'Submit';
+  const buttonText: string = value ?? t("Submit") ?? "Submit";
 
   // ------------------------------------------------------------------
   // CSS class computation
@@ -247,13 +247,13 @@ export function SubmitButton({
   // "jenkins-button jenkins-submit-button
   //  ${attrs.primary != 'false' ? 'jenkins-button--primary' : ''} ${attrs.clazz}"
   const cssClasses: string = [
-    'jenkins-button',
-    'jenkins-submit-button',
-    primary ? 'jenkins-button--primary' : '',
-    className ?? '',
+    "jenkins-button",
+    "jenkins-submit-button",
+    primary ? "jenkins-button--primary" : "",
+    className ?? "",
   ]
     .filter(Boolean)
-    .join(' ');
+    .join(" ");
 
   // ------------------------------------------------------------------
   // Disabled state

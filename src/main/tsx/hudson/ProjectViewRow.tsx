@@ -155,9 +155,7 @@ function formatTimeSince(timestampMs: number): string {
  * column sort values. React's JSX type system does not include it, so we
  * apply it via the DOM API — the same pattern used by {@link BuildHealth}.
  */
-function sortDataRef(
-  value: string | number,
-): (el: HTMLElement | null) => void {
+function sortDataRef(value: string | number): (el: HTMLElement | null) => void {
   return (el: HTMLElement | null) => {
     if (el) {
       el.setAttribute("data", String(value));

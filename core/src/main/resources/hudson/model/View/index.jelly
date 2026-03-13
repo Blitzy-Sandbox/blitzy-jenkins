@@ -48,7 +48,7 @@ THE SOFTWARE.
 
           <j:set var="items" value="${it.items}"/>
           <st:include page="main.jelly" />
-          <div id="react-root" data-view-type="dashboard" data-model-url="${rootURL}/api/json"></div>
+          <div id="react-root" data-view-type="${it.class.name=='hudson.model.AllView' ? 'all-view' : it.class.name=='hudson.model.ListView' ? 'list-view' : 'dashboard'}" data-model-url="${rootURL}/view/${it.viewName}/api/json"></div>
         </l:main-panel>
         <l:header>
           <!-- for screen resolution detection -->

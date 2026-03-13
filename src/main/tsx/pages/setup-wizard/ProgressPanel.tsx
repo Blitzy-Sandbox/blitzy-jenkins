@@ -426,7 +426,8 @@ export default function ProgressPanel({
             {hasFailedPlugins && (
               <>
                 <p>
-                  {translations.installWizard_pluginInstallFailure_message ?? ""}
+                  {translations.installWizard_pluginInstallFailure_message ??
+                    ""}
                 </p>
                 <button
                   type="button"
@@ -556,7 +557,8 @@ export default function ProgressPanel({
             </div>
           </div>
           <div className="dependency-legend">
-            {translations.installWizard_installingConsole_dependencyIndicatorNote ?? ""}
+            {translations.installWizard_installingConsole_dependencyIndicatorNote ??
+              ""}
           </div>
         </div>
       </div>

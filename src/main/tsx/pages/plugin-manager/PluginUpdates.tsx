@@ -15,13 +15,13 @@
  * - No-updates empty state
  */
 
-import { useState, useCallback, useMemo } from 'react';
-import { useStaplerQuery } from '@/hooks/useStaplerQuery';
-import { useStaplerMutation } from '@/hooks/useStaplerMutation';
-import { useCrumb } from '@/hooks/useCrumb';
-import { useI18n } from '@/hooks/useI18n';
-import { useJenkinsNavigation } from '@/hooks/useJenkinsNavigation';
-import type { StaplerResponse } from '@/api/types';
+import { useState, useCallback, useMemo } from "react";
+import { useStaplerQuery } from "@/hooks/useStaplerQuery";
+import { useStaplerMutation } from "@/hooks/useStaplerMutation";
+import { useCrumb } from "@/hooks/useCrumb";
+import { useI18n } from "@/hooks/useI18n";
+import { useJenkinsNavigation } from "@/hooks/useJenkinsNavigation";
+import type { StaplerResponse } from "@/api/types";
 
 /* ------------------------------------------------------------------ */
 /*  Type definitions                                                   */
@@ -144,12 +144,8 @@ function matchesFilter(plugin: PluginUpdate, query: string): boolean {
     return true;
   }
   const words = query.toLowerCase().trim().split(/\s+/);
-  const haystack = [
-    plugin.displayName,
-    plugin.name,
-    plugin.excerpt ?? '',
-  ]
-    .join(' ')
+  const haystack = [plugin.displayName, plugin.name, plugin.excerpt ?? ""]
+    .join(" ")
     .toLowerCase();
 
   return words.every((word) => haystack.includes(word));
@@ -174,7 +170,7 @@ function getRelativeTime(timestampMs: number, agoLabel: string): string {
     const months = Math.floor(days / 30);
     span = `${months} mo`;
   } else if (days > 0) {
-    span = `${days} day${days !== 1 ? 's' : ''}`;
+    span = `${days} day${days !== 1 ? "s" : ""}`;
   } else if (hours > 0) {
     span = `${hours} hr`;
   } else if (minutes > 0) {
@@ -184,7 +180,7 @@ function getRelativeTime(timestampMs: number, agoLabel: string): string {
   }
   /* The Jelly pattern is `${%ago(timeSpanString)}` where %ago is
      an i18n template like "{0} ago". We replicate that here. */
-  return agoLabel.replace('{0}', span);
+  return agoLabel.replace("{0}", span);
 }
 
 /* ------------------------------------------------------------------ */
@@ -225,19 +221,21 @@ export function PluginUpdates({
     error,
     refetch,
   } = useStaplerQuery<StaplerResponse<PluginManagerUpdatesResponse>>({
-    url: '/pluginManager/api/json?depth=2&tree=updates[*]',
-    queryKey: ['pluginManager', 'updates'],
+    url: "/pluginManager/api/json?depth=2&tree=updates[*]",
+    queryKey: ["pluginManager", "updates"],
   });
 
   /* Mutation for submitting the batch update form */
-  const { mutate: submitInstall, isPending: isInstalling } =
-    useStaplerMutation<void, Record<string, string>>({
-      url: '/pluginManager/install',
-      contentType: 'form-urlencoded',
-    });
+  const { mutate: submitInstall, isPending: isInstalling } = useStaplerMutation<
+    void,
+    Record<string, string>
+  >({
+    url: "/pluginManager/install",
+    contentType: "form-urlencoded",
+  });
 
   /* ---- local state ---- */
-  const [filterQuery, setFilterQuery] = useState<string>('');
+  const [filterQuery, setFilterQuery] = useState<string>("");
   const [selectedPlugins, setSelectedPlugins] = useState<Set<string>>(
     () => new Set<string>(),
   );
@@ -309,20 +307,17 @@ export function PluginUpdates({
   }, [updatesList]);
 
   /** Toggle a single checkbox */
-  const handleCheckboxChange = useCallback(
-    (key: string, checked: boolean) => {
-      setSelectedPlugins((prev) => {
-        const next = new Set(prev);
-        if (checked) {
-          next.add(key);
-        } else {
-          next.delete(key);
-        }
-        return next;
-      });
-    },
-    [],
-  );
+  const handleCheckboxChange = useCallback((key: string, checked: boolean) => {
+    setSelectedPlugins((prev) => {
+      const next = new Set(prev);
+      if (checked) {
+        next.add(key);
+      } else {
+        next.delete(key);
+      }
+      return next;
+    });
+  }, []);
 
   /** Submit the install form via mutation */
   const handleSubmitUpdate = useCallback(
@@ -335,7 +330,7 @@ export function PluginUpdates({
         payload[crumbFieldName] = crumbValue;
       }
       for (const key of selectedPlugins) {
-        payload[key] = 'on';
+        payload[key] = "on";
       }
 
       submitInstall(payload, {
@@ -363,15 +358,15 @@ export function PluginUpdates({
     return (
       <div className="jenkins-alert jenkins-alert--error" role="alert">
         <span>
-          {t('ErrorLoadingUpdates') ?? 'Failed to load plugin updates.'}
-          {error?.message ? ` ${error.message}` : ''}
+          {t("ErrorLoadingUpdates") ?? "Failed to load plugin updates."}
+          {error?.message ? ` ${error.message}` : ""}
         </span>
         <button
           type="button"
           className="jenkins-button jenkins-button--tertiary"
           onClick={() => refetch()}
         >
-          {t('Retry') ?? 'Retry'}
+          {t("Retry") ?? "Retry"}
         </button>
       </div>
     );
@@ -398,7 +393,7 @@ export function PluginUpdates({
           </svg>
         </span>
         <span className="jenkins-notice__title">
-          {t('No updates available') ?? 'No updates available'}
+          {t("No updates available") ?? "No updates available"}
         </span>
       </div>
     );
@@ -415,7 +410,9 @@ export function PluginUpdates({
               id="filter-box"
               type="search"
               className="jenkins-search__input"
-              placeholder={t('Search plugin updates') ?? 'Search plugin updates'}
+              placeholder={
+                t("Search plugin updates") ?? "Search plugin updates"
+              }
               value={filterQuery}
               onChange={handleFilterChange}
               autoFocus
@@ -431,7 +428,7 @@ export function PluginUpdates({
               className="jenkins-button jenkins-button--primary"
               disabled={!hasSelection || isInstalling}
             >
-              {t('Update') ?? 'Update'}
+              {t("Update") ?? "Update"}
             </button>
           )}
           <button
@@ -439,7 +436,7 @@ export function PluginUpdates({
             className="jenkins-button"
             onClick={() => refetch()}
           >
-            {t('Check now') ?? 'Check now'}
+            {t("Check now") ?? "Check now"}
           </button>
         </div>
       </div>
@@ -468,27 +465,21 @@ export function PluginUpdates({
                       onSelectAll={handleSelectAll}
                       onSelectNone={handleSelectNone}
                       onSelectCompatible={handleSelectCompatible}
-                      tSelectAll={t('All') ?? 'All'}
-                      tSelectNone={t('None') ?? 'None'}
-                      tCompatible={t('Compatible') ?? 'Compatible'}
+                      tSelectAll={t("All") ?? "All"}
+                      tSelectNone={t("None") ?? "None"}
+                      tCompatible={t("Compatible") ?? "Compatible"}
                     />
                   </div>
                 </th>
               )}
               {/* Name column — default sort direction down */}
-              <th data-sort-dir="down">
-                {t('Name') ?? 'Name'}
-              </th>
+              <th data-sort-dir="down">{t("Name") ?? "Name"}</th>
               {/* Released column */}
-              <th>{t('Released') ?? 'Released'}</th>
+              <th>{t("Released") ?? "Released"}</th>
               {/* Installed column */}
-              <th>{t('Installed') ?? 'Installed'}</th>
+              <th>{t("Installed") ?? "Installed"}</th>
               {/* Health score column — conditional */}
-              {healthScoresAvailable && (
-                <th>
-                  {t('Health') ?? 'Health'}
-                </th>
-              )}
+              {healthScoresAvailable && <th>{t("Health") ?? "Health"}</th>}
             </tr>
           </thead>
           <tbody>
@@ -604,15 +595,14 @@ function PluginUpdateRow({
   const checkboxKey = `plugin.${plugin.name}.${plugin.sourceId}`;
 
   /* Relative release time */
-  const agoLabel = t('ago') ?? '{0} ago';
-  const releaseTimeStr =
-    plugin.releaseTimestamp
-      ? getRelativeTime(plugin.releaseTimestamp.time, agoLabel)
-      : '';
+  const agoLabel = t("ago") ?? "{0} ago";
+  const releaseTimeStr = plugin.releaseTimestamp
+    ? getRelativeTime(plugin.releaseTimestamp.time, agoLabel)
+    : "";
 
   return (
     <tr
-      className={`plugin${alreadyUpgraded ? ' already-upgraded' : ''}`}
+      className={`plugin${alreadyUpgraded ? " already-upgraded" : ""}`}
       data-plugin-id={plugin.name}
     >
       {/* ---- Checkbox column ---- */}
@@ -626,9 +616,7 @@ function PluginUpdateRow({
               checked={alreadyUpgraded || isSelected}
               disabled={alreadyUpgraded}
               data-compat-warning={String(compatWarning)}
-              onChange={(e) =>
-                onCheckboxChange(checkboxKey, e.target.checked)
-              }
+              onChange={(e) => onCheckboxChange(checkboxKey, e.target.checked)}
             />
             <label className="jenkins-checkbox__label">
               <span className="jenkins-visually-hidden">
@@ -644,7 +632,7 @@ function PluginUpdateRow({
         <div>
           {/* Plugin name + version link */}
           <a
-            href={plugin.wiki || '#'}
+            href={plugin.wiki || "#"}
             className="jenkins-table__link"
             target="_blank"
             rel="noopener noreferrer"
@@ -652,7 +640,7 @@ function PluginUpdateRow({
             {plugin.displayName}
             <span className="jenkins-label jenkins-label--tertiary">
               <span className="jenkins-visually-hidden">
-                {t('Version') ?? 'Version'}{' '}
+                {t("Version") ?? "Version"}{" "}
               </span>
               {plugin.version}
             </span>
@@ -664,7 +652,9 @@ function PluginUpdateRow({
               {plugin.categories.map((cat) => (
                 <a
                   key={cat}
-                  href={buildUrl(`/pluginManager/available?filter=${encodeURIComponent(cat)}`)}
+                  href={buildUrl(
+                    `/pluginManager/available?filter=${encodeURIComponent(cat)}`,
+                  )}
                   className="jenkins-badge"
                 >
                   {cat}
@@ -687,7 +677,8 @@ function PluginUpdateRow({
           {!plugin.compatibleWithInstalledVersion && (
             <div className="jenkins-alert jenkins-alert--danger">
               <span>
-                {t('compatWarning') ?? 'Warning: This plugin is incompatible with the installed version.'}
+                {t("compatWarning") ??
+                  "Warning: This plugin is incompatible with the installed version."}
               </span>
               {plugin.incompatibleParentPlugins &&
                 plugin.incompatibleParentPlugins.length > 0 && (
@@ -695,14 +686,13 @@ function PluginUpdateRow({
                     {plugin.incompatibleParentPlugins.map((parent) => (
                       <li key={parent.displayName}>
                         <a
-                          href={parent.wiki || '#'}
+                          href={parent.wiki || "#"}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
                           {parent.displayName}
-                        </a>
-                        {' '}
-                        ({parent.installed?.version ?? ''})
+                        </a>{" "}
+                        ({parent.installed?.version ?? ""})
                       </li>
                     ))}
                   </ul>
@@ -714,10 +704,9 @@ function PluginUpdateRow({
           {plugin.forNewerHudson && plugin.requiredCore && (
             <div className="jenkins-alert jenkins-alert--danger">
               <span>
-                {(t('coreWarning') ?? 'This plugin requires Jenkins {0}').replace(
-                  '{0}',
-                  plugin.requiredCore,
-                )}
+                {(
+                  t("coreWarning") ?? "This plugin requires Jenkins {0}"
+                ).replace("{0}", plugin.requiredCore)}
               </span>
             </div>
           )}
@@ -726,8 +715,8 @@ function PluginUpdateRow({
           {plugin.fixesSecurityVulnerabilities && (
             <div className="jenkins-alert jenkins-alert--warning">
               <span>
-                {t('fixesSecurityVulnerabilities') ??
-                  'This update fixes security vulnerabilities.'}
+                {t("fixesSecurityVulnerabilities") ??
+                  "This update fixes security vulnerabilities."}
               </span>
             </div>
           )}
@@ -738,22 +727,21 @@ function PluginUpdateRow({
             plugin.dependenciesIncompatibleWithInstalledVersion.length > 0 && (
               <div className="jenkins-alert jenkins-alert--danger">
                 <span>
-                  {t('depCompatWarning') ??
-                    'Some dependencies are incompatible with currently installed versions:'}
+                  {t("depCompatWarning") ??
+                    "Some dependencies are incompatible with currently installed versions:"}
                 </span>
                 <ul>
                   {plugin.dependenciesIncompatibleWithInstalledVersion.map(
                     (dep) => (
                       <li key={dep.displayName}>
                         <a
-                          href={dep.wiki || '#'}
+                          href={dep.wiki || "#"}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
                           {dep.displayName}
-                        </a>
-                        {' '}
-                        ({dep.installed?.version ?? ''})
+                        </a>{" "}
+                        ({dep.installed?.version ?? ""})
                       </li>
                     ),
                   )}
@@ -767,9 +755,9 @@ function PluginUpdateRow({
               <div className="jenkins-alert jenkins-alert--danger">
                 <span>
                   {(
-                    t('depCoreWarning') ??
-                    'Some dependencies require a newer version of Jenkins ({0}).'
-                  ).replace('{0}', plugin.neededDependenciesRequiredCore)}
+                    t("depCoreWarning") ??
+                    "Some dependencies require a newer version of Jenkins ({0})."
+                  ).replace("{0}", plugin.neededDependenciesRequiredCore)}
                 </span>
               </div>
             )}
@@ -780,16 +768,13 @@ function PluginUpdateRow({
             plugin.warnings.length > 0 && (
               <div className="jenkins-alert jenkins-alert--danger">
                 <span>
-                  {t('securityWarning') ?? 'Warning: This plugin has security warnings:'}
+                  {t("securityWarning") ??
+                    "Warning: This plugin has security warnings:"}
                 </span>
                 <ul>
                   {plugin.warnings.map((w, idx) => (
                     <li key={`${plugin.name}-warn-${idx}`}>
-                      <a
-                        href={w.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
+                      <a href={w.url} target="_blank" rel="noopener noreferrer">
                         {w.message}
                       </a>
                     </li>
@@ -802,17 +787,17 @@ function PluginUpdateRow({
           {plugin.deprecated && (
             <div className="jenkins-alert jenkins-alert--warning">
               <span>
-                {t('deprecationWarning') ??
-                  'This plugin has been marked as deprecated.'}
+                {t("deprecationWarning") ??
+                  "This plugin has been marked as deprecated."}
                 {plugin.deprecation?.url && (
                   <>
-                    {' '}
+                    {" "}
                     <a
                       href={plugin.deprecation.url}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      {t('More info') ?? 'More info'}
+                      {t("More info") ?? "More info"}
                     </a>
                   </>
                 )}
@@ -824,8 +809,8 @@ function PluginUpdateRow({
           {plugin.hasAdoptThisPluginLabel && (
             <div className="jenkins-alert jenkins-alert--warning">
               <span>
-                {t('adoptThisPlugin') ??
-                  'This plugin is up for adoption. Want to help by becoming a maintainer?'}
+                {t("adoptThisPlugin") ??
+                  "This plugin is up for adoption. Want to help by becoming a maintainer?"}
               </span>
             </div>
           )}
@@ -852,7 +837,7 @@ function PluginUpdateRow({
           plugin.installed.active ? (
             <span>{plugin.installed.version}</span>
           ) : (
-            <span title={t('Inactive') ?? 'Inactive'}>
+            <span title={t("Inactive") ?? "Inactive"}>
               ({plugin.installed.version})
             </span>
           )
@@ -866,16 +851,16 @@ function PluginUpdateRow({
         <td>
           {plugin.healthScore != null ? (
             <a
-              href={plugin.wiki ? `${plugin.wiki}/healthScore` : '#'}
+              href={plugin.wiki ? `${plugin.wiki}/healthScore` : "#"}
               className={`jenkins-healthScore--badge ${
                 plugin.healthScoreClass
                   ? `jenkins-healthScore--${plugin.healthScoreClass}`
-                  : ''
+                  : ""
               }`}
               target="_blank"
               rel="noopener noreferrer"
               title={`${
-                t('healthTooltip') ?? 'Health score'
+                t("healthTooltip") ?? "Health score"
               }: ${plugin.healthScore}%`}
             >
               {plugin.healthScore}%
@@ -884,7 +869,7 @@ function PluginUpdateRow({
             <span
               className="jenkins-healthScore--badge jenkins-healthScore--aborted"
               title={
-                t('No health score available') ?? 'No health score available'
+                t("No health score available") ?? "No health score available"
               }
             >
               —

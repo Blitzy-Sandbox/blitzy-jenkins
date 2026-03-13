@@ -24,24 +24,24 @@
  * @module pages/plugin-manager/PluginManagerIndex
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-import Layout from '@/layout/Layout';
-import TabBar from '@/layout/TabBar';
-import Tab from '@/layout/Tab';
-import { useI18n } from '@/hooks/useI18n';
-import { useJenkinsNavigation } from '@/hooks/useJenkinsNavigation';
-import { PluginUpdates } from './PluginUpdates';
-import PluginAvailable from './PluginAvailable';
-import PluginInstalled from './PluginInstalled';
-import { PluginAdvanced } from './PluginAdvanced';
+import Layout from "@/layout/Layout";
+import TabBar from "@/layout/TabBar";
+import Tab from "@/layout/Tab";
+import { useI18n } from "@/hooks/useI18n";
+import { useJenkinsNavigation } from "@/hooks/useJenkinsNavigation";
+import { PluginUpdates } from "./PluginUpdates";
+import PluginAvailable from "./PluginAvailable";
+import PluginInstalled from "./PluginInstalled";
+import { PluginAdvanced } from "./PluginAdvanced";
 
 /* -------------------------------------------------------------------------- */
 /*  Types                                                                     */
 /* -------------------------------------------------------------------------- */
 
 /** Union of valid tab identifiers for the plugin manager sub-views. */
-type PluginManagerTab = 'updates' | 'available' | 'installed' | 'advanced';
+type PluginManagerTab = "updates" | "available" | "installed" | "advanced";
 
 /**
  * Props for the PluginManagerIndex page component.
@@ -69,10 +69,10 @@ export interface PluginManagerIndexProps {
  *   - "Advanced settings" → rootURL + /manage/pluginManager/advanced
  */
 const TAB_URL_PATHS: Record<PluginManagerTab, string> = {
-  updates: '/manage/pluginManager/',
-  available: '/manage/pluginManager/available',
-  installed: '/manage/pluginManager/installed',
-  advanced: '/manage/pluginManager/advanced',
+  updates: "/manage/pluginManager/",
+  available: "/manage/pluginManager/available",
+  installed: "/manage/pluginManager/installed",
+  advanced: "/manage/pluginManager/advanced",
 };
 
 /* -------------------------------------------------------------------------- */
@@ -84,17 +84,17 @@ const TAB_URL_PATHS: Record<PluginManagerTab, string> = {
  * plugin manager URL segments. Falls back to `'updates'` (the default view).
  */
 function resolveTabFromPath(pathname: string): PluginManagerTab {
-  if (pathname.includes('/pluginManager/available')) {
-    return 'available';
+  if (pathname.includes("/pluginManager/available")) {
+    return "available";
   }
-  if (pathname.includes('/pluginManager/installed')) {
-    return 'installed';
+  if (pathname.includes("/pluginManager/installed")) {
+    return "installed";
   }
-  if (pathname.includes('/pluginManager/advanced')) {
-    return 'advanced';
+  if (pathname.includes("/pluginManager/advanced")) {
+    return "advanced";
   }
   // Default: /pluginManager/ maps to updates view (index.jelly within <local:updates>)
-  return 'updates';
+  return "updates";
 }
 
 /* -------------------------------------------------------------------------- */
@@ -115,21 +115,21 @@ function resolveTabFromPath(pathname: string): PluginManagerTab {
  *   - Maintain bookmarkable URLs via History pushState + popstate listener
  */
 export default function PluginManagerIndex({
-  activeTab = 'updates',
+  activeTab = "updates",
 }: PluginManagerIndexProps): React.JSX.Element {
   /* ---- State ---- */
 
   /** Active tab managed via local state, initialised from prop or URL fallback */
   const [currentTab, setCurrentTab] = useState<PluginManagerTab>(() => {
-    if (activeTab !== 'updates') {
+    if (activeTab !== "updates") {
       return activeTab;
     }
     // When prop is the default, also check the URL in case the component is
     // mounted without an explicit prop (e.g. direct browser navigation).
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       return resolveTabFromPath(window.location.pathname);
     }
-    return 'updates';
+    return "updates";
   });
 
   /**
@@ -140,11 +140,11 @@ export default function PluginManagerIndex({
    *   - Visibility of the "Download progress" sidebar link (sidepanel.jelly)
    */
   const [hasUpdateCenterJobs] = useState<boolean>(() => {
-    if (typeof document === 'undefined') {
+    if (typeof document === "undefined") {
       return false;
     }
-    const root = document.getElementById('react-root');
-    return root?.dataset.hasUpdateCenterJobs === 'true';
+    const root = document.getElementById("react-root");
+    return root?.dataset.hasUpdateCenterJobs === "true";
   });
 
   /**
@@ -153,11 +153,11 @@ export default function PluginManagerIndex({
    * Passed to sub-view components that conditionally render admin-only controls.
    */
   const [isAdmin] = useState<boolean>(() => {
-    if (typeof document === 'undefined') {
+    if (typeof document === "undefined") {
       return false;
     }
-    const root = document.getElementById('react-root');
-    return root?.dataset.isAdmin === 'true';
+    const root = document.getElementById("react-root");
+    return root?.dataset.isAdmin === "true";
   });
 
   /**
@@ -166,11 +166,11 @@ export default function PluginManagerIndex({
    * health score columns in plugin listings.
    */
   const [healthScoresAvailable] = useState<boolean>(() => {
-    if (typeof document === 'undefined') {
+    if (typeof document === "undefined") {
       return false;
     }
-    const root = document.getElementById('react-root');
-    return root?.dataset.healthScoresAvailable === 'true';
+    const root = document.getElementById("react-root");
+    return root?.dataset.healthScoresAvailable === "true";
   });
 
   /**
@@ -179,11 +179,11 @@ export default function PluginManagerIndex({
    * of the "Compatible" filter button in the updates view.
    */
   const [hasIncompatibleUpdates] = useState<boolean>(() => {
-    if (typeof document === 'undefined') {
+    if (typeof document === "undefined") {
       return false;
     }
-    const root = document.getElementById('react-root');
-    return root?.dataset.hasIncompatibleUpdates === 'true';
+    const root = document.getElementById("react-root");
+    return root?.dataset.hasIncompatibleUpdates === "true";
   });
 
   /* ---- Hooks ---- */
@@ -202,9 +202,9 @@ export default function PluginManagerIndex({
       const tab = resolveTabFromPath(window.location.pathname);
       setCurrentTab(tab);
     };
-    window.addEventListener('popstate', handlePopState);
+    window.addEventListener("popstate", handlePopState);
     return () => {
-      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener("popstate", handlePopState);
     };
   }, []);
 
@@ -223,7 +223,7 @@ export default function PluginManagerIndex({
       return;
     }
     setCurrentTab(tab);
-    window.history.pushState({ tab }, '', buildUrl(TAB_URL_PATHS[tab]));
+    window.history.pushState({ tab }, "", buildUrl(TAB_URL_PATHS[tab]));
   };
 
   /**
@@ -232,20 +232,18 @@ export default function PluginManagerIndex({
    * and performs client-side navigation. This delegates because the Tab
    * component does not expose an onClick prop directly.
    */
-  const handleTabBarClick = (
-    event: React.MouseEvent<HTMLDivElement>,
-  ): void => {
+  const handleTabBarClick = (event: React.MouseEvent<HTMLDivElement>): void => {
     const target = event.target as HTMLElement;
-    const anchor = target.closest('a');
+    const anchor = target.closest("a");
     if (!anchor) {
       return;
     }
     event.preventDefault();
-    const href = anchor.getAttribute('href') ?? '';
+    const href = anchor.getAttribute("href") ?? "";
     const tab = resolveTabFromPath(href);
     if (tab !== currentTab) {
       setCurrentTab(tab);
-      window.history.pushState({ tab }, '', buildUrl(TAB_URL_PATHS[tab]));
+      window.history.pushState({ tab }, "", buildUrl(TAB_URL_PATHS[tab]));
     }
   };
 
@@ -257,7 +255,7 @@ export default function PluginManagerIndex({
    */
   const renderActiveView = (): React.ReactNode => {
     switch (currentTab) {
-      case 'updates':
+      case "updates":
         return (
           <PluginUpdates
             isAdmin={isAdmin}
@@ -265,11 +263,16 @@ export default function PluginManagerIndex({
             hasIncompatibleUpdates={hasIncompatibleUpdates}
           />
         );
-      case 'available':
-        return <PluginAvailable isAdmin={isAdmin} healthScoresAvailable={healthScoresAvailable} />;
-      case 'installed':
+      case "available":
+        return (
+          <PluginAvailable
+            isAdmin={isAdmin}
+            healthScoresAvailable={healthScoresAvailable}
+          />
+        );
+      case "installed":
         return <PluginInstalled />;
-      case 'advanced':
+      case "advanced":
         return <PluginAdvanced isAdmin={isAdmin} />;
       default:
         return (
@@ -303,12 +306,14 @@ export default function PluginManagerIndex({
    * applies the `task-link--active` CSS class matching the current tab.
    */
   const sidePanel: React.ReactNode = (
-    <nav aria-label={t('Plugin Manager Navigation') ?? 'Plugin Manager Navigation'}>
+    <nav
+      aria-label={t("Plugin Manager Navigation") ?? "Plugin Manager Navigation"}
+    >
       {/* App bar header with page title — from sidepanel.jelly app-bar */}
       <div className="jenkins-app-bar">
         <div className="jenkins-app-bar__content">
           <h2 className="jenkins-app-bar__content__title">
-            {t('Plugins') ?? 'Plugins'}
+            {t("Plugins") ?? "Plugins"}
           </h2>
         </div>
       </div>
@@ -318,17 +323,13 @@ export default function PluginManagerIndex({
         <span className="task-link-wrapper">
           <a
             href={buildUrl(TAB_URL_PATHS.updates)}
-            className={
-              `task-link${currentTab === 'updates' ? ' task-link--active' : ''}`
-            }
-            onClick={(e) => navigateToTab('updates', e)}
+            className={`task-link${currentTab === "updates" ? " task-link--active" : ""}`}
+            onClick={(e) => navigateToTab("updates", e)}
           >
             <span className="task-icon-link">
               <span className="task-icon" aria-hidden="true" />
             </span>
-            <span className="task-link-text">
-              {t('Updates') ?? 'Updates'}
-            </span>
+            <span className="task-link-text">{t("Updates") ?? "Updates"}</span>
           </a>
         </span>
       </div>
@@ -338,16 +339,14 @@ export default function PluginManagerIndex({
         <span className="task-link-wrapper">
           <a
             href={buildUrl(TAB_URL_PATHS.available)}
-            className={
-              `task-link${currentTab === 'available' ? ' task-link--active' : ''}`
-            }
-            onClick={(e) => navigateToTab('available', e)}
+            className={`task-link${currentTab === "available" ? " task-link--active" : ""}`}
+            onClick={(e) => navigateToTab("available", e)}
           >
             <span className="task-icon-link">
               <span className="task-icon" aria-hidden="true" />
             </span>
             <span className="task-link-text">
-              {t('Available plugins') ?? 'Available plugins'}
+              {t("Available plugins") ?? "Available plugins"}
             </span>
           </a>
         </span>
@@ -358,16 +357,14 @@ export default function PluginManagerIndex({
         <span className="task-link-wrapper">
           <a
             href={buildUrl(TAB_URL_PATHS.installed)}
-            className={
-              `task-link${currentTab === 'installed' ? ' task-link--active' : ''}`
-            }
-            onClick={(e) => navigateToTab('installed', e)}
+            className={`task-link${currentTab === "installed" ? " task-link--active" : ""}`}
+            onClick={(e) => navigateToTab("installed", e)}
           >
             <span className="task-icon-link">
               <span className="task-icon" aria-hidden="true" />
             </span>
             <span className="task-link-text">
-              {t('Installed plugins') ?? 'Installed plugins'}
+              {t("Installed plugins") ?? "Installed plugins"}
             </span>
           </a>
         </span>
@@ -378,16 +375,14 @@ export default function PluginManagerIndex({
         <span className="task-link-wrapper">
           <a
             href={buildUrl(TAB_URL_PATHS.advanced)}
-            className={
-              `task-link${currentTab === 'advanced' ? ' task-link--active' : ''}`
-            }
-            onClick={(e) => navigateToTab('advanced', e)}
+            className={`task-link${currentTab === "advanced" ? " task-link--active" : ""}`}
+            onClick={(e) => navigateToTab("advanced", e)}
           >
             <span className="task-icon-link">
               <span className="task-icon" aria-hidden="true" />
             </span>
             <span className="task-link-text">
-              {t('Advanced settings') ?? 'Advanced settings'}
+              {t("Advanced settings") ?? "Advanced settings"}
             </span>
           </a>
         </span>
@@ -402,14 +397,14 @@ export default function PluginManagerIndex({
         <div className="task">
           <span className="task-link-wrapper">
             <a
-              href={buildUrl('/manage/pluginManager/updates/')}
+              href={buildUrl("/manage/pluginManager/updates/")}
               className="task-link"
             >
               <span className="task-icon-link">
                 <span className="task-icon" aria-hidden="true" />
               </span>
               <span className="task-link-text">
-                {t('Download progress') ?? 'Download progress'}
+                {t("Download progress") ?? "Download progress"}
               </span>
             </a>
           </span>
@@ -422,7 +417,7 @@ export default function PluginManagerIndex({
 
   return (
     <Layout
-      title={t('Plugins') ?? 'Plugins'}
+      title={t("Plugins") ?? "Plugins"}
       type="two-column"
       sidePanel={sidePanel}
     >
@@ -432,33 +427,30 @@ export default function PluginManagerIndex({
         The Tab component renders <a href="..."> links which serve as fallback
         navigation when JavaScript is unavailable.
       */}
-      <div
-        role="presentation"
-        onClick={handleTabBarClick}
-      >
+      <div role="presentation" onClick={handleTabBarClick}>
         <TabBar>
           <Tab
-            name={t('Updates') ?? 'Updates'}
+            name={t("Updates") ?? "Updates"}
             href={buildUrl(TAB_URL_PATHS.updates)}
-            active={currentTab === 'updates'}
+            active={currentTab === "updates"}
             index={0}
           />
           <Tab
-            name={t('Available plugins') ?? 'Available plugins'}
+            name={t("Available plugins") ?? "Available plugins"}
             href={buildUrl(TAB_URL_PATHS.available)}
-            active={currentTab === 'available'}
+            active={currentTab === "available"}
             index={1}
           />
           <Tab
-            name={t('Installed plugins') ?? 'Installed plugins'}
+            name={t("Installed plugins") ?? "Installed plugins"}
             href={buildUrl(TAB_URL_PATHS.installed)}
-            active={currentTab === 'installed'}
+            active={currentTab === "installed"}
             index={2}
           />
           <Tab
-            name={t('Advanced settings') ?? 'Advanced settings'}
+            name={t("Advanced settings") ?? "Advanced settings"}
             href={buildUrl(TAB_URL_PATHS.advanced)}
-            active={currentTab === 'advanced'}
+            active={currentTab === "advanced"}
             index={3}
           />
         </TabBar>
@@ -470,10 +462,10 @@ export default function PluginManagerIndex({
         UpdateCenter has active jobs. Links to /updateCenter/ matching the
         original ${%UpdatePageLegend(rootURL+'/updateCenter/')} i18n pattern.
       */}
-      {currentTab === 'updates' && hasUpdateCenterJobs && (
+      {currentTab === "updates" && hasUpdateCenterJobs && (
         <div className="jenkins-alert jenkins-alert--visible jenkins-alert-info">
-          <a href={buildUrl('/updateCenter/')}>
-            {t('UpdatePageLegend') ?? 'View update center activity'}
+          <a href={buildUrl("/updateCenter/")}>
+            {t("UpdatePageLegend") ?? "View update center activity"}
           </a>
         </div>
       )}

@@ -310,9 +310,7 @@ export default function FirstUserPanel({
 
     // Step 5: Execute mutation
     mutate(payload, {
-      onSuccess: (
-        response: StaplerResponse<CrumbRefreshResponse>,
-      ): void => {
+      onSuccess: (response: StaplerResponse<CrumbRefreshResponse>): void => {
         // CRITICAL CRUMB REFRESH — mirrors securityConfig.js lines 16–19:
         //   var crumbRequestField = response.data.crumbRequestField;
         //   if (crumbRequestField) {
