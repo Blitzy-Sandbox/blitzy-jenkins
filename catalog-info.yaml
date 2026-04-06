@@ -5,11 +5,9 @@ metadata:
   description: "Jenkins Core UI migration from Jelly/JS to React 19 + TypeScript with Vite 7 build pipeline"
   tags:
     - java
-    - typescript
     - infrastructure
-    - in-progress
+    - refactor
   labels:
-    blitzy.com/status: in-progress
     blitzy.com/language: java
   annotations:
     github.com/project-slug: Blitzy-Sandbox/blitzy-jenkins
