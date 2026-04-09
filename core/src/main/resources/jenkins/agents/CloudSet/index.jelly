@@ -28,6 +28,7 @@ THE SOFTWARE.
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:f="/lib/form">
   <l:settings-subpage managementLink="${it.managementLink}" header="${null}" noDefer="true">
+    <div id="react-root" data-view-type="cloud-set" data-model-url="${rootURL}/cloud/api/json"></div>
     <l:isAdmin>
       <script src="${resURL}/jsbundles/pages/cloud-set.js" type="text/javascript" />
       <link rel="stylesheet" href="${resURL}/jsbundles/pages/cloud-set.css" type="text/css" />

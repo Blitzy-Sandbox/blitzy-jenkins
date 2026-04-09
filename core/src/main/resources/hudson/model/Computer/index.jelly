@@ -28,6 +28,7 @@ THE SOFTWARE.
     <st:include page="sidepanel.jelly" />
     <!-- no need for additional breadcrumb here as we're on an index page already including breadcrumb -->
     <l:main-panel>
+      <div id="react-root" data-view-type="computer-detail" data-model-url="${rootURL}/computer/${it.name}/api/json"></div>
       <l:app-bar title="${it.caption}">
         <t:editDescriptionButton permission="${it.CONFIGURE}"/>
         <j:if test="${it.manualLaunchAllowed}">

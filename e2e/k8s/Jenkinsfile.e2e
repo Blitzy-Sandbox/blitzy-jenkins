@@ -1,0 +1,162 @@
+/**
+ * Jenkins Pipeline for E2E visual regression testing.
+ *
+ * Deploys dual Jenkins instances (baseline + React) on Kubernetes,
+ * seeds them with identical JENKINS_HOME state, then runs Playwright
+ * E2E specs against both instances for functional and visual comparison.
+ *
+ * Prerequisites:
+ *   - Kubernetes cluster accessible from the Jenkins controller
+ *   - kubectl configured with credentials for the target cluster
+ *   - Node.js 24+ and Yarn 4 available (or managed via corepack)
+ *   - Playwright Chromium browser installed
+ *
+ * Usage:
+ *   Triggered manually or as part of the React migration CI pipeline.
+ *   Results are archived as HTML reports and screenshot diffs.
+ */
+pipeline {
+    agent {
+        kubernetes {
+            yaml '''
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+    - name: node
+      image: node:24-bookworm
+      command: ["sleep"]
+      args: ["infinity"]
+      resources:
+        requests:
+          cpu: "1"
+          memory: 2Gi
+        limits:
+          cpu: "2"
+          memory: 4Gi
+    - name: kubectl
+      image: bitnami/kubectl:latest
+      command: ["sleep"]
+      args: ["infinity"]
+'''
+        }
+    }
+
+    environment {
+        CI = 'true'
+        JENKINS_BASELINE_URL = 'http://jenkins-baseline.jenkins-e2e.svc.cluster.local:8080/jenkins'
+        JENKINS_REACT_URL    = 'http://jenkins-react.jenkins-e2e.svc.cluster.local:8080/jenkins'
+    }
+
+    options {
+        timeout(time: 30, unit: 'MINUTES')
+        ansiColor('xterm')
+    }
+
+    stages {
+        stage('Deploy K8s Manifests') {
+            steps {
+                container('kubectl') {
+                    sh '''
+                        echo "=== Applying Kubernetes manifests ==="
+                        kubectl apply -f e2e/k8s/namespace.yaml
+                        kubectl apply -f e2e/k8s/jenkins-baseline.yaml
+                        kubectl apply -f e2e/k8s/jenkins-react.yaml
+                    '''
+                }
+            }
+        }
+
+        stage('Wait for Pods Ready') {
+            steps {
+                container('kubectl') {
+                    sh '''
+                        echo "=== Waiting for baseline pod ==="
+                        kubectl -n jenkins-e2e wait --for=condition=Ready \
+                            pod -l app=jenkins-baseline \
+                            --timeout=300s
+
+                        echo "=== Waiting for react pod ==="
+                        kubectl -n jenkins-e2e wait --for=condition=Ready \
+                            pod -l app=jenkins-react \
+                            --timeout=300s
+
+                        echo "=== Both pods are ready ==="
+                        kubectl -n jenkins-e2e get pods
+                    '''
+                }
+            }
+        }
+
+        stage('Seed Jenkins Instances') {
+            steps {
+                container('kubectl') {
+                    sh '''
+                        echo "=== Running init job ==="
+                        kubectl apply -f e2e/k8s/init-job.yaml
+
+                        echo "=== Waiting for init job completion ==="
+                        kubectl -n jenkins-e2e wait --for=condition=Complete \
+                            job/jenkins-init \
+                            --timeout=300s
+
+                        echo "=== Init job logs ==="
+                        kubectl -n jenkins-e2e logs job/jenkins-init
+                    '''
+                }
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                container('node') {
+                    sh '''
+                        corepack enable
+                        corepack prepare yarn@4.12.0 --activate
+                        yarn install --immutable
+                        npx playwright install chromium
+                        npx playwright install-deps chromium
+                    '''
+                }
+            }
+        }
+
+        stage('Run E2E Tests') {
+            steps {
+                container('node') {
+                    sh '''
+                        echo "=== Running Playwright E2E tests against both instances ==="
+                        npx playwright test \
+                            --project=baseline \
+                            --project=react \
+                            --reporter=html
+                    '''
+                }
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'playwright-report/**', allowEmptyArchive: true
+                    archiveArtifacts artifacts: 'e2e/test-results/**', allowEmptyArchive: true
+                    archiveArtifacts artifacts: 'docs/screenshots/**', allowEmptyArchive: true
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            container('kubectl') {
+                sh '''
+                    echo "=== Tearing down E2E namespace ==="
+                    kubectl delete namespace jenkins-e2e --ignore-not-found=true --wait=false
+                '''
+            }
+        }
+        success {
+            echo 'E2E visual regression tests passed successfully.'
+        }
+        failure {
+            echo 'E2E visual regression tests failed. Check archived reports.'
+        }
+    }
+}

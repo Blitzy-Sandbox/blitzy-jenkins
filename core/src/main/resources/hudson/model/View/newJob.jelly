@@ -35,6 +35,7 @@ THE SOFTWARE.
     <l:breadcrumb title="${%NewJob(it.newPronoun)}" />
 
     <l:main-panel>
+    <div id="react-root" data-view-type="new-job" data-model-url="${rootURL}/api/json"></div>
     <div id="add-item-panel" style="display: none;">
       <h1>${%NewJob(it.newPronoun)}</h1>
           <form method="post" action="createItem" name="createItem" id="createItem">

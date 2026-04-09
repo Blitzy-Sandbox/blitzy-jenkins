@@ -69,6 +69,7 @@ THE SOFTWARE.
           <st:include page="main.jelly" />
 
           <st:include page="permalinks.jelly" />
+          <div id="react-root" data-view-type="job-index" data-model-url="${rootURL}/job/${it.name}/api/json"></div>
         </l:main-panel>
       </l:layout>
     </j:otherwise>

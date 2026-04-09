@@ -30,6 +30,7 @@ THE SOFTWARE.
   <j:new className="jenkins.management.SystemInfoLink" var="it" />
 
   <l:settings-subpage permissions="${app.MANAGE_AND_SYSTEM_READ}" includeBreadcrumb="true">
+    <div id="react-root" data-view-type="system-info" data-model-url="${rootURL}/manage/systemInfo/api/json"></div>
     <script src="${resURL}/jsbundles/section-to-tabs.js" type="text/javascript" defer="true" />
     <script src="${resURL}/jsbundles/pages/manage-jenkins/system-information.js" type="text/javascript" defer="true" />
 

@@ -37,6 +37,7 @@ THE SOFTWARE.
 
         <!-- no need for additional breadcrumb here as we're on an index page already including breadcrumb -->
         <l:main-panel>
+          <div id="react-root" data-view-type="build-index" data-model-url="${rootURL}/${it.url}api/json"></div>
           <j:set var="controls">
             <t:editDescriptionButton permission="${it.UPDATE}"/>
             <l:hasPermission permission="${it.UPDATE}">

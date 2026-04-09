@@ -1,0 +1,155 @@
+---
+# Kubernetes Job that populates both Jenkins instances with identical
+# JENKINS_HOME state: admin user, sample jobs, and pre-installed plugins.
+# Runs Jenkins CLI commands against each service once they are ready.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: jenkins-init
+  namespace: jenkins-e2e
+  labels:
+    app: jenkins-init
+spec:
+  backoffLimit: 3
+  activeDeadlineSeconds: 600
+  template:
+    metadata:
+      labels:
+        app: jenkins-init
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: init
+          image: jenkins/jenkins:lts-jdk21
+          command:
+            - /bin/bash
+            - -exc
+            - |
+              # -----------------------------------------------------------
+              # Helper: wait for a Jenkins instance to become available
+              # -----------------------------------------------------------
+              wait_for_jenkins() {
+                local url="$1"
+                local name="$2"
+                local max_attempts=60
+                local attempt=0
+                echo "Waiting for ${name} at ${url}/login ..."
+                while [ $attempt -lt $max_attempts ]; do
+                  if curl -sSf "${url}/login" > /dev/null 2>&1; then
+                    echo "${name} is ready."
+                    return 0
+                  fi
+                  attempt=$((attempt + 1))
+                  sleep 5
+                done
+                echo "ERROR: ${name} did not become ready within $((max_attempts * 5))s"
+                return 1
+              }
+
+              # -----------------------------------------------------------
+              # Helper: run Jenkins CLI against an instance
+              # -----------------------------------------------------------
+              jenkins_cli() {
+                local url="$1"
+                shift
+                java -jar /usr/share/jenkins/jenkins-cli.jar \
+                  -s "${url}" \
+                  -auth admin:admin \
+                  "$@"
+              }
+
+              # -----------------------------------------------------------
+              # Helper: seed a Jenkins instance with sample data
+              # -----------------------------------------------------------
+              seed_instance() {
+                local url="$1"
+                local name="$2"
+
+                echo "=== Seeding ${name} ==="
+
+                # Install plugins via CLI
+                echo "Installing plugins on ${name} ..."
+                jenkins_cli "${url}" install-plugin git workflow-aggregator \
+                  -deploy || echo "Plugin install may require restart"
+
+                # Create 3 freestyle jobs
+                for i in 1 2 3; do
+                  cat <<JOBXML | jenkins_cli "${url}" create-job "freestyle-job-${i}"
+              <?xml version='1.1' encoding='UTF-8'?>
+              <project>
+                <description>Freestyle test job ${i} for E2E visual regression</description>
+                <keepDependencies>false</keepDependencies>
+                <properties/>
+                <scm class="hudson.scm.NullSCM"/>
+                <canRoam>true</canRoam>
+                <disabled>false</disabled>
+                <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+                <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+                <triggers/>
+                <concurrentBuild>false</concurrentBuild>
+                <builders>
+                  <hudson.tasks.Shell>
+                    <command>echo "Build #\${BUILD_NUMBER} of freestyle-job-${i}"</command>
+                  </hudson.tasks.Shell>
+                </builders>
+                <publishers/>
+                <buildWrappers/>
+              </project>
+              JOBXML
+                  echo "Created freestyle-job-${i} on ${name}"
+                done
+
+                # Create 1 pipeline job
+                cat <<JOBXML | jenkins_cli "${url}" create-job "pipeline-job-1"
+              <?xml version='1.1' encoding='UTF-8'?>
+              <flow-definition plugin="workflow-job">
+                <description>Pipeline test job for E2E visual regression</description>
+                <keepDependencies>false</keepDependencies>
+                <properties/>
+                <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps">
+                  <script>
+              pipeline {
+                  agent any
+                  stages {
+                      stage('Build') {
+                          steps {
+                              echo "Building pipeline-job-1 #\${BUILD_NUMBER}"
+                          }
+                      }
+                      stage('Test') {
+                          steps {
+                              echo "Testing pipeline-job-1"
+                          }
+                      }
+                  }
+              }
+                  </script>
+                  <sandbox>true</sandbox>
+                </definition>
+                <triggers/>
+                <disabled>false</disabled>
+              </flow-definition>
+              JOBXML
+                echo "Created pipeline-job-1 on ${name}"
+
+                # Trigger a build for each job to populate build history
+                for job in freestyle-job-1 freestyle-job-2 freestyle-job-3 pipeline-job-1; do
+                  jenkins_cli "${url}" build "${job}" -s || echo "Build trigger for ${job} may be queued"
+                done
+
+                echo "=== ${name} seeding complete ==="
+              }
+
+              # -----------------------------------------------------------
+              # Main execution
+              # -----------------------------------------------------------
+              BASELINE_URL="http://jenkins-baseline.jenkins-e2e.svc.cluster.local:8080/jenkins"
+              REACT_URL="http://jenkins-react.jenkins-e2e.svc.cluster.local:8080/jenkins"
+
+              wait_for_jenkins "${BASELINE_URL}" "baseline"
+              wait_for_jenkins "${REACT_URL}" "react"
+
+              seed_instance "${BASELINE_URL}" "baseline"
+              seed_instance "${REACT_URL}" "react"
+
+              echo "=== Init job complete — both instances seeded ==="

@@ -100,6 +100,8 @@ THE SOFTWARE.
     <!-- Make sure to keep the jetty-ee9-maven-plugin version in war/pom.xml in sync with the Jetty release in Winstone: -->
     <winstone.version>8.1033.v23d2f156e821</winstone.version>
     <node.version>24.13.0</node.version>
+    <!-- Set to true (-Dskip.yarn=true) to bypass the frontend (Yarn/Vite) build entirely -->
+    <skip.yarn>false</skip.yarn>
   </properties>
 
   <!--
@@ -444,6 +446,7 @@ THE SOFTWARE.
                 <configuration>
                   <nodeVersion>v${node.version}</nodeVersion>
                   <nodeDownloadRoot>https://repo.jenkins-ci.org/nodejs-dist/</nodeDownloadRoot>
+                  <skip>${skip.yarn}</skip>
                 </configuration>
               </execution>
               <execution>
@@ -454,6 +457,7 @@ THE SOFTWARE.
                 <phase>initialize</phase>
                 <configuration>
                   <arguments>yarn install</arguments>
+                  <skip>${skip.yarn}</skip>
                 </configuration>
               </execution>
               <execution>
@@ -464,6 +468,7 @@ THE SOFTWARE.
                 <phase>generate-sources</phase>
                 <configuration>
                   <arguments>yarn build</arguments>
+                  <skip>${skip.yarn}</skip>
                 </configuration>
               </execution>
             </executions>

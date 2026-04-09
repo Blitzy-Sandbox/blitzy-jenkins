@@ -29,6 +29,7 @@ THE SOFTWARE.
   </j:new>
 
   <l:run-subpage>
+    <div id="react-root" data-view-type="build-changes" data-model-url="${rootURL}/${it.object.url}api/json"></div>
     <l:app-bar title="${it.displayName}">
       <l:details-bar it="${it.object}" />
     </l:app-bar>

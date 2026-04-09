@@ -69,6 +69,7 @@ THE SOFTWARE.
           <j:otherwise>
             <st:include it="${simpleDecorator}" page="simple-branding.jelly" />
             <main id="main-panel" class="app-sign-in-register__content">
+              <div id="react-root" data-view-type="sign-in" data-model-url="${rootURL}/api/json"></div>
               <div class="app-sign-in-register__content-inner">
                 <h1>${%Sign in to Jenkins}</h1>
 

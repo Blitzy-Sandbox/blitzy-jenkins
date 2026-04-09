@@ -35,7 +35,7 @@ THE SOFTWARE.
   <packaging>war</packaging>
 
   <name>Jenkins war</name>
-  <description>Creates a war file. Also includes additional static web resources, such as images, CSS, JavaScript, and some HTML files.</description>
+  <description>Creates a war file. Also includes additional static web resources, such as images, CSS, React/TypeScript frontend bundles, and some HTML files.</description>
   <url>https://github.com/jenkinsci/jenkins</url>
 
   <properties>
@@ -49,7 +49,8 @@ THE SOFTWARE.
     <mina-sshd-api.version>2.16.0-167.va_269f38cc024</mina-sshd-api.version>
     <!-- Minimum Remoting version, which is tested for API compatibility, duplicated so that renovate only updates the latest remoting version property -->
     <remoting.minimum.supported.version>3176.v207ec082a_8c0</remoting.minimum.supported.version>
-
+    <!-- Set to true to skip the frontend (Yarn/Vite) build -->
+    <skip.yarn>false</skip.yarn>
   </properties>
 
   <dependencyManagement>
@@ -201,6 +202,13 @@ THE SOFTWARE.
           <release>11</release>
         </configuration>
       </plugin>
+      <!--
+        Frontend build is handled by the root pom.xml (yarn-execution profile)
+        which invokes frontend-maven-plugin 2.0.0 to install Node.js+corepack,
+        run 'yarn install' and 'yarn build', producing Vite-compiled bundles
+        in war/src/main/webapp/jsbundles/.
+        Set -Dskip.yarn=true to bypass the frontend build entirely.
+      -->
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
         <!-- version specified in grandparent pom -->

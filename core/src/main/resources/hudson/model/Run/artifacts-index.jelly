@@ -29,6 +29,7 @@ THE SOFTWARE.
       <st:include page="sidepanel.jelly" />
       <l:breadcrumb title="${%Artifacts}" />
       <l:main-panel>
+        <div id="react-root" data-view-type="build-artifacts" data-model-url="${rootURL}/${it.url}api/json"></div>
         <t:buildCaption>${%Build Artifacts}</t:buildCaption>
         <table class="fileList">
           <j:forEach var="f" items="${it.artifacts}">
