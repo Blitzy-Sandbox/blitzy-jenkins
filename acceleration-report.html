@@ -11,9 +11,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
 
-  <!-- reveal.js 5.1.0 -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <!-- reveal.js 5.1.0 (CSS assets pinned via Subresource Integrity) -->
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css"
+        integrity="sha384-AJKv9Ui5SfA0VsFksFI9GuA1ztX9Ca3CLP6HGfX4YY/tYSVodC+PUszaQZFIlkuy"
+        crossorigin="anonymous">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css"
+        integrity="sha384-YgvgKeZJykuztG+iQPoZHNZENTFZvOcOJ/uRzmJTje6GHYN9zAw+y5rx/L8MQKA/"
+        crossorigin="anonymous">
 
   <!-- Blitzy Brand Theme (inline, self-contained) -->
   <style>
@@ -542,27 +548,11 @@
       border: 1px solid var(--blitzy-border);
     }
 
-    /* ------------------- Mermaid ------------------- */
-    pre.mermaid {
-      background: var(--blitzy-surface-0);
-      text-align: center;
-      margin: 1.5rem auto;
-      max-width: 90%;
-      font-family: var(--ff-body);
-      padding: 0;
-      border: none;
-      box-shadow: none;
-    }
-
-    .mermaid svg {
-      max-width: 100%;
-      height: auto;
-    }
-
     /* ------------------- Flow Diagram (HTML/CSS, Inter font) ------------------- */
-    /* Used on Slide 3 instead of Mermaid to guarantee Inter font metrics and
-       zero label truncation. Horizontal chain of labelled steps separated by
-       chevron arrows, rendered entirely with reveal.js, Lucide, and CSS. */
+    /* Used on Slide 3 per Decision D016: HTML/CSS with Lucide icons in place of
+       a Mermaid flowchart. Guarantees Inter font metrics and zero label
+       truncation. Horizontal chain of labelled steps separated by chevron
+       arrows, rendered entirely with reveal.js, Lucide, and CSS. */
     .flow-diagram {
       display: flex;
       flex-direction: row;
@@ -881,10 +871,10 @@
             </tr>
             <tr>
               <td>2 — Arch &amp; Design <span class="kpi-confidence insufficient">Insufficient</span></td>
-              <td class="cell-insufficient">Insufficient</td>
-              <td class="cell-insufficient">Insufficient</td>
-              <td class="cell-insufficient">Insufficient</td>
-              <td class="cell-insufficient">Insufficient</td>
+              <td class="cell-insufficient">Insufficient signal</td>
+              <td class="cell-insufficient">Insufficient signal</td>
+              <td class="cell-insufficient">Insufficient signal</td>
+              <td class="cell-insufficient">Insufficient signal</td>
             </tr>
             <tr>
               <td>3 — Code Gen <span class="kpi-confidence high">High</span></td>
@@ -915,18 +905,40 @@
               <td class="cell-multiplier">1.22&times;</td>
             </tr>
             <tr>
+              <td>6 — Defect Response unfiltered <span class="kpi-confidence medium">Medium</span></td>
+              <td>7.16%</td>
+              <td>6.94%</td>
+              <td>4.98%</td>
+              <td class="cell-multiplier">0.70&times;</td>
+            </tr>
+            <tr>
               <td>7 — Commit Throughput weighted <span class="kpi-confidence high">High</span></td>
               <td>5.32</td>
               <td>2.62</td>
               <td>3.17</td>
               <td class="cell-multiplier">0.60&times;</td>
             </tr>
+            <tr>
+              <td>7 — Commit Throughput simple-mean (supplementary) <span class="kpi-confidence high">High</span></td>
+              <td>7.75</td>
+              <td>2.60</td>
+              <td>13.08</td>
+              <td class="cell-multiplier">1.69&times;</td>
+            </tr>
           </tbody>
           <tfoot>
             <tr>
               <td colspan="5">
-                Decision D010 (collapse to Post-Introduction) not triggered:
-                292-day After window exceeds 90-day threshold.
+                Activity 2 cells rendered as literal <code>Insufficient signal</code> per Rule 2 &mdash;
+                no files matched <code>ARCHITECTURE.md</code>, <code>tech-spec*</code>,
+                <code>adr-*</code>, or <code>design-*</code> patterns across the repository lifetime.
+              </td>
+            </tr>
+            <tr>
+              <td colspan="5">
+                Activities 6 and 7 dual-reported per Decisions D012 and D013 to expose
+                bot-filtering and aggregation sensitivity. Decision D010 (collapse to
+                Post-Introduction) not triggered: 292-day After window exceeds 90-day threshold.
               </td>
             </tr>
           </tfoot>
@@ -979,7 +991,7 @@
           </tfoot>
         </table>
         <p class="callout-note">
-          Measures maintainer merge activity to <code>main</code>, not individual PR authorship.
+          Measures maintainer merge activity to <code>master</code>, not individual PR authorship.
         </p>
       </section>
 
@@ -1003,7 +1015,7 @@
               <td>Engineer A</td>
               <td>0.000</td>
               <td>7.383</td>
-              <td class="cell-insufficient">Insufficient signal &mdash; division by zero</td>
+              <td class="cell-insufficient">Insufficient signal &mdash; no Baseline commits (division by zero)</td>
             </tr>
             <tr>
               <td>Engineer B</td>
@@ -1193,45 +1205,20 @@
     </div><!-- /.slides -->
   </div><!-- /.reveal -->
 
-  <!-- CDN-pinned dependencies: reveal.js 5.1.0, mermaid 11.4.0, lucide 0.460.0 -->
-  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@11.4.0/dist/mermaid.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <!-- CDN-pinned dependencies: reveal.js 5.1.0, lucide 0.460.0
+       (Mermaid 11.4.0 omitted per Decision D016: Slide 3 uses HTML/CSS
+       flow-diagram and Slide 8 uses a styled <table>, so no Mermaid
+       runtime is needed.)
+       Subresource Integrity (SRI) hashes pin each asset to its known
+       byte content to mitigate CDN-side tampering risk. -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"
+          integrity="sha384-M/JtqCVlLcK9lwVnBnMXP0V577CBULkjodKsR/PITOe4MSKNbbwqCemEyluOw0+5"
+          crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.460.0/dist/umd/lucide.min.js"
+          integrity="sha384-ieG+IKD0d/ZPXyCBTMVAbqsQdns8QGJR/e26WMw7M4fkaI/rHcS/YIoi+ah9WGge"
+          crossorigin="anonymous"></script>
 
   <script>
-    // ----------------------------------------------------------------------
-    // Mermaid initialization with Blitzy theme variables
-    // ----------------------------------------------------------------------
-    mermaid.initialize({
-      startOnLoad: false,
-      theme: 'base',
-      themeVariables: {
-        primaryColor: '#F2F0FE',
-        primaryTextColor: '#333333',
-        primaryBorderColor: '#5B39F3',
-        lineColor: '#999999',
-        secondaryColor: '#F4EFF6',
-        fontFamily: 'Inter, system-ui, sans-serif',
-        fontSize: '16px'
-      },
-      flowchart: {
-        htmlLabels: true,
-        nodeSpacing: 60,
-        rankSpacing: 70,
-        padding: 20,
-        useMaxWidth: true
-      },
-      // Force the font-family override that defeats Mermaid's default
-      // --mermaid-font-family ("trebuchet ms") and the per-diagram CSS
-      // that leads to narrower boxes after Inter loads.
-      themeCSS: `
-        :root { --mermaid-font-family: 'Inter', system-ui, sans-serif !important; }
-        .nodeLabel, .label, .flowchart-label, .edgeLabel, text, foreignObject p {
-          font-family: 'Inter', system-ui, sans-serif !important;
-        }
-      `
-    });
-
     // ----------------------------------------------------------------------
     // Reveal.js initialization
     // ----------------------------------------------------------------------
@@ -1244,20 +1231,20 @@
     });
 
     // ----------------------------------------------------------------------
-    // Run Mermaid and Lucide on ready and on every slide change.
-    // Re-running Mermaid on slide change is safe because unrendered
-    // <pre class="mermaid"> elements remain untouched after rendering.
-    // We wait for document.fonts.ready so Mermaid measures box widths
-    // using the actual Inter font metrics rather than a fallback font.
+    // Run Lucide on ready and on every slide change to materialize any
+    // <i data-lucide="..."> placeholders into inline SVGs. Visual elements
+    // on every slide (flow-diagram icons, KPI-card icons, hero icons,
+    // decorative chevrons) depend on this pass.
+    // We wait for document.fonts.ready so icon sizing stabilizes relative
+    // to the Inter/Space Grotesk font box metrics.
     // ----------------------------------------------------------------------
     async function renderVisuals() {
-      try {
-        if (document.fonts && document.fonts.ready) {
+      if (document.fonts && document.fonts.ready) {
+        try {
           await document.fonts.ready;
+        } catch (err) {
+          // document.fonts.ready may reject on older engines — safe to ignore.
         }
-        await mermaid.run({ querySelector: 'pre.mermaid' });
-      } catch (err) {
-        // Mermaid may throw if all diagrams are already rendered — ignore safely.
       }
       if (window.lucide && typeof window.lucide.createIcons === 'function') {
         window.lucide.createIcons();
