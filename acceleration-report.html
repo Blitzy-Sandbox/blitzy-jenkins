@@ -223,6 +223,14 @@
       color: var(--blitzy-text-invert);
     }
 
+    /* Title-slide eyebrow: Fira Code teal on hero gradient per AAP §0.4.3.
+       Specificity (0,3,0) wins over the generic .reveal section .eyebrow
+       override (0,2,1) so the eyebrow on slide-title renders accent teal
+       rather than primary purple. */
+    .reveal .slide-title .eyebrow {
+      color: var(--blitzy-accent-teal);
+    }
+
     /* ------------------- Divider slides ------------------- */
     .reveal .slide-divider {
       background: var(--gradient-divider);
