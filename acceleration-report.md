@@ -20,7 +20,7 @@ Headline multipliers — ordered by magnitude of the After-period multiplier, st
 - Activity 7 — Commit Throughput (weighted per engineer per 2-week window): **0.56× After / Baseline** (Confidence: High; see §4.7); simple-mean alternative: **1.18×** (Confidence: High)
 - Activity 3 — Code Generation (merges / 2-week window, non-bot): **0.66× After / Baseline** (Confidence: High; see §4.3)
 - Activity 1 — Requirements Throughput (feature-branch-proxy merges / 2-week window): **0.56× After / Baseline** (Confidence: Medium; see §4.1)
-- Activity 2 — Architecture & Design: **Insufficient signal — no files matched ARCHITECTURE.md, tech-spec*, adr-*, or design-* patterns across the repository lifetime** (see §4.2)
+- Activity 2 — Architecture & Design: **Insufficient signal — no files matched ARCHITECTURE.md, tech-spec*, adr-*, or design-\* patterns across the repository lifetime** (see §4.2)
 
 Confidence distribution across the 7 activities: **4 High (Activities 3, 4, 5, 7), 2 Medium (Activities 1, 6), and 1 Insufficient Signal (Activity 2)**. Per-engineer anonymized multipliers for Activities 3 and 7 appear in §6. Phase-segmented values (Baseline → Ramp-Up → Steady State) appear in §7. All Low-confidence or Insufficient-signal cases are further addressed in §8 (Risk Assessment).
 
@@ -30,17 +30,17 @@ Confidence distribution across the 7 activities: **4 High (Activities 3, 4, 5, 7
 
 This section documents the execution environment before any metric extraction, satisfying Rule 7. Every row cross-references a Reproducibility Appendix command ID (Rule 6).
 
-| Field | Value | Command ID |
-|-------|-------|------------|
-| Repository URL | `https://github.com/Blitzy-Sandbox/blitzy-jenkins.git` | R0.2 |
-| Git version | `git version 2.43.0` | R0.3 |
-| Total commits | `38115` | R0.4 |
-| Earliest commit | `2006-11-05T21:16:01+00:00` (hash `8a0dc230f44e84e5a7f7920cf9a31f09a54999ac`) | R0.5 |
-| Latest commit | `2026-04-06T23:09:56-04:00` (hash `6f653dffd77a9a8fe250fb7ec75e39156366aab3`) | R0.6 |
-| Commit window | `2006-11-05T21:16:01+00:00` → `2026-04-06T23:09:56-04:00` (approximately 19.42 years) | R0.5, R0.6 |
-| Active branches | `6` (deviation from Agent Action Plan expected value of `4`; see §8.3) | R0.7 |
-| Submodule state | `no submodules` (empty `git submodule status` output) | R0.8 |
-| Extraction timestamp | `2026-04-22T00:50:25+00:00` (UTC, captured once at start of extraction and reused throughout per Decision D015) | R0.1 |
+| Field                | Value                                                                                                           | Command ID |
+| -------------------- | --------------------------------------------------------------------------------------------------------------- | ---------- |
+| Repository URL       | `https://github.com/Blitzy-Sandbox/blitzy-jenkins.git`                                                          | R0.2       |
+| Git version          | `git version 2.43.0`                                                                                            | R0.3       |
+| Total commits        | `38115`                                                                                                         | R0.4       |
+| Earliest commit      | `2006-11-05T21:16:01+00:00` (hash `8a0dc230f44e84e5a7f7920cf9a31f09a54999ac`)                                   | R0.5       |
+| Latest commit        | `2026-04-06T23:09:56-04:00` (hash `6f653dffd77a9a8fe250fb7ec75e39156366aab3`)                                   | R0.6       |
+| Commit window        | `2006-11-05T21:16:01+00:00` → `2026-04-06T23:09:56-04:00` (approximately 19.42 years)                           | R0.5, R0.6 |
+| Active branches      | `6` (deviation from Agent Action Plan expected value of `4`; see §8.3)                                          | R0.7       |
+| Submodule state      | `no submodules` (empty `git submodule status` output)                                                           | R0.8       |
+| Extraction timestamp | `2026-04-22T00:50:25+00:00` (UTC, captured once at start of extraction and reused throughout per Decision D015) | R0.1       |
 
 **Deviation — active branch count**: The Agent Action Plan (AAP) recorded `4` for `git branch -a | wc -l` during reconnaissance; the extraction run during this report observed `6`. The difference is accounted for by branches visible at extraction time (`master`, local working branch `blitzy-dd6c20ca-a9a8-471c-9df6-5a502a812b8e`, remote tracking references including `origin/HEAD` symbolic, `origin/master`, `origin/blitzy-35697eee-*`, and `origin/blitzy-dd6c20ca-a9a8-471c-9df6-5a502a812b8e`). The deviation does not affect any per-activity metric because all per-activity queries operate against commit history rather than branch counts. The deviation is logged in §8.3 (Confounding Factors).
 
@@ -70,26 +70,26 @@ All extraction commands apply the Rule 5 parity constraint: before and after per
 
 ### 3.3 Confidence Rationale
 
-| Activity | Confidence | Rationale |
-|----------|------------|-----------|
-| 1. Requirements Throughput | Medium | Heuristic pattern match (fallback rule applied because branch-naming primary returned zero) |
-| 2. Architecture & Design | — (Insufficient signal) | Glob pattern returned zero matches; no value derivable per Rule 2 (literal rendering per Decision D009) |
-| 3. Code Generation | High | Direct merge-commit count |
-| 4. Test Creation | High | Direct file-creation count (with boundary condition on pattern scope, §4.4) |
-| 5. Documentation | High | Direct file-creation count |
-| 6. Defect Response | Medium | Heuristic commit-message scan; false-positives and false-negatives plausible |
-| 7. Commit Throughput | High | Direct non-merge commit count and direct active-engineer count |
+| Activity                   | Confidence              | Rationale                                                                                               |
+| -------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------- |
+| 1. Requirements Throughput | Medium                  | Heuristic pattern match (fallback rule applied because branch-naming primary returned zero)             |
+| 2. Architecture & Design   | — (Insufficient signal) | Glob pattern returned zero matches; no value derivable per Rule 2 (literal rendering per Decision D009) |
+| 3. Code Generation         | High                    | Direct merge-commit count                                                                               |
+| 4. Test Creation           | High                    | Direct file-creation count (with boundary condition on pattern scope, §4.4)                             |
+| 5. Documentation           | High                    | Direct file-creation count                                                                              |
+| 6. Defect Response         | Medium                  | Heuristic commit-message scan; false-positives and false-negatives plausible                            |
+| 7. Commit Throughput       | High                    | Direct non-merge commit count and direct active-engineer count                                          |
 
 ### 3.4 Temporal Segmentation
 
 Three adjacent time partitions are defined:
 
-| Phase | Start (inclusive) | End (exclusive) | Days | 2-Week Buckets | Calendar Quarters Touched |
-|-------|-------------------|-----------------|------|----------------|----------------------------|
-| Baseline | `2006-11-05T21:16:01+00:00` | `2025-06-19T00:00:00+00:00` | 6800 | 485.71 | 75 |
-| Ramp-Up | `2025-06-19T00:00:00+00:00` | `2025-09-17T00:00:00+00:00` | 90 | 6.43 | 2 |
-| Steady State | `2025-09-17T00:00:00+00:00` | `2026-04-07T00:00:00+00:00` | 202 | 14.43 | 4 |
-| After (Ramp-Up + Steady State) | `2025-06-19T00:00:00+00:00` | `2026-04-07T00:00:00+00:00` | 292 | 20.86 | 5 |
+| Phase                          | Start (inclusive)           | End (exclusive)             | Days | 2-Week Buckets | Calendar Quarters Touched |
+| ------------------------------ | --------------------------- | --------------------------- | ---- | -------------- | ------------------------- |
+| Baseline                       | `2006-11-05T21:16:01+00:00` | `2025-06-19T00:00:00+00:00` | 6800 | 485.71         | 75                        |
+| Ramp-Up                        | `2025-06-19T00:00:00+00:00` | `2025-09-17T00:00:00+00:00` | 90   | 6.43           | 2                         |
+| Steady State                   | `2025-09-17T00:00:00+00:00` | `2026-04-07T00:00:00+00:00` | 202  | 14.43          | 4                         |
+| After (Ramp-Up + Steady State) | `2025-06-19T00:00:00+00:00` | `2026-04-07T00:00:00+00:00` | 292  | 20.86          | 5                         |
 
 Decision D010 (collapse Ramp-Up into Post-Introduction if fewer than 90 days of post-introduction data exist) is **not triggered**: the observed post-introduction window of 292 days exceeds the 90-day threshold by a factor of 3.24, so Ramp-Up and Steady State are reported as distinct phases in §7.
 
@@ -133,9 +133,9 @@ Measure: feature-branch-proxy merges per 2-week window. Primary heuristic (R2.1)
 - **Multiplier**: `0.91 / 1.62 = 0.56×` (After / Baseline).
 - **Confidence**: Medium (heuristic pattern match; fallback rule applied because primary branch-naming heuristic returned zero).
 - **Boundary Conditions**:
-  - *False-positive*: non-feature branches whose merged-in side carried 3 or more commits (e.g., bulk refactors, routine upgrades) are counted as feature-proxy merges by the fallback rule.
-  - *False-negative*: feature work delivered as a single-commit merge or as direct commits to `master` is not counted; merged-and-deleted branches that did not survive into the current ref graph are not directly observable but are partially captured via their merge commits.
-  - *Data gap*: branches deleted before extraction cannot be recovered; the heuristic relies on the merge commit remaining on `master`, which it does by default in `--no-ff` merge workflows.
+  - _False-positive_: non-feature branches whose merged-in side carried 3 or more commits (e.g., bulk refactors, routine upgrades) are counted as feature-proxy merges by the fallback rule.
+  - _False-negative_: feature work delivered as a single-commit merge or as direct commits to `master` is not counted; merged-and-deleted branches that did not survive into the current ref graph are not directly observable but are partially captured via their merge commits.
+  - _Data gap_: branches deleted before extraction cannot be recovered; the heuristic relies on the merge commit remaining on `master`, which it does by default in `--no-ff` merge workflows.
 - **Interpretation**: Over identical 2-week window alignment, the After-period feature-proxy merge rate is 0.56× the Baseline rate. The full-period multiplier conceals a phase-level split (see §7): Ramp-Up is 1.44× Baseline while Steady State is 0.17× Baseline.
 
 ### 4.2 Architecture & Design
@@ -195,9 +195,9 @@ Measure: ratio of commit subjects matching `\b(fix|bugfix|hotfix|revert)\b` (cas
 - **Multiplier (unfiltered)**: `0.0567 / 0.0716 = 0.79×` (After / Baseline).
 - **Confidence**: Medium (heuristic commit-message scan).
 - **Boundary Conditions**:
-  - *False-positive*: commits with `fix` in an unrelated context (e.g., "refactor to fix iterator typing", "prefix URL to avoid redirect") are matched. Word-boundary anchoring (`\b`) limits but does not eliminate this noise.
-  - *False-negative*: fix commits not using any of the 4 listed keywords (e.g., "Correct typo", "Patch CSRF flaw", "Resolve NPE in agent registration") are not matched.
-  - *Bot pollution*: bot-authored commits (primarily `renovate[bot]` and `dependabot[bot]`) produce high-cadence upgrade subjects that rarely contain fix keywords, which depresses the unfiltered ratio; filtering bots raises the denominator-normalized ratio, which is why the non-bot and unfiltered multipliers point in opposite directions (1.48× vs. 0.79×). Both numbers are valid under their respective scopes.
+  - _False-positive_: commits with `fix` in an unrelated context (e.g., "refactor to fix iterator typing", "prefix URL to avoid redirect") are matched. Word-boundary anchoring (`\b`) limits but does not eliminate this noise.
+  - _False-negative_: fix commits not using any of the 4 listed keywords (e.g., "Correct typo", "Patch CSRF flaw", "Resolve NPE in agent registration") are not matched.
+  - _Bot pollution_: bot-authored commits (primarily `renovate[bot]` and `dependabot[bot]`) produce high-cadence upgrade subjects that rarely contain fix keywords, which depresses the unfiltered ratio; filtering bots raises the denominator-normalized ratio, which is why the non-bot and unfiltered multipliers point in opposite directions (1.48× vs. 0.79×). Both numbers are valid under their respective scopes.
 - **Interpretation**: Among non-bot commits only, the After-period fix-ratio is 1.48× the Baseline ratio. Among all commits (bots included), the After-period fix-ratio is 0.79× the Baseline ratio. Phase-segmented non-bot (§7): Ramp-Up fix ratio is 16.11% (2.06× Baseline); Steady State fix ratio is 9.52% (1.22× Baseline).
 
 ### 4.7 Commit Throughput
@@ -219,65 +219,64 @@ Measure: non-merge commits per active engineer per 2-week window, with bot autho
 - **Confidence**: High (direct non-merge commit count and direct unique-engineer count per bucket).
 - **Interpretation**: The weighted per-engineer-bucket rate (total non-merge commits divided by total engineer-bucket pairs) is 0.56× the Baseline value. The simple-mean variant (mean of bucket-level per-engineer rates) is 1.18×. The two values measure subtly different things: the weighted rate reports the average productivity per engineer-bucket pair; the simple-mean rate gives each 2-week bucket equal weight regardless of engineer count. Phase-segmented weighted rates (§7): Ramp-Up is 2.62 (0.49× Baseline); Steady State is 3.17 (0.60× Baseline). Per-engineer segmentation appears in §6.2.
 
-
 ---
 
 ## 5. Requirements Traceability Matrix
 
 Every metric appearing in §1, §4, §6, and §7 is represented by at least one row below. Every row cites the Reproducibility Appendix command ID that produced it. Rows with deviations cite the §8.x row that records the deviation.
 
-| Requirement ID | Requirement | Extraction Command | Derived Value | Status | Deviation Reference |
-|----------------|-------------|--------------------|---------------|--------|---------------------|
-| T0.1 | Extraction timestamp | R0.1 | `2026-04-22T00:50:25+00:00` | Complete | — |
-| T0.2 | Repository URL | R0.2 | `https://github.com/Blitzy-Sandbox/blitzy-jenkins.git` | Complete | — |
-| T0.3 | Git version | R0.3 | `git version 2.43.0` | Complete | — |
-| T0.4 | Total commit count | R0.4 | `38115` | Complete | — |
-| T0.5 | Earliest commit | R0.5 | `2006-11-05T21:16:01+00:00 / 8a0dc230f44e84e5a7f7920cf9a31f09a54999ac` | Complete | — |
-| T0.6 | Latest commit | R0.6 | `2026-04-06T23:09:56-04:00 / 6f653dffd77a9a8fe250fb7ec75e39156366aab3` | Complete | — |
-| T0.7 | Active branch count | R0.7 | `6` | Complete | §8.3 (AAP reconnaissance expected 4; deviation documented) |
-| T0.8 | Submodule state | R0.8 | `no submodules (empty output)` | Complete | — |
-| T1.1 | Tool Introduction Date (AI co-author trailer) | R1.1 | `2025-06-19T11:03:50+01:00 / c701361ec7bc9aa58d7745de6291a01b3d7abbe4` | Complete | — |
-| T1.2 | Earliest `agent@blitzy.com` commit | R1.2 | `2026-02-19T10:42:03+00:00 / f0f89db8ec0ef59109dc496e6cbbf8a5439032ab` | Complete | — |
-| T2.1 | Activity 1 — Baseline feature-proxy merges / 2wk | R2.2 | `786 merges / 485.71 buckets = 1.62 / 2wk` | Complete | — |
-| T2.2 | Activity 1 — After feature-proxy merges / 2wk | R2.2 | `19 merges / 20.86 buckets = 0.91 / 2wk` | Complete | — |
-| T2.3 | Activity 1 — Multiplier (After / Baseline) | R2.2 (composite) | `0.91 / 1.62 = 0.56×` | Complete | — |
-| T2.4 | Activity 1 — Ramp-Up rate | R2.2 (date bounded) | `15 merges / 6.43 buckets = 2.33 / 2wk` | Complete | — |
-| T2.5 | Activity 1 — Steady State rate | R2.2 (date bounded) | `4 merges / 14.43 buckets = 0.28 / 2wk` | Complete | — |
-| T3.1 | Activity 2 — Baseline design-doc creations / quarter | R3.1 | `Insufficient signal — no files matched ARCHITECTURE.md, tech-spec*, adr-*, or design-* patterns across the repository lifetime` | Insufficient signal | §8.2 |
-| T3.2 | Activity 2 — After design-doc creations / quarter | R3.1 | `Insufficient signal — no files matched ARCHITECTURE.md, tech-spec*, adr-*, or design-* patterns across the repository lifetime` | Insufficient signal | §8.2 |
-| T4.1 | Activity 3 — Baseline non-bot merges / 2wk | R4.1 | `2659 merges / 485.71 buckets = 5.47 / 2wk` | Complete | — |
-| T4.2 | Activity 3 — After non-bot merges / 2wk | R4.1 | `75 merges / 20.86 buckets = 3.60 / 2wk` | Complete | — |
-| T4.3 | Activity 3 — Multiplier (After / Baseline) | R4.1 (composite) | `3.60 / 5.47 = 0.66×` | Complete | — |
-| T4.4 | Activity 3 — Ramp-Up rate | R4.1 (date bounded) | `65 merges / 6.43 buckets = 10.11 / 2wk` | Complete | — |
-| T4.5 | Activity 3 — Steady State rate | R4.1 (date bounded) | `10 merges / 14.43 buckets = 0.69 / 2wk` | Complete | — |
-| T5.1 | Activity 4 — Baseline test-file creations / 2wk | R5.1 | `3 files / 485.71 buckets = 0.006 / 2wk` | Complete | §8.3 (Java `*Test.java` pattern blindspot) |
-| T5.2 | Activity 4 — After test-file creations / 2wk | R5.1 | `69 files / 20.86 buckets = 3.31 / 2wk` | Complete | — |
-| T5.3 | Activity 4 — Multiplier (After / Baseline) | R5.1 (composite) | `3.31 / 0.006 = 535.62×` | Complete | §8.3 |
-| T5.4 | Activity 4 — Ramp-Up rate | R5.1 (date bounded) | `0 files / 6.43 buckets = 0 / 2wk` | Complete | — |
-| T5.5 | Activity 4 — Steady State rate | R5.1 (date bounded) | `69 files / 14.43 buckets = 4.78 / 2wk` | Complete | — |
-| T6.1 | Activity 5 — Baseline doc creations / quarter | R6.1 | `12 files / 75 quarters = 0.16 / qtr` | Complete | — |
-| T6.2 | Activity 5 — After doc creations / quarter | R6.1 | `7 files / 5 quarters = 1.40 / qtr` | Complete | — |
-| T6.3 | Activity 5 — Multiplier (After / Baseline) | R6.1 (composite) | `1.40 / 0.16 = 8.75×` | Complete | — |
-| T6.4 | Activity 5 — Ramp-Up rate | R6.1 (date bounded) | `0 files / 2 quarters touched = 0 / qtr` | Complete | — |
-| T6.5 | Activity 5 — Steady State rate | R6.1 (date bounded) | `7 files / 4 quarters touched = 1.75 / qtr` | Complete | — |
-| T7.1 | Activity 6 — Baseline non-bot fix ratio | R7.1 | `2262 / 28961 = 7.81%` | Complete | — |
-| T7.2 | Activity 6 — After non-bot fix ratio | R7.1 | `56 / 485 = 11.55%` | Complete | — |
-| T7.3 | Activity 6 — Multiplier non-bot (After / Baseline) | R7.1 (composite) | `0.1155 / 0.0781 = 1.48×` | Complete | — |
-| T7.4 | Activity 6 — Baseline unfiltered fix ratio | R7.1 | `2262 / 31601 = 7.16%` | Complete | — |
-| T7.5 | Activity 6 — After unfiltered fix ratio | R7.1 | `56 / 988 = 5.67%` | Complete | — |
-| T7.6 | Activity 6 — Multiplier unfiltered (After / Baseline) | R7.1 (composite) | `0.0567 / 0.0716 = 0.79×` | Complete | — |
-| T7.7 | Activity 6 — Ramp-Up non-bot ratio | R7.1 (date bounded) | `24 / 149 = 16.11%` | Complete | — |
-| T7.8 | Activity 6 — Steady State non-bot ratio | R7.1 (date bounded) | `32 / 336 = 9.52%` | Complete | — |
-| T8.1 | Activity 7 — Baseline weighted rate (commits / engineer / 2wk) | R8.1 | `28961 / 5446 = 5.32 / eng / 2wk` | Complete | — |
-| T8.2 | Activity 7 — After weighted rate | R8.1 | `485 / 164 = 2.96 / eng / 2wk` | Complete | — |
-| T8.3 | Activity 7 — Multiplier weighted (After / Baseline) | R8.1 (composite) | `2.96 / 5.32 = 0.56×` | Complete | — |
-| T8.4 | Activity 7 — Baseline simple-mean rate | R8.1 | `mean(per-bucket rates) = 7.75 / eng / 2wk` | Complete | — |
-| T8.5 | Activity 7 — After simple-mean rate | R8.1 | `mean(per-bucket rates) = 9.11 / eng / 2wk` | Complete | — |
-| T8.6 | Activity 7 — Multiplier simple-mean (After / Baseline) | R8.1 (composite) | `9.11 / 7.75 = 1.18×` | Complete | — |
-| T8.7 | Activity 7 — Ramp-Up weighted rate | R8.1 (date bounded) | `2.62 / eng / 2wk` | Complete | — |
-| T8.8 | Activity 7 — Steady State weighted rate | R8.1 (date bounded) | `3.17 / eng / 2wk` | Complete | — |
-| T9.1 | Bot author identification | R9.1 | `4 bot identities identified (renovate[bot], dependabot[bot], github-actions[bot], jenkins-release-bot); release-bot pattern retained in R9.1 filter as defense-in-depth but matches zero authors` | Complete | — |
-| T9.2 | Per-engineer volume ranking | R9.2 | `2-engineer After-period merge ranking sorted by volume descending (see §6.1); 10-engineer After-period non-merge ranking (see §6.2); anonymization rule recorded in decision-log.md per Decision D008 — identities not stored in any deliverable` | Complete | — |
+| Requirement ID | Requirement                                                    | Extraction Command  | Derived Value                                                                                                                                                                                                                                      | Status              | Deviation Reference                                        |
+| -------------- | -------------------------------------------------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- | ---------------------------------------------------------- |
+| T0.1           | Extraction timestamp                                           | R0.1                | `2026-04-22T00:50:25+00:00`                                                                                                                                                                                                                        | Complete            | —                                                          |
+| T0.2           | Repository URL                                                 | R0.2                | `https://github.com/Blitzy-Sandbox/blitzy-jenkins.git`                                                                                                                                                                                             | Complete            | —                                                          |
+| T0.3           | Git version                                                    | R0.3                | `git version 2.43.0`                                                                                                                                                                                                                               | Complete            | —                                                          |
+| T0.4           | Total commit count                                             | R0.4                | `38115`                                                                                                                                                                                                                                            | Complete            | —                                                          |
+| T0.5           | Earliest commit                                                | R0.5                | `2006-11-05T21:16:01+00:00 / 8a0dc230f44e84e5a7f7920cf9a31f09a54999ac`                                                                                                                                                                             | Complete            | —                                                          |
+| T0.6           | Latest commit                                                  | R0.6                | `2026-04-06T23:09:56-04:00 / 6f653dffd77a9a8fe250fb7ec75e39156366aab3`                                                                                                                                                                             | Complete            | —                                                          |
+| T0.7           | Active branch count                                            | R0.7                | `6`                                                                                                                                                                                                                                                | Complete            | §8.3 (AAP reconnaissance expected 4; deviation documented) |
+| T0.8           | Submodule state                                                | R0.8                | `no submodules (empty output)`                                                                                                                                                                                                                     | Complete            | —                                                          |
+| T1.1           | Tool Introduction Date (AI co-author trailer)                  | R1.1                | `2025-06-19T11:03:50+01:00 / c701361ec7bc9aa58d7745de6291a01b3d7abbe4`                                                                                                                                                                             | Complete            | —                                                          |
+| T1.2           | Earliest `agent@blitzy.com` commit                             | R1.2                | `2026-02-19T10:42:03+00:00 / f0f89db8ec0ef59109dc496e6cbbf8a5439032ab`                                                                                                                                                                             | Complete            | —                                                          |
+| T2.1           | Activity 1 — Baseline feature-proxy merges / 2wk               | R2.2                | `786 merges / 485.71 buckets = 1.62 / 2wk`                                                                                                                                                                                                         | Complete            | —                                                          |
+| T2.2           | Activity 1 — After feature-proxy merges / 2wk                  | R2.2                | `19 merges / 20.86 buckets = 0.91 / 2wk`                                                                                                                                                                                                           | Complete            | —                                                          |
+| T2.3           | Activity 1 — Multiplier (After / Baseline)                     | R2.2 (composite)    | `0.91 / 1.62 = 0.56×`                                                                                                                                                                                                                              | Complete            | —                                                          |
+| T2.4           | Activity 1 — Ramp-Up rate                                      | R2.2 (date bounded) | `15 merges / 6.43 buckets = 2.33 / 2wk`                                                                                                                                                                                                            | Complete            | —                                                          |
+| T2.5           | Activity 1 — Steady State rate                                 | R2.2 (date bounded) | `4 merges / 14.43 buckets = 0.28 / 2wk`                                                                                                                                                                                                            | Complete            | —                                                          |
+| T3.1           | Activity 2 — Baseline design-doc creations / quarter           | R3.1                | `Insufficient signal — no files matched ARCHITECTURE.md, tech-spec*, adr-*, or design-* patterns across the repository lifetime`                                                                                                                   | Insufficient signal | §8.2                                                       |
+| T3.2           | Activity 2 — After design-doc creations / quarter              | R3.1                | `Insufficient signal — no files matched ARCHITECTURE.md, tech-spec*, adr-*, or design-* patterns across the repository lifetime`                                                                                                                   | Insufficient signal | §8.2                                                       |
+| T4.1           | Activity 3 — Baseline non-bot merges / 2wk                     | R4.1                | `2659 merges / 485.71 buckets = 5.47 / 2wk`                                                                                                                                                                                                        | Complete            | —                                                          |
+| T4.2           | Activity 3 — After non-bot merges / 2wk                        | R4.1                | `75 merges / 20.86 buckets = 3.60 / 2wk`                                                                                                                                                                                                           | Complete            | —                                                          |
+| T4.3           | Activity 3 — Multiplier (After / Baseline)                     | R4.1 (composite)    | `3.60 / 5.47 = 0.66×`                                                                                                                                                                                                                              | Complete            | —                                                          |
+| T4.4           | Activity 3 — Ramp-Up rate                                      | R4.1 (date bounded) | `65 merges / 6.43 buckets = 10.11 / 2wk`                                                                                                                                                                                                           | Complete            | —                                                          |
+| T4.5           | Activity 3 — Steady State rate                                 | R4.1 (date bounded) | `10 merges / 14.43 buckets = 0.69 / 2wk`                                                                                                                                                                                                           | Complete            | —                                                          |
+| T5.1           | Activity 4 — Baseline test-file creations / 2wk                | R5.1                | `3 files / 485.71 buckets = 0.006 / 2wk`                                                                                                                                                                                                           | Complete            | §8.3 (Java `*Test.java` pattern blindspot)                 |
+| T5.2           | Activity 4 — After test-file creations / 2wk                   | R5.1                | `69 files / 20.86 buckets = 3.31 / 2wk`                                                                                                                                                                                                            | Complete            | —                                                          |
+| T5.3           | Activity 4 — Multiplier (After / Baseline)                     | R5.1 (composite)    | `3.31 / 0.006 = 535.62×`                                                                                                                                                                                                                           | Complete            | §8.3                                                       |
+| T5.4           | Activity 4 — Ramp-Up rate                                      | R5.1 (date bounded) | `0 files / 6.43 buckets = 0 / 2wk`                                                                                                                                                                                                                 | Complete            | —                                                          |
+| T5.5           | Activity 4 — Steady State rate                                 | R5.1 (date bounded) | `69 files / 14.43 buckets = 4.78 / 2wk`                                                                                                                                                                                                            | Complete            | —                                                          |
+| T6.1           | Activity 5 — Baseline doc creations / quarter                  | R6.1                | `12 files / 75 quarters = 0.16 / qtr`                                                                                                                                                                                                              | Complete            | —                                                          |
+| T6.2           | Activity 5 — After doc creations / quarter                     | R6.1                | `7 files / 5 quarters = 1.40 / qtr`                                                                                                                                                                                                                | Complete            | —                                                          |
+| T6.3           | Activity 5 — Multiplier (After / Baseline)                     | R6.1 (composite)    | `1.40 / 0.16 = 8.75×`                                                                                                                                                                                                                              | Complete            | —                                                          |
+| T6.4           | Activity 5 — Ramp-Up rate                                      | R6.1 (date bounded) | `0 files / 2 quarters touched = 0 / qtr`                                                                                                                                                                                                           | Complete            | —                                                          |
+| T6.5           | Activity 5 — Steady State rate                                 | R6.1 (date bounded) | `7 files / 4 quarters touched = 1.75 / qtr`                                                                                                                                                                                                        | Complete            | —                                                          |
+| T7.1           | Activity 6 — Baseline non-bot fix ratio                        | R7.1                | `2262 / 28961 = 7.81%`                                                                                                                                                                                                                             | Complete            | —                                                          |
+| T7.2           | Activity 6 — After non-bot fix ratio                           | R7.1                | `56 / 485 = 11.55%`                                                                                                                                                                                                                                | Complete            | —                                                          |
+| T7.3           | Activity 6 — Multiplier non-bot (After / Baseline)             | R7.1 (composite)    | `0.1155 / 0.0781 = 1.48×`                                                                                                                                                                                                                          | Complete            | —                                                          |
+| T7.4           | Activity 6 — Baseline unfiltered fix ratio                     | R7.1                | `2262 / 31601 = 7.16%`                                                                                                                                                                                                                             | Complete            | —                                                          |
+| T7.5           | Activity 6 — After unfiltered fix ratio                        | R7.1                | `56 / 988 = 5.67%`                                                                                                                                                                                                                                 | Complete            | —                                                          |
+| T7.6           | Activity 6 — Multiplier unfiltered (After / Baseline)          | R7.1 (composite)    | `0.0567 / 0.0716 = 0.79×`                                                                                                                                                                                                                          | Complete            | —                                                          |
+| T7.7           | Activity 6 — Ramp-Up non-bot ratio                             | R7.1 (date bounded) | `24 / 149 = 16.11%`                                                                                                                                                                                                                                | Complete            | —                                                          |
+| T7.8           | Activity 6 — Steady State non-bot ratio                        | R7.1 (date bounded) | `32 / 336 = 9.52%`                                                                                                                                                                                                                                 | Complete            | —                                                          |
+| T8.1           | Activity 7 — Baseline weighted rate (commits / engineer / 2wk) | R8.1                | `28961 / 5446 = 5.32 / eng / 2wk`                                                                                                                                                                                                                  | Complete            | —                                                          |
+| T8.2           | Activity 7 — After weighted rate                               | R8.1                | `485 / 164 = 2.96 / eng / 2wk`                                                                                                                                                                                                                     | Complete            | —                                                          |
+| T8.3           | Activity 7 — Multiplier weighted (After / Baseline)            | R8.1 (composite)    | `2.96 / 5.32 = 0.56×`                                                                                                                                                                                                                              | Complete            | —                                                          |
+| T8.4           | Activity 7 — Baseline simple-mean rate                         | R8.1                | `mean(per-bucket rates) = 7.75 / eng / 2wk`                                                                                                                                                                                                        | Complete            | —                                                          |
+| T8.5           | Activity 7 — After simple-mean rate                            | R8.1                | `mean(per-bucket rates) = 9.11 / eng / 2wk`                                                                                                                                                                                                        | Complete            | —                                                          |
+| T8.6           | Activity 7 — Multiplier simple-mean (After / Baseline)         | R8.1 (composite)    | `9.11 / 7.75 = 1.18×`                                                                                                                                                                                                                              | Complete            | —                                                          |
+| T8.7           | Activity 7 — Ramp-Up weighted rate                             | R8.1 (date bounded) | `2.62 / eng / 2wk`                                                                                                                                                                                                                                 | Complete            | —                                                          |
+| T8.8           | Activity 7 — Steady State weighted rate                        | R8.1 (date bounded) | `3.17 / eng / 2wk`                                                                                                                                                                                                                                 | Complete            | —                                                          |
+| T9.1           | Bot author identification                                      | R9.1                | `4 bot identities identified (renovate[bot], dependabot[bot], github-actions[bot], jenkins-release-bot); release-bot pattern retained in R9.1 filter as defense-in-depth but matches zero authors`                                                 | Complete            | —                                                          |
+| T9.2           | Per-engineer volume ranking                                    | R9.2                | `2-engineer After-period merge ranking sorted by volume descending (see §6.1); 10-engineer After-period non-merge ranking (see §6.2); anonymization rule recorded in decision-log.md per Decision D008 — identities not stored in any deliverable` | Complete            | —                                                          |
 
 Every Reproducibility Appendix command ID (R0.1, R0.2, R0.3, R0.4, R0.5, R0.6, R0.7, R0.8, R1.1, R1.2, R1.3, R2.1, R2.2, R3.1, R4.1, R5.1, R5.2, R6.1, R7.1, R8.1, R9.1, R9.2) is referenced by at least one row above. Rule 1 is satisfied: zero orphan requirements and zero orphan results.
 
@@ -291,10 +290,10 @@ This section satisfies Quality Gate 5. Engineer identifiers are anonymized per D
 
 Only 2 engineers produced at least one non-bot merge commit on `master` in the After period. Both are retained for the per-engineer breakdown.
 
-| Engineer | Baseline (merges / 2wk) | After (merges / 2wk) | Multiplier |
-|----------|--------------------------|------------------------|------------|
-| Engineer A | 156 merges / 485.71 = 0.321 | 70 merges / 20.86 = 3.356 | 10.45× |
-| Engineer B | 75 merges / 485.71 = 0.154 | 5 merges / 20.86 = 0.240 | 1.55× |
+| Engineer   | Baseline (merges / 2wk)     | After (merges / 2wk)      | Multiplier |
+| ---------- | --------------------------- | ------------------------- | ---------- |
+| Engineer A | 156 merges / 485.71 = 0.321 | 70 merges / 20.86 = 3.356 | 10.45×     |
+| Engineer B | 75 merges / 485.71 = 0.154  | 5 merges / 20.86 = 0.240  | 1.55×      |
 
 - **Range**: 1.55× – 10.45×.
 - **Median**: 6.00×.
@@ -306,18 +305,18 @@ Only 2 engineers produced at least one non-bot merge commit on `master` in the A
 
 Top 10 engineers by After-period non-bot non-merge commit volume. `Engineer A` is a first-time contributor in the After period (zero Baseline commits); the multiplier is rendered as `Insufficient signal — no Baseline commits (division by zero)` per Rule 2 because the denominator is zero. The deterministic anonymization rule (sort non-bot authors by After-period non-merge commit volume descending; assign `Engineer A` to the highest-volume contributor, `Engineer B` to the next, and so on) is documented in `decision-log.md` per Decision D008; the rule is recorded, the real-identity mapping is not, consistent with the Explainability project rule. `Range` and `Median` are computed over the subset of engineers with a valid (non-zero Baseline) multiplier, consistent with Rule 2.
 
-| Engineer | Baseline (commits / 2wk) | After (commits / 2wk) | Multiplier |
-|----------|---------------------------|-------------------------|------------|
-| Engineer A | 0 / 485.71 = 0.000 | 154 / 20.86 = 7.383 | Insufficient signal — no Baseline commits (division by zero) |
-| Engineer B | 372 / 485.71 = 0.766 | 55 / 20.86 = 2.637 | 3.44× |
-| Engineer C | 2725 / 485.71 = 5.610 | 26 / 20.86 = 1.246 | 0.22× |
-| Engineer D | 13 / 485.71 = 0.027 | 23 / 20.86 = 1.103 | 41.20× |
-| Engineer E | 131 / 485.71 = 0.270 | 20 / 20.86 = 0.959 | 3.55× |
-| Engineer F | 182 / 485.71 = 0.375 | 20 / 20.86 = 0.959 | 2.56× |
-| Engineer G | 48 / 485.71 = 0.099 | 15 / 20.86 = 0.719 | 7.28× |
-| Engineer H | 155 / 485.71 = 0.319 | 14 / 20.86 = 0.671 | 2.10× |
-| Engineer I | 210 / 485.71 = 0.432 | 13 / 20.86 = 0.623 | 1.44× |
-| Engineer J | 71 / 485.71 = 0.146 | 12 / 20.86 = 0.575 | 3.94× |
+| Engineer   | Baseline (commits / 2wk) | After (commits / 2wk) | Multiplier                                                   |
+| ---------- | ------------------------ | --------------------- | ------------------------------------------------------------ |
+| Engineer A | 0 / 485.71 = 0.000       | 154 / 20.86 = 7.383   | Insufficient signal — no Baseline commits (division by zero) |
+| Engineer B | 372 / 485.71 = 0.766     | 55 / 20.86 = 2.637    | 3.44×                                                        |
+| Engineer C | 2725 / 485.71 = 5.610    | 26 / 20.86 = 1.246    | 0.22×                                                        |
+| Engineer D | 13 / 485.71 = 0.027      | 23 / 20.86 = 1.103    | 41.20×                                                       |
+| Engineer E | 131 / 485.71 = 0.270     | 20 / 20.86 = 0.959    | 3.55×                                                        |
+| Engineer F | 182 / 485.71 = 0.375     | 20 / 20.86 = 0.959    | 2.56×                                                        |
+| Engineer G | 48 / 485.71 = 0.099      | 15 / 20.86 = 0.719    | 7.28×                                                        |
+| Engineer H | 155 / 485.71 = 0.319     | 14 / 20.86 = 0.671    | 2.10×                                                        |
+| Engineer I | 210 / 485.71 = 0.432     | 13 / 20.86 = 0.623    | 1.44×                                                        |
+| Engineer J | 71 / 485.71 = 0.146      | 12 / 20.86 = 0.575    | 3.94×                                                        |
 
 - **Range** (over 9 engineers with valid Baseline): 0.22× – 41.20×.
 - **Median** (over 9 engineers with valid Baseline): 3.44×.
@@ -336,20 +335,19 @@ Rates below use the same unit system as §4:
 - Activities 2, 5: per calendar quarter (Q1 / Q2 / Q3 / Q4) measured by quarter-labels touched per phase, per Decision D014.
 - Activity 6: fix-commit ratio (%) per period.
 
-| Activity | Baseline | Ramp-Up | Steady State | Multiplier (Steady State ÷ Baseline) |
-|----------|----------|---------|---------------|----------------------------------------|
-| 1 — Requirements Throughput (feature-proxy merges / 2wk, Medium) | 1.62 | 2.33 | 0.28 | 0.17× |
-| 2 — Architecture & Design (docs / qtr, Insufficient signal) | Insufficient signal — no files matched ARCHITECTURE.md, tech-spec*, adr-*, or design-* patterns across the repository lifetime | Insufficient signal — no files matched ARCHITECTURE.md, tech-spec*, adr-*, or design-* patterns across the repository lifetime | Insufficient signal — no files matched ARCHITECTURE.md, tech-spec*, adr-*, or design-* patterns across the repository lifetime | Insufficient signal — no files matched ARCHITECTURE.md, tech-spec*, adr-*, or design-* patterns across the repository lifetime |
-| 3 — Code Generation (non-bot merges / 2wk, High) | 5.47 | 10.11 | 0.69 | 0.13× |
-| 4 — Test Creation (files / 2wk, High, see §4.4 boundary) | 0.006 | 0.00 | 4.78 | 774.46× |
-| 5 — Documentation (docs / qtr, High) | 0.16 | 0.00 | 1.75 | 10.94× |
-| 6 — Defect Response non-bot (%, Medium) | 7.81% | 16.11% | 9.52% | 1.22× |
-| 6 — Defect Response unfiltered (%, Medium) | 7.16% | 6.94% | 4.98% | 0.70× |
-| 7 — Commit Throughput weighted (commits/engineer/2wk, High) | 5.32 | 2.62 | 3.17 | 0.60× |
-| 7 — Commit Throughput simple-mean (commits/engineer/2wk, High, supplementary) | 7.75 | 2.60 | 13.08 | 1.69× |
+| Activity                                                                      | Baseline                                                                                                                        | Ramp-Up                                                                                                                         | Steady State                                                                                                                    | Multiplier (Steady State ÷ Baseline)                                                                                            |
+| ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| 1 — Requirements Throughput (feature-proxy merges / 2wk, Medium)              | 1.62                                                                                                                            | 2.33                                                                                                                            | 0.28                                                                                                                            | 0.17×                                                                                                                           |
+| 2 — Architecture & Design (docs / qtr, Insufficient signal)                   | Insufficient signal — no files matched ARCHITECTURE.md, tech-spec*, adr-*, or design-\* patterns across the repository lifetime | Insufficient signal — no files matched ARCHITECTURE.md, tech-spec*, adr-*, or design-\* patterns across the repository lifetime | Insufficient signal — no files matched ARCHITECTURE.md, tech-spec*, adr-*, or design-\* patterns across the repository lifetime | Insufficient signal — no files matched ARCHITECTURE.md, tech-spec*, adr-*, or design-\* patterns across the repository lifetime |
+| 3 — Code Generation (non-bot merges / 2wk, High)                              | 5.47                                                                                                                            | 10.11                                                                                                                           | 0.69                                                                                                                            | 0.13×                                                                                                                           |
+| 4 — Test Creation (files / 2wk, High, see §4.4 boundary)                      | 0.006                                                                                                                           | 0.00                                                                                                                            | 4.78                                                                                                                            | 774.46×                                                                                                                         |
+| 5 — Documentation (docs / qtr, High)                                          | 0.16                                                                                                                            | 0.00                                                                                                                            | 1.75                                                                                                                            | 10.94×                                                                                                                          |
+| 6 — Defect Response non-bot (%, Medium)                                       | 7.81%                                                                                                                           | 16.11%                                                                                                                          | 9.52%                                                                                                                           | 1.22×                                                                                                                           |
+| 6 — Defect Response unfiltered (%, Medium)                                    | 7.16%                                                                                                                           | 6.94%                                                                                                                           | 4.98%                                                                                                                           | 0.70×                                                                                                                           |
+| 7 — Commit Throughput weighted (commits/engineer/2wk, High)                   | 5.32                                                                                                                            | 2.62                                                                                                                            | 3.17                                                                                                                            | 0.60×                                                                                                                           |
+| 7 — Commit Throughput simple-mean (commits/engineer/2wk, High, supplementary) | 7.75                                                                                                                            | 2.60                                                                                                                            | 13.08                                                                                                                           | 1.69×                                                                                                                           |
 
 Observations (factual-neutral): Activities 1 and 3 peak in Ramp-Up and decline in Steady State to values below their Baseline rates; Activities 4 and 5 are quiescent in Ramp-Up and concentrated in Steady State; Activity 6 (non-bot) is elevated throughout the After period relative to Baseline; Activity 7 is reported under both weighted and simple-mean aggregation per Decision D013, with the weighted rate declining in both After phases relative to Baseline. Phase-level divergence from the overall After/Baseline multipliers (§4) is explained by bucket weighting: the overall After multiplier is computed across the full 20.86-bucket After window, while Steady State multipliers here use the 14.43-bucket Steady-State-only window.
-
 
 ---
 
@@ -359,31 +357,31 @@ Observations (factual-neutral): Activities 1 and 3 peak in Ramp-Up and decline i
 
 No activity in this report is tagged Low confidence. The table below records the Medium-confidence activities (which the user prompt treats as warranting equivalent scrutiny under Rule 4).
 
-| Activity | Confidence | Risk Description | Severity |
-|----------|------------|------------------|----------|
-| 1 — Requirements Throughput | Medium | Primary feature-branch-naming heuristic returned zero matches; fallback rule (merges with ≥3 non-merge commits on merged-in branch) counts non-feature bulk merges. Overcount plausible. | Medium |
-| 6 — Defect Response | Medium | Keyword-based commit-message scan; word-boundary anchoring reduces false-positives but does not eliminate them; non-matching fix vocabulary (e.g., "correct", "patch", "resolve") is excluded. Direction of bias depends on team vocabulary, which may have evolved between Baseline and After. | Medium |
+| Activity                    | Confidence | Risk Description                                                                                                                                                                                                                                                                                | Severity |
+| --------------------------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| 1 — Requirements Throughput | Medium     | Primary feature-branch-naming heuristic returned zero matches; fallback rule (merges with ≥3 non-merge commits on merged-in branch) counts non-feature bulk merges. Overcount plausible.                                                                                                        | Medium   |
+| 6 — Defect Response         | Medium     | Keyword-based commit-message scan; word-boundary anchoring reduces false-positives but does not eliminate them; non-matching fix vocabulary (e.g., "correct", "patch", "resolve") is excluded. Direction of bias depends on team vocabulary, which may have evolved between Baseline and After. | Medium   |
 
 ### 8.2 Insufficient-Signal Gaps
 
-| Activity | Reason | Traceability Break Point |
-|----------|--------|---------------------------|
-| 2 — Architecture & Design | Strict pattern set (`ARCHITECTURE.md`, `tech-spec*`, `adr-*`, `design-*`) returned zero file-creation events across the 6800-day Baseline and the 292-day After window. Relaxing to `docs/technical-*` would yield 1 After creation and 0 Baseline creations but is not adopted per Decision D006 to preserve Rule 2 literalness. | T3.1, T3.2 |
+| Activity                  | Reason                                                                                                                                                                                                                                                                                                                            | Traceability Break Point |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| 2 — Architecture & Design | Strict pattern set (`ARCHITECTURE.md`, `tech-spec*`, `adr-*`, `design-*`) returned zero file-creation events across the 6800-day Baseline and the 292-day After window. Relaxing to `docs/technical-*` would yield 1 After creation and 0 Baseline creations but is not adopted per Decision D006 to preserve Rule 2 literalness. | T3.1, T3.2               |
 
 ### 8.3 Confounding Factors
 
-| Confounder | Severity | Affected Activities | Mitigation |
-|------------|----------|---------------------|------------|
-| Bot author activity (`renovate[bot]`, `dependabot[bot]`, `github-actions[bot]`, `jenkins-release-bot`, `release-bot`) | Medium | 3, 6, 7 | Excluded via email-suffix match per Decision D002. Activity 6 also reports an unfiltered ratio to surface the confounder effect. |
-| Activity 4 pattern scope — Java `<Class>Test.java` files invisible to user-specified globs | High | 4 | Boundary condition documented in §4.4. The repository contains 608 Java JUnit test files that follow the `<ClassName>Test.java` convention and are not counted. The Baseline therefore reflects only JavaScript `.spec.js` creations (3 files in 2020), causing the multiplier to overstate the acceleration relative to the de-facto team test-writing rate. The user-specified pattern set is preserved literally per the Agent Action Plan. |
-| Repository age (earliest commit `2006-11-05`) | Low | All | The 6800-day Baseline averages across 18.6 years of team composition, branching practice, and language stack changes. Reported as a composite average per §3.6. |
-| Branch-naming heuristic — absence of `feature/`, `feat/`, or `JENKINS-<NNN>` prefix | Medium | 1 | Primary heuristic returned zero; fallback rule (merges with ≥3 non-merge commits) applied per Decision D005. |
-| Branch rename (`master` → `main`) not detected at extraction time | Low | 3, 7 | Primary branch is `master` per Decision D011; `git branch -a` confirms no rename; Activity 3 and Activity 7 queries target `master` literally. If a historical rename occurred without leaving a detectable artefact, merge and commit counts could be understated. |
-| Merge-author vs. PR-author distinction | Low | 3, 6.1 | Merge commits reflect the merger, not the contributor. Per-engineer Activity 3 view (§6.1) is a maintainer-activity proxy. |
-| Partial 2-week buckets at Baseline/Ramp-Up and Ramp-Up/Steady-State boundaries | Low | 1, 3, 4, 6, 7 | Phase boundaries are day-precise; buckets straddling a boundary are attributed to the phase containing the bucket start. The effect is symmetric across phases. |
-| Active branch count deviation (6 observed vs. AAP-recorded 4) | Low | None directly; metadata only | Accounted for by remote tracking refs and symbolic ref visible at extraction time; has no impact on per-activity commit-history queries. |
-| Tool Introduction Date detection ambiguity (Copilot co-author trailer vs. `agent@blitzy.com` direct commits) | Medium | All | Resolved to the earliest AI signal (`2025-06-19` Copilot co-author) per Decision D001; the alternative anchor (`2026-02-19` `agent@blitzy.com` first commit) would compress the After window from 292 days to 46 days and would trigger Decision D010 (collapse to Post-Introduction). |
-| Simple-mean vs. weighted rate divergence for Activity 7 | Medium | 7 | Both values reported in §4.7 and §7. The weighted rate (headline, 0.56×) measures per-engineer-bucket productivity; the simple-mean rate (1.18×) measures the per-bucket ratio. The two measurements answer subtly different questions and are both valid under their respective scopes. |
+| Confounder                                                                                                            | Severity | Affected Activities          | Mitigation                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| --------------------------------------------------------------------------------------------------------------------- | -------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Bot author activity (`renovate[bot]`, `dependabot[bot]`, `github-actions[bot]`, `jenkins-release-bot`, `release-bot`) | Medium   | 3, 6, 7                      | Excluded via email-suffix match per Decision D002. Activity 6 also reports an unfiltered ratio to surface the confounder effect.                                                                                                                                                                                                                                                                                                               |
+| Activity 4 pattern scope — Java `<Class>Test.java` files invisible to user-specified globs                            | High     | 4                            | Boundary condition documented in §4.4. The repository contains 608 Java JUnit test files that follow the `<ClassName>Test.java` convention and are not counted. The Baseline therefore reflects only JavaScript `.spec.js` creations (3 files in 2020), causing the multiplier to overstate the acceleration relative to the de-facto team test-writing rate. The user-specified pattern set is preserved literally per the Agent Action Plan. |
+| Repository age (earliest commit `2006-11-05`)                                                                         | Low      | All                          | The 6800-day Baseline averages across 18.6 years of team composition, branching practice, and language stack changes. Reported as a composite average per §3.6.                                                                                                                                                                                                                                                                                |
+| Branch-naming heuristic — absence of `feature/`, `feat/`, or `JENKINS-<NNN>` prefix                                   | Medium   | 1                            | Primary heuristic returned zero; fallback rule (merges with ≥3 non-merge commits) applied per Decision D005.                                                                                                                                                                                                                                                                                                                                   |
+| Branch rename (`master` → `main`) not detected at extraction time                                                     | Low      | 3, 7                         | Primary branch is `master` per Decision D011; `git branch -a` confirms no rename; Activity 3 and Activity 7 queries target `master` literally. If a historical rename occurred without leaving a detectable artefact, merge and commit counts could be understated.                                                                                                                                                                            |
+| Merge-author vs. PR-author distinction                                                                                | Low      | 3, 6.1                       | Merge commits reflect the merger, not the contributor. Per-engineer Activity 3 view (§6.1) is a maintainer-activity proxy.                                                                                                                                                                                                                                                                                                                     |
+| Partial 2-week buckets at Baseline/Ramp-Up and Ramp-Up/Steady-State boundaries                                        | Low      | 1, 3, 4, 6, 7                | Phase boundaries are day-precise; buckets straddling a boundary are attributed to the phase containing the bucket start. The effect is symmetric across phases.                                                                                                                                                                                                                                                                                |
+| Active branch count deviation (6 observed vs. AAP-recorded 4)                                                         | Low      | None directly; metadata only | Accounted for by remote tracking refs and symbolic ref visible at extraction time; has no impact on per-activity commit-history queries.                                                                                                                                                                                                                                                                                                       |
+| Tool Introduction Date detection ambiguity (Copilot co-author trailer vs. `agent@blitzy.com` direct commits)          | Medium   | All                          | Resolved to the earliest AI signal (`2025-06-19` Copilot co-author) per Decision D001; the alternative anchor (`2026-02-19` `agent@blitzy.com` first commit) would compress the After window from 292 days to 46 days and would trigger Decision D010 (collapse to Post-Introduction).                                                                                                                                                         |
+| Simple-mean vs. weighted rate divergence for Activity 7                                                               | Medium   | 7                            | Both values reported in §4.7 and §7. The weighted rate (headline, 0.56×) measures per-engineer-bucket productivity; the simple-mean rate (1.18×) measures the per-bucket ratio. The two measurements answer subtly different questions and are both valid under their respective scopes.                                                                                                                                                       |
 
 ---
 
@@ -420,7 +418,6 @@ This analysis is a retrospective, quantitative measurement of git history under 
 - What non-git artifacts (design reviews, architectural discussions, pair-programming sessions) accompanied the observed commits.
 
 The report is a measurement, not a recommendation, and contains no prescriptive guidance.
-
 
 ---
 
@@ -508,6 +505,11 @@ git for-each-ref --format='%(refname:short) %(objectname)' refs/heads refs/remot
 ```bash
 # R2.2 — Fallback: merges on master with >= 3 non-merge commits on merged-in branch
 # Per 2-week Monday-aligned window (Decision D003). Parameterize period with --before / --after.
+# Extraction-timestamp ceiling: the After invocation bounds --before to the
+# recorded extraction timestamp per Decision D015 so post-extraction merges
+# do not inflate the After-period count on re-runs. Replace the pinned
+# timestamp below with the value recorded in §2 (Environment Verification).
+EXTRACT_TS='2026-04-22T00:50:25+00:00'
 # Baseline invocation example (--before=2025-06-19):
 git log master --merges --first-parent --format='%H %aI' --before=2025-06-19 \
   | while read h d; do
@@ -515,8 +517,8 @@ git log master --merges --first-parent --format='%H %aI' --before=2025-06-19 \
       if [ "${size:-0}" -ge 3 ]; then echo "$d $h $size"; fi
     done \
   | wc -l
-# After invocation example (--after=2025-06-19):
-git log master --merges --first-parent --format='%H %aI' --after=2025-06-19 \
+# After invocation example (--after=2025-06-19) — bounded by extraction-timestamp ceiling:
+git log master --merges --first-parent --format='%H %aI' --after=2025-06-19 --before="${EXTRACT_TS}" \
   | while read h d; do
       size=$(git rev-list --no-merges --count "${h}^1..${h}^2" 2>/dev/null || echo 0)
       if [ "${size:-0}" -ge 3 ]; then echo "$d $h $size"; fi
@@ -529,6 +531,12 @@ git log master --merges --first-parent --format='%H %aI' --after=2025-06-19 \
 ```bash
 # R3.1 — Design-document file-creation events per calendar quarter (Decision D006)
 # Returns zero rows for both Baseline and After partitions (Insufficient signal per Rule 2).
+# Extraction-timestamp ceiling: the After invocation bounds --before to the
+# recorded extraction timestamp per Decision D015 so post-extraction additions
+# of any newly-introduced design-doc file do not silently alter the After-period
+# count on re-runs. Replace the pinned timestamp below with the value recorded
+# in §2 (Environment Verification).
+EXTRACT_TS='2026-04-22T00:50:25+00:00'
 # Baseline (--before=2025-06-19):
 git log --all --diff-filter=A --name-only --format='%aI' --before=2025-06-19 -- \
   ':(glob)**/ARCHITECTURE.md' ':(glob)**/tech-spec*' ':(glob)**/adr-*' ':(glob)**/design-*' \
@@ -536,8 +544,8 @@ git log --all --diff-filter=A --name-only --format='%aI' --before=2025-06-19 -- 
   | grep -v '^20' \
   | sort -u \
   | wc -l
-# After (--after=2025-06-19):
-git log --all --diff-filter=A --name-only --format='%aI' --after=2025-06-19 -- \
+# After (--after=2025-06-19) — bounded by extraction-timestamp ceiling:
+git log --all --diff-filter=A --name-only --format='%aI' --after=2025-06-19 --before="${EXTRACT_TS}" -- \
   ':(glob)**/ARCHITECTURE.md' ':(glob)**/tech-spec*' ':(glob)**/adr-*' ':(glob)**/design-*' \
   | grep -v '^$' \
   | grep -v '^20' \
@@ -550,6 +558,11 @@ git log --all --diff-filter=A --name-only --format='%aI' --after=2025-06-19 -- \
 ```bash
 # R4.1 — Non-bot merges on master per 2-week window (Decision D002, D004)
 # Parameterize period with --before / --after. Bot filter applied via grep -v.
+# Extraction-timestamp ceiling: the After invocations bound --before to the
+# recorded extraction timestamp per Decision D015 so post-extraction merges
+# do not inflate the After-period count on re-runs. Replace the pinned
+# timestamp below with the value recorded in §2 (Environment Verification).
+EXTRACT_TS='2026-04-22T00:50:25+00:00'
 # Baseline invocation:
 git log master --merges --first-parent --format='%aI %H %ae' --before=2025-06-19 \
   | grep -v 'renovate\[bot\]' \
@@ -558,16 +571,16 @@ git log master --merges --first-parent --format='%aI %H %ae' --before=2025-06-19
   | grep -v 'jenkins-release-bot' \
   | grep -v 'release-bot' \
   | wc -l
-# After invocation:
-git log master --merges --first-parent --format='%aI %H %ae' --after=2025-06-19 \
+# After invocation — bounded by extraction-timestamp ceiling:
+git log master --merges --first-parent --format='%aI %H %ae' --after=2025-06-19 --before="${EXTRACT_TS}" \
   | grep -v 'renovate\[bot\]' \
   | grep -v 'dependabot\[bot\]' \
   | grep -v 'github-actions\[bot\]' \
   | grep -v 'jenkins-release-bot' \
   | grep -v 'release-bot' \
   | wc -l
-# Per-author segmentation (drives §6.1):
-git log master --merges --first-parent --format='%ae' --after=2025-06-19 \
+# Per-author segmentation (drives §6.1) — bounded by extraction-timestamp ceiling:
+git log master --merges --first-parent --format='%ae' --after=2025-06-19 --before="${EXTRACT_TS}" \
   | grep -v 'renovate\[bot\]' \
   | grep -v 'dependabot\[bot\]' \
   | grep -v 'github-actions\[bot\]' \
@@ -581,14 +594,20 @@ git log master --merges --first-parent --format='%ae' --after=2025-06-19 \
 ```bash
 # R5.1 — Test-file creation events per 2-week window
 # Uses the :(glob) pathspec prefix to ensure recursive matching across all directories.
+# Extraction-timestamp ceiling: the After invocation bounds --before to the
+# recorded extraction timestamp per Decision D015 so post-extraction file
+# additions do not inflate the After-period count on re-runs. Replace the
+# pinned timestamp below with the value recorded in §2 (Environment
+# Verification).
+EXTRACT_TS='2026-04-22T00:50:25+00:00'
 # Baseline invocation:
 git log --all --diff-filter=A --name-only --format='=%aI' --before=2025-06-19 -- \
   ':(glob)**/test_*' ':(glob)**/*_test.*' ':(glob)**/*.test.*' ':(glob)**/*.spec.*' \
   | awk '/^=/{d=$0; next} NF{print d" "$0}' \
   | sort -u \
   | wc -l
-# After invocation:
-git log --all --diff-filter=A --name-only --format='=%aI' --after=2025-06-19 -- \
+# After invocation — bounded by extraction-timestamp ceiling:
+git log --all --diff-filter=A --name-only --format='=%aI' --after=2025-06-19 --before="${EXTRACT_TS}" -- \
   ':(glob)**/test_*' ':(glob)**/*_test.*' ':(glob)**/*.test.*' ':(glob)**/*.spec.*' \
   | awk '/^=/{d=$0; next} NF{print d" "$0}' \
   | sort -u \
@@ -598,7 +617,10 @@ git log --all --diff-filter=A --name-only --format='=%aI' --after=2025-06-19 -- 
 ```bash
 # R5.2 — Supplementary: test-function addition count (not used as headline; Medium confidence)
 # Scans diff of each commit for lines beginning with common test-declaration patterns.
-git log --all --no-merges --format='%H %aI' --after=2025-06-19 \
+# Bounded by extraction-timestamp ceiling per Decision D015 so post-extraction
+# commits do not inflate the scanned-commit set on re-runs.
+EXTRACT_TS='2026-04-22T00:50:25+00:00'
+git log --all --no-merges --format='%H %aI' --after=2025-06-19 --before="${EXTRACT_TS}" \
   | while read h d; do
       n=$(git show "$h" --unified=0 --no-color -- \
         ':(glob)**/test_*' ':(glob)**/*_test.*' ':(glob)**/*.test.*' ':(glob)**/*.spec.*' 2>/dev/null \
@@ -640,6 +662,11 @@ git log --all --diff-filter=A --name-only --format= --after=2025-06-19 --before=
 # --no-merges is applied to every invocation so the denominator counts only
 # human-authored non-merge commits, matching Decision D004 (Activity 6 scope)
 # and the per-activity counts reported in §4.6 and §5 (T7.1–T7.5).
+# Extraction-timestamp ceiling: the After invocations bound --before to the
+# recorded extraction timestamp per Decision D015 so post-extraction commits
+# do not inflate the After-period count on re-runs. Replace the pinned
+# timestamp below with the value recorded in §2 (Environment Verification).
+EXTRACT_TS='2026-04-22T00:50:25+00:00'
 # Baseline invocation (non-bot):
 FIX_B=$(git log --all --no-merges --format='%aI %ae %s' --before=2025-06-19 \
   | grep -v 'renovate\[bot\]' | grep -v 'dependabot\[bot\]' \
@@ -650,21 +677,21 @@ TOT_B=$(git log --all --no-merges --format='%aI %ae' --before=2025-06-19 \
   | grep -v 'github-actions\[bot\]' | grep -v 'jenkins-release-bot' | grep -v 'release-bot' \
   | wc -l)
 python3 -c "print(f'{${FIX_B}/${TOT_B}:.4f}')"
-# After invocation (non-bot):
-FIX_A=$(git log --all --no-merges --format='%aI %ae %s' --after=2025-06-19 \
+# After invocation (non-bot) — bounded by extraction-timestamp ceiling:
+FIX_A=$(git log --all --no-merges --format='%aI %ae %s' --after=2025-06-19 --before="${EXTRACT_TS}" \
   | grep -v 'renovate\[bot\]' | grep -v 'dependabot\[bot\]' \
   | grep -v 'github-actions\[bot\]' | grep -v 'jenkins-release-bot' | grep -v 'release-bot' \
   | grep -iE '\b(fix|bugfix|hotfix|revert)\b' | wc -l)
-TOT_A=$(git log --all --no-merges --format='%aI %ae' --after=2025-06-19 \
+TOT_A=$(git log --all --no-merges --format='%aI %ae' --after=2025-06-19 --before="${EXTRACT_TS}" \
   | grep -v 'renovate\[bot\]' | grep -v 'dependabot\[bot\]' \
   | grep -v 'github-actions\[bot\]' | grep -v 'jenkins-release-bot' | grep -v 'release-bot' \
   | wc -l)
 python3 -c "print(f'{${FIX_A}/${TOT_A}:.4f}')"
-# Unfiltered (no bot exclusion) — produced for Rule 5 consistency:
+# Unfiltered (no bot exclusion) — produced for Rule 5 consistency; After bounded by ceiling:
 git log --all --no-merges --format='%s' --before=2025-06-19 | grep -iE '\b(fix|bugfix|hotfix|revert)\b' | wc -l
 git log --all --no-merges --format='%s' --before=2025-06-19 | wc -l
-git log --all --no-merges --format='%s' --after=2025-06-19 | grep -iE '\b(fix|bugfix|hotfix|revert)\b' | wc -l
-git log --all --no-merges --format='%s' --after=2025-06-19 | wc -l
+git log --all --no-merges --format='%s' --after=2025-06-19 --before="${EXTRACT_TS}" | grep -iE '\b(fix|bugfix|hotfix|revert)\b' | wc -l
+git log --all --no-merges --format='%s' --after=2025-06-19 --before="${EXTRACT_TS}" | wc -l
 ```
 
 ### Activity 7 — Commit Throughput (R8.1)
@@ -673,13 +700,19 @@ git log --all --no-merges --format='%s' --after=2025-06-19 | wc -l
 # R8.1 — Non-merge commits per active engineer per 2-week window (Decision D002, D004)
 # Active engineer := >= 1 non-merge commit in the 2-week window.
 # Parameterize period with --before / --after. Output format: "ISO_TIMESTAMP EMAIL".
+# Extraction-timestamp ceiling: the After invocation bounds --before to the
+# recorded extraction timestamp per Decision D015 so post-extraction commits
+# do not inflate the After-period non-merge count on re-runs. Replace the
+# pinned timestamp below with the value recorded in §2 (Environment
+# Verification).
+EXTRACT_TS='2026-04-22T00:50:25+00:00'
 # Baseline invocation:
 git log --all --no-merges --format='%aI %ae' --before=2025-06-19 \
   | grep -v 'renovate\[bot\]' | grep -v 'dependabot\[bot\]' \
   | grep -v 'github-actions\[bot\]' | grep -v 'jenkins-release-bot' | grep -v 'release-bot' \
   > /tmp/act7_baseline.txt
-# After invocation:
-git log --all --no-merges --format='%aI %ae' --after=2025-06-19 \
+# After invocation — bounded by extraction-timestamp ceiling:
+git log --all --no-merges --format='%aI %ae' --after=2025-06-19 --before="${EXTRACT_TS}" \
   | grep -v 'renovate\[bot\]' | grep -v 'dependabot\[bot\]' \
   | grep -v 'github-actions\[bot\]' | grep -v 'jenkins-release-bot' | grep -v 'release-bot' \
   > /tmp/act7_after.txt
@@ -732,16 +765,19 @@ git log --all --format='%ae' \
 
 ```bash
 # R9.2 — Per-engineer non-merge commit volume ranking (drives §6 anonymization, Decision D008)
+# Extraction-timestamp ceiling: the After invocation bounds --before to the
+# recorded extraction timestamp per Decision D015 so post-extraction commits
+# do not alter the Engineer A/B/C… ordering on re-runs, preserving the
+# deterministic anonymization map committed in decision-log.md.
+EXTRACT_TS='2026-04-22T00:50:25+00:00'
 # Baseline ranking:
 git log --all --no-merges --format='%ae' --before=2025-06-19 \
   | grep -v 'renovate\[bot\]' | grep -v 'dependabot\[bot\]' \
   | grep -v 'github-actions\[bot\]' | grep -v 'jenkins-release-bot' | grep -v 'release-bot' \
   | sort | uniq -c | sort -rn | head -20
-# After ranking (drives Engineer A/B/C… assignment):
-git log --all --no-merges --format='%ae' --after=2025-06-19 \
+# After ranking (drives Engineer A/B/C… assignment) — bounded by extraction-timestamp ceiling:
+git log --all --no-merges --format='%ae' --after=2025-06-19 --before="${EXTRACT_TS}" \
   | grep -v 'renovate\[bot\]' | grep -v 'dependabot\[bot\]' \
   | grep -v 'github-actions\[bot\]' | grep -v 'jenkins-release-bot' | grep -v 'release-bot' \
   | sort | uniq -c | sort -rn | head -20
 ```
-
-
