@@ -1,0 +1,1562 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta
+      name="description"
+      content="Executive presentation of the development acceleration analysis for Blitzy-Sandbox/blitzy-jenkins, derived from read-only git history."
+    />
+    <title>Acceleration Report — Blitzy-Sandbox/blitzy-jenkins</title>
+
+    <!-- Google Fonts: Inter (body), Space Grotesk (display), Fira Code (mono) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- reveal.js 5.1.0 (CSS assets pinned via Subresource Integrity) -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css"
+      integrity="sha384-AJKv9Ui5SfA0VsFksFI9GuA1ztX9Ca3CLP6HGfX4YY/tYSVodC+PUszaQZFIlkuy"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css"
+      integrity="sha384-YgvgKeZJykuztG+iQPoZHNZENTFZvOcOJ/uRzmJTje6GHYN9zAw+y5rx/L8MQKA/"
+      crossorigin="anonymous"
+    />
+
+    <!-- Blitzy Brand Theme (inline, self-contained) -->
+    <style>
+      :root {
+        --blitzy-primary: #5b39f3;
+        --blitzy-primary-dark: #2d1c77;
+        --blitzy-primary-navy: #1a105f;
+        --blitzy-primary-light: #7a6dec;
+        --blitzy-primary-deep: #4101db;
+        --blitzy-accent-teal: #94fad5;
+        --blitzy-surface-0: #ffffff;
+        --blitzy-surface-1: #f4eff6;
+        --blitzy-surface-2: #f2f0fe;
+        --blitzy-surface-3: #f5f5f5;
+        --blitzy-border: #d9d9d9;
+        --blitzy-border-soft: rgba(91, 57, 243, 0.18);
+        --blitzy-text: #333333;
+        --blitzy-text-muted: #999999;
+        --blitzy-text-invert: #ffffff;
+        --ff-body: "Inter", system-ui, sans-serif;
+        --ff-display: "Space Grotesk", "Inter", sans-serif;
+        --ff-mono: "Fira Code", "Courier New", monospace;
+        --gradient-hero: linear-gradient(
+          68deg,
+          #7a6dec 15.56%,
+          #5b39f3 62.74%,
+          #4101db 84.44%
+        );
+        --gradient-divider: linear-gradient(135deg, #2d1c77 0%, #5b39f3 100%);
+        --gradient-accent-bar: linear-gradient(90deg, #5b39f3 0%, #94fad5 100%);
+      }
+
+      /* Reveal base overrides */
+      .reveal {
+        font-family: var(--ff-body);
+        font-weight: 400;
+        color: var(--blitzy-text);
+        background: var(--blitzy-surface-0);
+      }
+
+      .reveal .slides {
+        text-align: left;
+      }
+
+      .reveal .slides > section,
+      .reveal .slides > section > section {
+        padding: 3rem 4rem;
+        box-sizing: border-box;
+        height: 100%;
+      }
+
+      .reveal h1,
+      .reveal h2,
+      .reveal h3,
+      .reveal h4 {
+        font-family: var(--ff-display);
+        color: var(--blitzy-text);
+        text-transform: none;
+        letter-spacing: -0.01em;
+        margin: 0 0 1.25rem 0;
+        line-height: 1.1;
+      }
+
+      .reveal h2 {
+        font-weight: 600;
+        font-size: 2.75rem;
+      }
+
+      .reveal h3 {
+        font-weight: 600;
+        font-size: 2rem;
+      }
+
+      .reveal p,
+      .reveal li {
+        font-family: var(--ff-body);
+        font-weight: 400;
+        font-size: 1.25rem;
+        line-height: 1.5;
+        color: var(--blitzy-text);
+      }
+
+      .reveal ul {
+        list-style: none;
+        padding-left: 0;
+        margin: 1rem 0;
+      }
+
+      .reveal ul li {
+        position: relative;
+        padding-left: 1.5rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .reveal ul li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.65rem;
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 50%;
+        background: var(--blitzy-primary);
+      }
+
+      .reveal code {
+        font-family: var(--ff-mono);
+        font-weight: 400;
+        font-size: 0.95em;
+        background: var(--blitzy-surface-2);
+        color: var(--blitzy-primary-dark);
+        padding: 0.125em 0.375em;
+        border-radius: 4px;
+      }
+
+      /* Eyebrow label (Fira Code, teal, uppercase) */
+      .eyebrow {
+        font-family: var(--ff-mono);
+        font-weight: 500;
+        font-size: 0.875rem;
+        color: var(--blitzy-accent-teal);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        margin-bottom: 1.5rem;
+        display: block;
+      }
+
+      .reveal .slide-content .eyebrow,
+      .reveal section .eyebrow {
+        color: var(--blitzy-primary);
+      }
+
+      /* Brand lockup */
+      .brand-lockup {
+        font-family: var(--ff-display);
+        font-weight: 600;
+        font-size: 1rem;
+        letter-spacing: 0.02em;
+        position: absolute;
+        left: 4rem;
+        bottom: 2rem;
+      }
+
+      /* Accent bar */
+      .accent-bar {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 8px;
+        background: var(--gradient-accent-bar);
+      }
+
+      /* ------------------- Title slide ------------------- */
+      .reveal .slide-title {
+        background: var(--gradient-hero);
+        color: var(--blitzy-text-invert);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 4rem 5rem;
+      }
+
+      .reveal .slide-title h1 {
+        font-family: var(--ff-display);
+        font-weight: 700;
+        font-size: 4.5rem;
+        color: var(--blitzy-text-invert);
+        line-height: 1.05;
+        margin-bottom: 1.25rem;
+        max-width: 80%;
+      }
+
+      .reveal .slide-title .subtitle {
+        font-family: var(--ff-body);
+        font-weight: 500;
+        font-size: 1.5rem;
+        color: rgba(255, 255, 255, 0.8);
+        max-width: 70%;
+        margin-bottom: 1rem;
+      }
+
+      .reveal .slide-title .timestamp {
+        font-family: var(--ff-mono);
+        font-weight: 400;
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin-top: 1rem;
+      }
+
+      .reveal .slide-title .hero-icon-wrap {
+        position: absolute;
+        top: 3rem;
+        right: 4rem;
+        color: var(--blitzy-text-invert);
+      }
+
+      .reveal .slide-title .hero-icon-wrap svg {
+        width: 64px;
+        height: 64px;
+        stroke: var(--blitzy-text-invert);
+        stroke-width: 1.5;
+      }
+
+      .reveal .slide-title .brand-lockup {
+        color: var(--blitzy-text-invert);
+      }
+
+      /* Title-slide eyebrow: Fira Code teal on hero gradient per AAP §0.4.3.
+       Specificity (0,3,0) wins over the generic .reveal section .eyebrow
+       override (0,2,1) so the eyebrow on slide-title renders accent teal
+       rather than primary purple. */
+      .reveal .slide-title .eyebrow {
+        color: var(--blitzy-accent-teal);
+      }
+
+      /* ------------------- Divider slides ------------------- */
+      .reveal .slide-divider {
+        background: var(--gradient-divider);
+        color: var(--blitzy-text-invert);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 4rem;
+      }
+
+      .reveal .slide-divider h2 {
+        font-family: var(--ff-display);
+        font-weight: 600;
+        font-size: 5rem;
+        color: var(--blitzy-text-invert);
+        margin: 1.5rem 0;
+        line-height: 1.05;
+      }
+
+      /* Lucide replaces <i data-lucide="x" class="hero-icon" aria-hidden="true"> with
+       <svg class="lucide lucide-x hero-icon">. Dimensions and color
+       must be applied to the svg (with class hero-icon) directly. */
+      .reveal .slide-divider .hero-icon {
+        width: 96px;
+        height: 96px;
+        color: var(--blitzy-accent-teal);
+        stroke: var(--blitzy-accent-teal);
+        stroke-width: 1.5;
+        margin-bottom: 2rem;
+      }
+
+      /* ------------------- Closing slide ------------------- */
+      .reveal .slide-closing {
+        background: var(--blitzy-primary-navy);
+        color: var(--blitzy-text-invert);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 4rem 5rem;
+      }
+
+      .reveal .slide-closing h2 {
+        font-family: var(--ff-display);
+        font-weight: 600;
+        font-size: 4rem;
+        color: var(--blitzy-text-invert);
+        margin-bottom: 2rem;
+        line-height: 1.1;
+        max-width: 85%;
+      }
+
+      .reveal .slide-closing p,
+      .reveal .slide-closing li {
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .reveal .slide-closing ul li::before {
+        background: var(--blitzy-accent-teal);
+      }
+
+      .reveal .slide-closing .brand-lockup {
+        color: var(--blitzy-text-invert);
+      }
+
+      .reveal .slide-closing .closing-icon-wrap {
+        position: absolute;
+        top: 3rem;
+        right: 4rem;
+      }
+
+      .reveal .slide-closing .closing-icon-wrap svg {
+        width: 96px;
+        height: 96px;
+        color: var(--blitzy-accent-teal);
+        stroke: var(--blitzy-accent-teal);
+        stroke-width: 1.5;
+      }
+
+      /* ------------------- KPI cards and grid ------------------- */
+      .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+      }
+
+      .kpi-card {
+        background: var(--blitzy-surface-1);
+        border: 1px solid var(--blitzy-border-soft);
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 2px 8px rgba(91, 57, 243, 0.04);
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        position: relative;
+      }
+
+      .kpi-card.insufficient {
+        background: var(--blitzy-surface-3);
+        border-color: var(--blitzy-border);
+      }
+
+      /* Lucide replaces the <i> with an <svg> carrying the original
+       class. Apply dimensions to the svg with class kpi-icon directly. */
+      .kpi-icon {
+        width: 32px;
+        height: 32px;
+        color: var(--blitzy-primary);
+        stroke: var(--blitzy-primary);
+        stroke-width: 2;
+      }
+
+      .kpi-card.insufficient .kpi-icon {
+        color: var(--blitzy-text-muted);
+        stroke: var(--blitzy-text-muted);
+      }
+
+      .kpi-value {
+        font-family: var(--ff-display);
+        font-weight: 700;
+        font-size: 3rem;
+        line-height: 1;
+        color: var(--blitzy-primary);
+      }
+
+      .kpi-card.insufficient .kpi-value {
+        font-family: var(--ff-body);
+        font-weight: 500;
+        font-size: 1rem;
+        color: var(--blitzy-text-muted);
+        line-height: 1.4;
+      }
+
+      .kpi-label {
+        font-family: var(--ff-body);
+        font-weight: 500;
+        font-size: 0.9375rem;
+        color: var(--blitzy-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .kpi-confidence {
+        font-family: var(--ff-mono);
+        font-weight: 500;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        padding: 0.25rem 0.75rem;
+        border-radius: 999px;
+        align-self: flex-start;
+      }
+
+      .kpi-confidence.high {
+        background: var(--blitzy-accent-teal);
+        color: var(--blitzy-primary-dark);
+      }
+
+      .kpi-confidence.medium {
+        background: var(--blitzy-surface-2);
+        color: var(--blitzy-primary-dark);
+        border: 1px solid var(--blitzy-border-soft);
+      }
+
+      .kpi-confidence.low {
+        background: var(--blitzy-border);
+        color: var(--blitzy-text);
+      }
+
+      .kpi-confidence.insufficient {
+        background: var(--blitzy-surface-3);
+        color: var(--blitzy-text-muted);
+        border: 1px solid var(--blitzy-border);
+      }
+
+      /* ------------------- Icon row ------------------- */
+      .icon-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        gap: 1.5rem;
+        margin: 2rem 0;
+      }
+
+      .icon-row > div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1.5rem 2rem;
+        background: var(--blitzy-surface-1);
+        border: 1px solid var(--blitzy-border-soft);
+        border-radius: 16px;
+        min-width: 220px;
+      }
+
+      .icon-row svg {
+        width: 48px;
+        height: 48px;
+        stroke-width: 1.75;
+      }
+
+      .icon-row .kpi-value {
+        font-size: 3.5rem;
+      }
+
+      .icon-row .kpi-label {
+        text-align: center;
+      }
+
+      .icon-row .conf-high svg {
+        stroke: #0e8a5b;
+        color: #0e8a5b;
+      }
+      .icon-row .conf-med svg {
+        stroke: var(--blitzy-primary);
+        color: var(--blitzy-primary);
+      }
+      .icon-row .conf-low svg {
+        stroke: var(--blitzy-text-muted);
+        color: var(--blitzy-text-muted);
+      }
+      .icon-row .conf-insufficient svg {
+        stroke: var(--blitzy-text-muted);
+        color: var(--blitzy-text-muted);
+      }
+
+      /* ------------------- Styled tables ------------------- */
+      table.styled {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: var(--ff-body);
+        font-size: 1rem;
+        margin-top: 1rem;
+        border: 1px solid var(--blitzy-border);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      table.styled thead tr {
+        background: var(--blitzy-primary);
+        color: var(--blitzy-text-invert);
+      }
+
+      table.styled thead th {
+        font-family: var(--ff-display);
+        font-weight: 600;
+        padding: 0.875rem 1rem;
+        text-align: left;
+        font-size: 1rem;
+      }
+
+      table.styled tbody tr:nth-child(even) {
+        background: var(--blitzy-surface-1);
+      }
+
+      table.styled tbody tr:nth-child(odd) {
+        background: var(--blitzy-surface-0);
+      }
+
+      table.styled tbody td {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid var(--blitzy-border);
+        color: var(--blitzy-text);
+        vertical-align: middle;
+      }
+
+      table.styled tbody td:first-child {
+        font-weight: 600;
+        color: var(--blitzy-primary-dark);
+      }
+
+      table.styled tfoot tr {
+        background: var(--blitzy-surface-2);
+        border-top: 2px solid var(--blitzy-primary);
+      }
+
+      table.styled tfoot td {
+        padding: 0.875rem 1rem;
+        font-family: var(--ff-mono);
+        font-size: 0.875rem;
+        color: var(--blitzy-primary-dark);
+        font-weight: 500;
+      }
+
+      table.styled .cell-insufficient {
+        font-family: var(--ff-body);
+        font-style: italic;
+        color: var(--blitzy-text-muted);
+        font-size: 0.875rem;
+      }
+
+      table.styled .cell-multiplier {
+        font-family: var(--ff-mono);
+        font-weight: 500;
+        color: var(--blitzy-primary);
+      }
+
+      table.styled .severity-high {
+        background: var(--blitzy-primary);
+        color: var(--blitzy-text-invert);
+        font-family: var(--ff-mono);
+        font-size: 0.75rem;
+        padding: 0.125rem 0.625rem;
+        border-radius: 999px;
+        display: inline-block;
+        letter-spacing: 0.06em;
+      }
+
+      table.styled .severity-medium {
+        background: var(--blitzy-surface-2);
+        color: var(--blitzy-primary-dark);
+        font-family: var(--ff-mono);
+        font-size: 0.75rem;
+        padding: 0.125rem 0.625rem;
+        border-radius: 999px;
+        display: inline-block;
+        letter-spacing: 0.06em;
+        border: 1px solid var(--blitzy-border-soft);
+      }
+
+      table.styled .severity-low {
+        background: var(--blitzy-surface-3);
+        color: var(--blitzy-text);
+        font-family: var(--ff-mono);
+        font-size: 0.75rem;
+        padding: 0.125rem 0.625rem;
+        border-radius: 999px;
+        display: inline-block;
+        letter-spacing: 0.06em;
+        border: 1px solid var(--blitzy-border);
+      }
+
+      /* ------------------- Flow Diagram (HTML/CSS, Inter font) ------------------- */
+      /* Used on Slide 3 per Decision D016: HTML/CSS with Lucide icons in place of
+       a Mermaid flowchart. Guarantees Inter font metrics and zero label
+       truncation. Horizontal chain of labelled steps separated by chevron
+       arrows, rendered entirely with reveal.js, Lucide, and CSS. */
+      .flow-diagram {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        justify-content: center;
+        gap: 0.375rem;
+        flex-wrap: nowrap;
+        padding: 1.5rem 0;
+        margin: 0.5rem auto 0;
+        max-width: 100%;
+      }
+
+      .flow-step {
+        flex: 1 1 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        background: var(--blitzy-surface-2);
+        border: 1px solid var(--blitzy-primary);
+        border-radius: 10px;
+        padding: 1.25rem 0.875rem;
+        text-align: center;
+        font-family: var(--ff-body);
+        font-weight: 500;
+        font-size: 0.9375rem;
+        line-height: 1.3;
+        color: var(--blitzy-text);
+        min-width: 0;
+      }
+
+      .flow-step .flow-step-icon {
+        width: 28px;
+        height: 28px;
+        color: var(--blitzy-primary);
+        stroke: var(--blitzy-primary);
+        stroke-width: 2;
+        flex-shrink: 0;
+      }
+
+      .flow-step .flow-step-label {
+        display: block;
+        white-space: normal;
+      }
+
+      .flow-arrow-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .flow-arrow-wrap .flow-arrow {
+        width: 20px;
+        height: 20px;
+        color: var(--blitzy-text-muted);
+        stroke: var(--blitzy-text-muted);
+        stroke-width: 2;
+      }
+
+      /* ------------------- Mermaid container ------------------- */
+      /* Applied to the `<pre class="mermaid">` block on Slide 3 (Extraction
+       Methodology flowchart). Mermaid 11.4.0 replaces the Mermaid-rendered
+       SVG inside the element; the wrapper provides centering, neutral
+       background, and a minimum height so the slide layout does not shift
+       while Mermaid renders asynchronously. Theme variables for colors
+       and the explicit Inter font family are configured in the
+       `mermaid.initialize(...)` call below, which mitigates the prior
+       font-metric race concern documented in Decision D016. */
+      .mermaid {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0.5rem auto 0;
+        padding: 0.75rem 0;
+        font-family: var(--ff-body);
+        background: transparent;
+        font-size: 0.9375rem;
+        color: var(--blitzy-text);
+        line-height: 1.3;
+        min-height: 220px;
+        max-width: 100%;
+        overflow: hidden;
+      }
+
+      .mermaid svg {
+        max-width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      /* Mermaid foreignObject clipping mitigation.
+       Reveal.js applies a scale(0.96) transform to the .slides container
+       at 1920x1080 viewport; the SVG scales uniformly with this transform
+       (rendered width = viewBox * scale), but HTML content inside
+       <foreignObject> renders at its native CSS pixel size. Mermaid 11.4.0
+       sizes the <foreignObject> width to match the measured text width in
+       SVG viewBox units, so after the reveal.js scale is applied the
+       foreignObject ends up ~4% narrower than the HTML text it contains,
+       producing trailing-character clipping (e.g., "Raw Git Histor" for
+       "Raw Git History") due to the default `overflow: hidden` on
+       foreignObject. Setting overflow: visible on both the foreignObject
+       and its inner <div> allows the few pixels of overflow to render
+       without altering Mermaid's layout or node geometry. The surrounding
+       <rect> of each node retains the full Mermaid-calculated width, so
+       the text remains visually centered inside its node border. */
+      .mermaid foreignObject {
+        overflow: visible;
+      }
+
+      .mermaid foreignObject > div {
+        overflow: visible;
+      }
+
+      /* ------------------- Methodology callout ------------------- */
+      .callout {
+        background: var(--blitzy-surface-2);
+        border-left: 4px solid var(--blitzy-primary);
+        padding: 1rem 1.5rem;
+        border-radius: 4px;
+        margin-top: 1.5rem;
+        font-family: var(--ff-body);
+        font-size: 1rem;
+        color: var(--blitzy-text);
+      }
+
+      .callout .callout-label {
+        font-family: var(--ff-mono);
+        font-weight: 500;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--blitzy-primary);
+        display: block;
+        margin-bottom: 0.375rem;
+      }
+
+      .callout code {
+        font-family: var(--ff-mono);
+        font-weight: 500;
+        color: var(--blitzy-primary-dark);
+        background: var(--blitzy-surface-0);
+      }
+
+      /* ------------------- Reveal.js controls & progress ------------------- */
+      .reveal .controls {
+        color: var(--blitzy-primary);
+      }
+      .reveal .progress {
+        color: var(--blitzy-primary);
+        background: var(--blitzy-border);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <!-- ================================================================
+           Slide 1 — Title Slide
+           ================================================================ -->
+        <section class="slide-title">
+          <div class="hero-icon-wrap">
+            <i data-lucide="activity" aria-hidden="true"></i>
+          </div>
+          <div class="eyebrow">Acceleration Report</div>
+          <h1>Jenkins Core Engineering Velocity</h1>
+          <p class="subtitle">
+            Before AI vs. After AI — Git-Derived Quantitative Analysis
+          </p>
+          <p class="timestamp">Extracted 2026-04-22T00:50:25+00:00</p>
+          <div class="brand-lockup">Blitzy · Blitzy-Sandbox/blitzy-jenkins</div>
+          <div class="accent-bar"></div>
+        </section>
+
+        <!-- ================================================================
+           Slide 2 — Headline Multipliers (KPI grid)
+           ================================================================ -->
+        <section>
+          <div class="eyebrow">Executive Summary</div>
+          <h2>Headline Multipliers</h2>
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <i
+                class="kpi-icon"
+                data-lucide="check-circle"
+                aria-hidden="true"
+              ></i>
+              <div class="kpi-value">535.62&times;</div>
+              <div class="kpi-label">Activity 4 — Test Creation</div>
+              <span class="kpi-confidence high">High</span>
+            </div>
+            <div class="kpi-card">
+              <i
+                class="kpi-icon"
+                data-lucide="file-text"
+                aria-hidden="true"
+              ></i>
+              <div class="kpi-value">8.75&times;</div>
+              <div class="kpi-label">Activity 5 — Documentation</div>
+              <span class="kpi-confidence high">High</span>
+            </div>
+            <div class="kpi-card">
+              <i class="kpi-icon" data-lucide="bug" aria-hidden="true"></i>
+              <div class="kpi-value">1.48&times;</div>
+              <div class="kpi-label">
+                Activity 6 — Defect Response (non-bot)
+              </div>
+              <span class="kpi-confidence medium">Medium</span>
+            </div>
+            <div class="kpi-card">
+              <i
+                class="kpi-icon"
+                data-lucide="git-commit"
+                aria-hidden="true"
+              ></i>
+              <div class="kpi-value">0.56&times;</div>
+              <div class="kpi-label">
+                Activity 7 — Commit Throughput (weighted)
+              </div>
+              <span class="kpi-confidence high">High</span>
+            </div>
+          </div>
+          <div class="brand-lockup">Blitzy · Blitzy-Sandbox/blitzy-jenkins</div>
+        </section>
+
+        <!-- ================================================================
+           Slide 3 — Methodology Overview (Mermaid 11.4.0 flowchart LR)
+           ================================================================ -->
+        <section>
+          <div class="eyebrow">Read-only git history mining</div>
+          <h2>Extraction Methodology</h2>
+          <!-- Mermaid 11.4.0 flowchart (per AAP §0.4.3 "Methodology flow"
+             and §0.10.3 "Mermaid integration"). Raw Mermaid syntax lives
+             inside <pre class="mermaid">; Mermaid replaces the <pre> with
+             an inline <svg> after mermaid.run() is called by
+             renderVisuals(). Theme variables preserve the Blitzy palette
+             (primaryColor, primaryBorderColor, lineColor) and explicit
+             `fontFamily: 'Inter'` prevents the font-metric race that
+             originally motivated Decision D016's previous omission. -->
+          <pre class="mermaid" aria-label="Extraction pipeline flowchart">
+flowchart LR
+    A["Raw Git History"] --&gt; B["Extraction Commands"]
+    B --&gt; C["Per-Activity Values"]
+    C --&gt; D["Multipliers"]
+    D --&gt; E["Confidence Tags"]
+    E --&gt; F["Report Sections"]
+</pre
+          >
+          <div class="callout">
+            <strong>Tool Introduction Date:</strong>
+            2025-06-19 &nbsp;&middot;&nbsp; Detection method per Decision
+            <code>D001</code>
+            : earliest
+            <code>Co-authored-by: Copilot</code>
+            trailer (commit
+            <code>c701361ec7bc9aa58d7745de6291a01b3d7abbe4</code>
+            ).
+          </div>
+        </section>
+
+        <!-- ================================================================
+           Slide 4 — Section Divider: Per-Activity Results
+           ================================================================ -->
+        <section class="slide-divider">
+          <i class="hero-icon" data-lucide="layers" aria-hidden="true"></i>
+          <h2>Per-Activity Results</h2>
+        </section>
+
+        <!-- ================================================================
+           Slide 5 — Activities 1 to 3 (KPI grid)
+           ================================================================ -->
+        <section>
+          <div class="eyebrow">Per-Activity Multipliers</div>
+          <h2>Activities 1 &mdash; 3</h2>
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <i
+                class="kpi-icon"
+                data-lucide="git-branch"
+                aria-hidden="true"
+              ></i>
+              <div class="kpi-value">0.56&times;</div>
+              <div class="kpi-label">Activity 1 — Requirements Throughput</div>
+              <span class="kpi-confidence medium">Medium</span>
+            </div>
+            <div class="kpi-card insufficient">
+              <i
+                class="kpi-icon"
+                data-lucide="layout-grid"
+                aria-hidden="true"
+              ></i>
+              <!-- Rule 2 (AAP §0.10.1) literal format: `Insufficient signal — [specific reason]`.
+                 Brief reason rendered inline per Decision D009; full rationale (strict
+                 file-pattern scope) is expanded in the callout-note immediately below
+                 the KPI grid and matches `acceleration-report.md` §4.2 verbatim. -->
+              <div class="kpi-value">
+                Insufficient signal &mdash; no matching files
+              </div>
+              <div class="kpi-label">
+                Activity 2 — Architecture &amp; Design
+              </div>
+              <span class="kpi-confidence insufficient">Insufficient</span>
+            </div>
+            <div class="kpi-card">
+              <i
+                class="kpi-icon"
+                data-lucide="git-merge"
+                aria-hidden="true"
+              ></i>
+              <div class="kpi-value">0.66&times;</div>
+              <div class="kpi-label">Activity 3 — Code Generation</div>
+              <span class="kpi-confidence high">High</span>
+            </div>
+          </div>
+          <p class="callout-note">
+            Activity 2 rendered as literal
+            <code>Insufficient signal</code>
+            — no files matched
+            <code>ARCHITECTURE.md</code>
+            ,
+            <code>tech-spec*</code>
+            ,
+            <code>adr-*</code>
+            , or
+            <code>design-*</code>
+            patterns across the repository lifetime.
+          </p>
+          <div class="brand-lockup">Blitzy · Blitzy-Sandbox/blitzy-jenkins</div>
+        </section>
+
+        <!-- ================================================================
+           Slide 6 — Activities 4 to 7 (KPI grid)
+           ================================================================ -->
+        <section>
+          <div class="eyebrow">Per-Activity Multipliers</div>
+          <h2>Activities 4 &mdash; 7</h2>
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <i
+                class="kpi-icon"
+                data-lucide="check-circle"
+                aria-hidden="true"
+              ></i>
+              <div class="kpi-value">535.62&times;</div>
+              <div class="kpi-label">Activity 4 — Test Creation</div>
+              <span class="kpi-confidence high">High</span>
+            </div>
+            <div class="kpi-card">
+              <i
+                class="kpi-icon"
+                data-lucide="file-text"
+                aria-hidden="true"
+              ></i>
+              <div class="kpi-value">8.75&times;</div>
+              <div class="kpi-label">Activity 5 — Documentation</div>
+              <span class="kpi-confidence high">High</span>
+            </div>
+            <div class="kpi-card">
+              <i class="kpi-icon" data-lucide="bug" aria-hidden="true"></i>
+              <div class="kpi-value">1.48&times;</div>
+              <div class="kpi-label">
+                Activity 6 — Defect Response (non-bot)
+              </div>
+              <span class="kpi-confidence medium">Medium</span>
+            </div>
+            <div class="kpi-card">
+              <i
+                class="kpi-icon"
+                data-lucide="git-commit"
+                aria-hidden="true"
+              ></i>
+              <div class="kpi-value">0.56&times;</div>
+              <div class="kpi-label">
+                Activity 7 — Commit Throughput (weighted)
+              </div>
+              <span class="kpi-confidence high">High</span>
+            </div>
+          </div>
+          <div class="brand-lockup">Blitzy · Blitzy-Sandbox/blitzy-jenkins</div>
+        </section>
+
+        <!-- ================================================================
+           Slide 7 — Section Divider: Temporal Acceleration
+           ================================================================ -->
+        <section class="slide-divider">
+          <i class="hero-icon" data-lucide="trending-up" aria-hidden="true"></i>
+          <h2>Temporal Acceleration</h2>
+        </section>
+
+        <!-- ================================================================
+           Slide 8 — Acceleration Curve (styled table)
+           ================================================================ -->
+        <section>
+          <div class="eyebrow">Baseline &rarr; Ramp-Up &rarr; Steady State</div>
+          <h2>Acceleration Curve</h2>
+          <table class="styled">
+            <thead>
+              <tr>
+                <th>Activity</th>
+                <th>Baseline</th>
+                <th>Ramp-Up</th>
+                <th>Steady State</th>
+                <th>Steady &divide; Baseline</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  1 — Req Throughput
+                  <span class="kpi-confidence medium">Medium</span>
+                </td>
+                <td>1.62</td>
+                <td>2.33</td>
+                <td>0.28</td>
+                <td class="cell-multiplier">0.17&times;</td>
+              </tr>
+              <tr>
+                <!-- Rule 2 (AAP §0.10.1) literal format rendered inline in every
+                   cell: `Insufficient signal — [specific reason]`. Brief reason
+                   matches the KPI card on Slide 4 and the Engineer A row on
+                   Slide 10 for internal consistency (Rule 8). Full rationale
+                   (no files matched ARCHITECTURE.md, tech-spec*, adr-*, or
+                   design-* patterns) is repeated in the tfoot annotation below
+                   and matches `acceleration-report.md` §4.2 and §7 verbatim. -->
+                <td>
+                  2 — Arch &amp; Design
+                  <span class="kpi-confidence insufficient">Insufficient</span>
+                </td>
+                <td class="cell-insufficient">
+                  Insufficient signal &mdash; no matching files
+                </td>
+                <td class="cell-insufficient">
+                  Insufficient signal &mdash; no matching files
+                </td>
+                <td class="cell-insufficient">
+                  Insufficient signal &mdash; no matching files
+                </td>
+                <td class="cell-insufficient">
+                  Insufficient signal &mdash; no matching files
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  3 — Code Gen
+                  <span class="kpi-confidence high">High</span>
+                </td>
+                <td>5.47</td>
+                <td>10.11</td>
+                <td>0.69</td>
+                <td class="cell-multiplier">0.13&times;</td>
+              </tr>
+              <tr>
+                <td>
+                  4 — Test Creation
+                  <span class="kpi-confidence high">High</span>
+                </td>
+                <td>0.006</td>
+                <td>0.00</td>
+                <td>4.78</td>
+                <td class="cell-multiplier">774.46&times;</td>
+              </tr>
+              <tr>
+                <td>
+                  5 — Documentation
+                  <span class="kpi-confidence high">High</span>
+                </td>
+                <td>0.16</td>
+                <td>0.00</td>
+                <td>1.75</td>
+                <td class="cell-multiplier">10.94&times;</td>
+              </tr>
+              <tr>
+                <td>
+                  6 — Defect Response non-bot
+                  <span class="kpi-confidence medium">Medium</span>
+                </td>
+                <td>7.81%</td>
+                <td>16.11%</td>
+                <td>9.52%</td>
+                <td class="cell-multiplier">1.22&times;</td>
+              </tr>
+              <tr>
+                <td>
+                  6 — Defect Response unfiltered
+                  <span class="kpi-confidence medium">Medium</span>
+                </td>
+                <td>7.16%</td>
+                <td>6.94%</td>
+                <td>4.98%</td>
+                <td class="cell-multiplier">0.70&times;</td>
+              </tr>
+              <tr>
+                <td>
+                  7 — Commit Throughput weighted
+                  <span class="kpi-confidence high">High</span>
+                </td>
+                <td>5.32</td>
+                <td>2.62</td>
+                <td>3.17</td>
+                <td class="cell-multiplier">0.60&times;</td>
+              </tr>
+              <tr>
+                <td>
+                  7 — Commit Throughput simple-mean (supplementary)
+                  <span class="kpi-confidence high">High</span>
+                </td>
+                <td>7.75</td>
+                <td>2.60</td>
+                <td>13.08</td>
+                <td class="cell-multiplier">1.69&times;</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="5">
+                  Activity 2 cells rendered as literal
+                  <code>Insufficient signal</code>
+                  per Rule 2 &mdash; no files matched
+                  <code>ARCHITECTURE.md</code>
+                  ,
+                  <code>tech-spec*</code>
+                  ,
+                  <code>adr-*</code>
+                  , or
+                  <code>design-*</code>
+                  patterns across the repository lifetime.
+                </td>
+              </tr>
+              <tr>
+                <td colspan="5">
+                  Activities 6 and 7 dual-reported per Decisions D012 and D013
+                  to expose bot-filtering and aggregation sensitivity. Decision
+                  D010 (collapse to Post-Introduction) not triggered: 292-day
+                  After window exceeds 90-day threshold.
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </section>
+
+        <!-- ================================================================
+           Slide 9 — Section Divider: Per-Engineer View
+           ================================================================ -->
+        <section class="slide-divider">
+          <i class="hero-icon" data-lucide="users" aria-hidden="true"></i>
+          <h2>Per-Engineer View</h2>
+        </section>
+
+        <!-- ================================================================
+           Slide 10 — Activity 3 Per-Engineer (anonymized styled table)
+           ================================================================ -->
+        <section>
+          <div class="eyebrow">
+            Activity 3 &middot; Engineers A, B &middot; Anonymized
+          </div>
+          <h2>Code Generation &mdash; Per-Engineer Multipliers</h2>
+          <table class="styled">
+            <thead>
+              <tr>
+                <th>Engineer</th>
+                <th>Baseline (PRs / 2wk)</th>
+                <th>After (PRs / 2wk)</th>
+                <th>Multiplier</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Engineer A</td>
+                <td>0.321</td>
+                <td>3.356</td>
+                <td class="cell-multiplier">10.45&times;</td>
+              </tr>
+              <tr>
+                <td>Engineer B</td>
+                <td>0.154</td>
+                <td>0.240</td>
+                <td class="cell-multiplier">1.55&times;</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="4">
+                  Range: 1.55&times; &ndash; 10.45&times; &nbsp;&middot;&nbsp;
+                  Median: 6.00&times;
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+          <p class="callout-note">
+            Measures maintainer merge activity to
+            <code>master</code>
+            , not individual PR authorship.
+          </p>
+        </section>
+
+        <!-- ================================================================
+           Slide 11 — Activity 7 Per-Engineer (anonymized styled table)
+           ================================================================ -->
+        <section>
+          <div class="eyebrow">
+            Activity 7 &middot; Engineers A&ndash;J &middot; Normalizes for team
+            growth
+          </div>
+          <h2>Commit Throughput &mdash; Per-Engineer Multipliers</h2>
+          <table class="styled">
+            <thead>
+              <tr>
+                <th>Engineer</th>
+                <th>Baseline (commits / 2wk)</th>
+                <th>After (commits / 2wk)</th>
+                <th>Multiplier</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Engineer A</td>
+                <td>0.000</td>
+                <td>7.383</td>
+                <td class="cell-insufficient">
+                  Insufficient signal &mdash; no Baseline commits (division by
+                  zero)
+                </td>
+              </tr>
+              <tr>
+                <td>Engineer B</td>
+                <td>0.766</td>
+                <td>2.637</td>
+                <td class="cell-multiplier">3.44&times;</td>
+              </tr>
+              <tr>
+                <td>Engineer C</td>
+                <td>5.610</td>
+                <td>1.246</td>
+                <td class="cell-multiplier">0.22&times;</td>
+              </tr>
+              <tr>
+                <td>Engineer D</td>
+                <td>0.027</td>
+                <td>1.103</td>
+                <td class="cell-multiplier">41.20&times;</td>
+              </tr>
+              <tr>
+                <td>Engineer E</td>
+                <td>0.270</td>
+                <td>0.959</td>
+                <td class="cell-multiplier">3.55&times;</td>
+              </tr>
+              <tr>
+                <td>Engineer F</td>
+                <td>0.375</td>
+                <td>0.959</td>
+                <td class="cell-multiplier">2.56&times;</td>
+              </tr>
+              <tr>
+                <td>Engineer G</td>
+                <td>0.099</td>
+                <td>0.719</td>
+                <td class="cell-multiplier">7.28&times;</td>
+              </tr>
+              <tr>
+                <td>Engineer H</td>
+                <td>0.319</td>
+                <td>0.671</td>
+                <td class="cell-multiplier">2.10&times;</td>
+              </tr>
+              <tr>
+                <td>Engineer I</td>
+                <td>0.432</td>
+                <td>0.623</td>
+                <td class="cell-multiplier">1.44&times;</td>
+              </tr>
+              <tr>
+                <td>Engineer J</td>
+                <td>0.146</td>
+                <td>0.575</td>
+                <td class="cell-multiplier">3.94&times;</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="4">
+                  Range (9 engineers with valid Baseline): 0.22&times; &ndash;
+                  41.20&times; &nbsp;&middot;&nbsp; Median: 3.44&times;
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </section>
+
+        <!-- ================================================================
+           Slide 12 — Section Divider: Confidence & Risk
+           ================================================================ -->
+        <section class="slide-divider">
+          <i
+            class="hero-icon"
+            data-lucide="shield-alert"
+            aria-hidden="true"
+          ></i>
+          <h2>Confidence &amp; Risk</h2>
+        </section>
+
+        <!-- ================================================================
+           Slide 13 — Confidence Distribution (icon row + counts)
+           ================================================================ -->
+        <section>
+          <div class="eyebrow">Distribution across 7 activities</div>
+          <h2>Confidence Distribution</h2>
+          <div class="icon-row">
+            <div class="icon-row-cell">
+              <i data-lucide="shield-check" aria-hidden="true"></i>
+              <div class="kpi-value">4</div>
+              <div class="kpi-label">High</div>
+            </div>
+            <div class="icon-row-cell">
+              <i data-lucide="shield" aria-hidden="true"></i>
+              <div class="kpi-value">2</div>
+              <div class="kpi-label">Medium</div>
+            </div>
+            <div class="icon-row-cell">
+              <i data-lucide="shield-alert" aria-hidden="true"></i>
+              <div class="kpi-value">0</div>
+              <div class="kpi-label">Low</div>
+            </div>
+            <div class="icon-row-cell">
+              <i data-lucide="minus-circle" aria-hidden="true"></i>
+              <div class="kpi-value">1</div>
+              <div class="kpi-label">Insufficient</div>
+            </div>
+          </div>
+          <p class="callout-note">
+            High: Activities 3, 4, 5, 7 &nbsp;&middot;&nbsp; Medium: Activities
+            1, 6 &nbsp;&middot;&nbsp; Insufficient: Activity 2
+          </p>
+        </section>
+
+        <!-- ================================================================
+           Slide 14 — Risks & Confounders (styled table)
+           ================================================================ -->
+        <section>
+          <div class="eyebrow">Boundary conditions &amp; mitigations</div>
+          <h2>Risks &amp; Confounders</h2>
+          <table class="styled">
+            <thead>
+              <tr>
+                <th>Risk</th>
+                <th>Severity</th>
+                <th>Mitigation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  Activity 4 pattern scope excludes 608 Java
+                  <code>&lt;Class&gt;Test.java</code>
+                  files
+                </td>
+                <td><span class="severity-high">High</span></td>
+                <td>Multiplier overstated; boundary noted in Section 4.4</td>
+              </tr>
+              <tr>
+                <td>
+                  Bot author activity (
+                  <code>renovate</code>
+                  ,
+                  <code>dependabot</code>
+                  ,
+                  <code>github-actions</code>
+                  ,
+                  <code>jenkins-release-bot</code>
+                  )
+                </td>
+                <td><span class="severity-medium">Medium</span></td>
+                <td>Bots excluded from Activities 3, 6, 7 per Decision D002</td>
+              </tr>
+              <tr>
+                <td>Branch-naming heuristic brittleness for Activity 1</td>
+                <td><span class="severity-medium">Medium</span></td>
+                <td>
+                  Fallback to &ge;3-commit merged branches per Decision D005
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Tool Introduction Date detection ambiguity (Copilot vs.
+                  <code>agent@blitzy.com</code>
+                  )
+                </td>
+                <td><span class="severity-medium">Medium</span></td>
+                <td>Earliest Copilot trailer chosen per Decision D001</td>
+              </tr>
+              <tr>
+                <td>Simple-mean vs. weighted divergence in Activity 7</td>
+                <td><span class="severity-medium">Medium</span></td>
+                <td>
+                  Both figures published (0.56&times; weighted vs. 1.18&times;
+                  simple-mean)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ================================================================
+           Slide 15 — Limitations (max 4 bullets)
+           ================================================================ -->
+        <section>
+          <div class="eyebrow">What this analysis cannot determine</div>
+          <h2>Limitations</h2>
+          <ul>
+            <li>
+              <i data-lucide="alert-octagon" aria-hidden="true"></i>
+              &nbsp; Git history is the sole input source
+            </li>
+            <li>
+              <i data-lucide="info" aria-hidden="true"></i>
+              &nbsp; Heuristic activities carry boundary conditions
+            </li>
+            <li>
+              <i data-lucide="help-circle" aria-hidden="true"></i>
+              &nbsp; Causation is out of scope; tone is factual-neutral
+            </li>
+            <li>
+              <i data-lucide="check-circle" aria-hidden="true"></i>
+              &nbsp; Values are computed, never estimated or fabricated
+            </li>
+          </ul>
+          <div class="brand-lockup">Blitzy · Blitzy-Sandbox/blitzy-jenkins</div>
+        </section>
+
+        <!-- ================================================================
+           Slide 16 — Closing
+           ================================================================ -->
+        <section class="slide-closing">
+          <div class="closing-icon-wrap">
+            <i data-lucide="check" aria-hidden="true"></i>
+          </div>
+          <h2>Measured. Traced. Reproducible.</h2>
+          <ul>
+            <li>
+              Open
+              <code>acceleration-report.md</code>
+              for full analysis
+            </li>
+            <li>Re-run commands in Reproducibility Appendix to verify</li>
+            <li>Every metric traces Requirement &rarr; Command &rarr; Value</li>
+          </ul>
+          <div class="brand-lockup">Blitzy · Blitzy-Sandbox/blitzy-jenkins</div>
+          <div class="accent-bar"></div>
+        </section>
+      </div>
+      <!-- /.slides -->
+    </div>
+    <!-- /.reveal -->
+
+    <!-- CDN-pinned dependencies: reveal.js 5.1.0, mermaid 11.4.0, lucide 0.460.0
+       per AAP §0.6.1 and §0.10.3 (Executive Presentation project rule).
+       Mermaid 11.4.0 is loaded to drive the Slide 3 extraction-pipeline
+       flowchart (<pre class="mermaid">). Per Decision D016 (revised after
+       QA checkpoint 4 feedback), the Slide 8 Acceleration Curve continues
+       to render as a styled <table> under AAP §0.4.3 Option B. The
+       "commit velocity timeline" visualization listed in AAP §0.4.3 is
+       intentionally omitted; the equivalent temporal data is surfaced
+       on Slide 8 in the Acceleration Curve (see revised D016).
+       Subresource Integrity (SRI) hashes pin each asset to its known
+       byte content to mitigate CDN-side tampering risk. -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/mermaid@11.4.0/dist/mermaid.min.js"
+      integrity="sha384-Wm9qzEgq4j1jEnuFK2FxKTlwuhbV2QqtGhcchvjDoKxeJ7WWAW7fysBq+1s6myfX"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"
+      integrity="sha384-M/JtqCVlLcK9lwVnBnMXP0V577CBULkjodKsR/PITOe4MSKNbbwqCemEyluOw0+5"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/lucide@0.460.0/dist/umd/lucide.min.js"
+      integrity="sha384-ieG+IKD0d/ZPXyCBTMVAbqsQdns8QGJR/e26WMw7M4fkaI/rHcS/YIoi+ah9WGge"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      // ----------------------------------------------------------------------
+      // Mermaid 11.4.0 initialization (AAP §0.10.3 "Mermaid integration")
+      // ----------------------------------------------------------------------
+      // `startOnLoad: false` — we defer to `mermaid.run()` inside
+      // renderVisuals() so the rendering pass occurs AFTER reveal.js
+      // signals `ready` and AFTER document.fonts.ready resolves. This
+      // ordering prevents the font-metric race that motivated Decision
+      // D016's original Mermaid omission and is now explicitly mitigated
+      // by the revised D016.
+      //
+      // Theme variables mirror the canonical Blitzy palette tokens
+      // (--blitzy-primary, --blitzy-primary-dark, --blitzy-text,
+      //  --blitzy-text-muted, --blitzy-surface-1, --blitzy-surface-2)
+      // to keep Slide 3 visually consistent with the rest of the deck.
+      // ----------------------------------------------------------------------
+      if (window.mermaid && typeof window.mermaid.initialize === "function") {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          theme: "base",
+          securityLevel: "strict",
+          themeVariables: {
+            primaryColor: "#F2F0FE",
+            primaryTextColor: "#333333",
+            primaryBorderColor: "#5B39F3",
+            lineColor: "#999999",
+            secondaryColor: "#F4EFF6",
+            tertiaryColor: "#F4EFF6",
+            fontFamily: "'Inter', system-ui, sans-serif",
+          },
+        });
+      }
+
+      // ----------------------------------------------------------------------
+      // Reveal.js initialization
+      // ----------------------------------------------------------------------
+      Reveal.initialize({
+        hash: true,
+        transition: "slide",
+        controlsTutorial: false,
+        width: 1920,
+        height: 1080,
+      });
+
+      // ----------------------------------------------------------------------
+      // Run Mermaid and Lucide on `ready` and on every slide change.
+      //   - Mermaid converts each <pre class="mermaid"> into an inline
+      //     <svg> flowchart (currently only Slide 3 uses this).
+      //   - Lucide materializes every <i data-lucide="..."> placeholder
+      //     into an inline <svg> icon (KPI-card icons, hero icons,
+      //     decorative chevrons on content/divider/closing slides).
+      //
+      // We wait for document.fonts.ready first so icon and Mermaid-node
+      // sizing stabilizes relative to the Inter/Space Grotesk font-box
+      // metrics — mitigating the font-metric race documented in the
+      // revised Decision D016.
+      // ----------------------------------------------------------------------
+      async function renderVisuals() {
+        if (document.fonts && document.fonts.ready) {
+          try {
+            await document.fonts.ready;
+          } catch (err) {
+            // document.fonts.ready may reject on older engines — safe to ignore.
+          }
+        }
+        if (window.mermaid && typeof window.mermaid.run === "function") {
+          try {
+            await window.mermaid.run();
+          } catch (err) {
+            // mermaid.run() can throw if no <pre class="mermaid"> is on the
+            // current slide or if it has already been processed — ignore
+            // gracefully so the Lucide pass below still executes.
+          }
+        }
+        if (window.lucide && typeof window.lucide.createIcons === "function") {
+          window.lucide.createIcons();
+        }
+      }
+
+      Reveal.on("ready", function () {
+        renderVisuals();
+      });
+
+      Reveal.on("slidechanged", function () {
+        renderVisuals();
+      });
+    </script>
+  </body>
+</html>
