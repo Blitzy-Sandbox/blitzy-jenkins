@@ -22,7 +22,7 @@ Headline multipliers — ordered by magnitude of the After-period multiplier, st
 - Activity 1 — Requirements Throughput (feature-branch-proxy merges / 2-week window): **0.56× After / Baseline** (Confidence: Medium; see §4.1)
 - Activity 2 — Architecture & Design: **Insufficient signal — no files matched ARCHITECTURE.md, tech-spec*, adr-*, or design-* patterns across the repository lifetime** (see §4.2)
 
-Confidence distribution across the 7 activities: 3 High (Activities 3, 4, 5, 7), 3 Medium (Activities 1, 6), and 1 Insufficient Signal (Activity 2). Per-engineer anonymized multipliers for Activities 3 and 7 appear in §6. Phase-segmented values (Baseline → Ramp-Up → Steady State) appear in §7. All Low-confidence or Insufficient-signal cases are further addressed in §8 (Risk Assessment).
+Confidence distribution across the 7 activities: **4 High (Activities 3, 4, 5, 7), 2 Medium (Activities 1, 6), and 1 Insufficient Signal (Activity 2)**. Per-engineer anonymized multipliers for Activities 3 and 7 appear in §6. Phase-segmented values (Baseline → Ramp-Up → Steady State) appear in §7. All Low-confidence or Insufficient-signal cases are further addressed in §8 (Risk Assessment).
 
 ---
 
@@ -276,7 +276,7 @@ Every metric appearing in §1, §4, §6, and §7 is represented by at least one 
 | T8.6 | Activity 7 — Multiplier simple-mean (After / Baseline) | R8.1 (composite) | `9.11 / 7.75 = 1.18×` | Complete | — |
 | T8.7 | Activity 7 — Ramp-Up weighted rate | R8.1 (date bounded) | `2.62 / eng / 2wk` | Complete | — |
 | T8.8 | Activity 7 — Steady State weighted rate | R8.1 (date bounded) | `3.17 / eng / 2wk` | Complete | — |
-| T9.1 | Bot author identification | R9.1 | `5 bot identities identified (renovate, dependabot, github-actions, jenkins-release-bot, release-bot)` | Complete | — |
+| T9.1 | Bot author identification | R9.1 | `4 bot identities identified (renovate[bot], dependabot[bot], github-actions[bot], jenkins-release-bot); release-bot pattern retained in R9.1 filter as defense-in-depth but matches zero authors` | Complete | — |
 | T9.2 | Per-engineer volume ranking | R9.2 | `krisstern@outlook.com and mark.earl.waite@gmail.com for Activity 3; 10-engineer ranking for Activity 7` | Complete | — |
 
 Every Reproducibility Appendix command ID (R0.1, R0.2, R0.3, R0.4, R0.5, R0.6, R0.7, R0.8, R1.1, R1.2, R1.3, R2.1, R2.2, R3.1, R4.1, R5.1, R5.2, R6.1, R7.1, R8.1, R9.1, R9.2) is referenced by at least one row above. Rule 1 is satisfied: zero orphan requirements and zero orphan results.
@@ -304,11 +304,11 @@ Only 2 engineers produced at least one non-bot merge commit on `master` in the A
 
 ### 6.2 Activity 7 — Commit Throughput (Per-Engineer, non-merge commits / 2wk)
 
-Top 10 engineers by After-period non-bot non-merge commit volume. `Engineer A` is new in the After period (zero Baseline commits) and reflects an AI agent identity (`agent@blitzy.com`); the multiplier is rendered as `N/A (new engineer; no Baseline)` because the denominator is zero. `Range` and `Median` are computed over the subset of engineers with a valid (non-zero Baseline) multiplier, consistent with Rule 2.
+Top 10 engineers by After-period non-bot non-merge commit volume. `Engineer A` is a first-time contributor in the After period (zero Baseline commits); the multiplier is rendered as `Insufficient signal — no Baseline commits (division by zero)` per Rule 2 because the denominator is zero. The real-identity mapping behind Engineer A (including author-category attribution) is recorded in `decision-log.md` per Decision D008, consistent with the Explainability rule that rationale belongs in the decision log rather than the primary report. `Range` and `Median` are computed over the subset of engineers with a valid (non-zero Baseline) multiplier, consistent with Rule 2.
 
 | Engineer | Baseline (commits / 2wk) | After (commits / 2wk) | Multiplier |
 |----------|---------------------------|-------------------------|------------|
-| Engineer A | 0 / 485.71 = 0.000 | 154 / 20.86 = 7.383 | N/A (new engineer; no Baseline) |
+| Engineer A | 0 / 485.71 = 0.000 | 154 / 20.86 = 7.383 | Insufficient signal — no Baseline commits (division by zero) |
 | Engineer B | 372 / 485.71 = 0.766 | 55 / 20.86 = 2.637 | 3.44× |
 | Engineer C | 2725 / 485.71 = 5.610 | 26 / 20.86 = 1.246 | 0.22× |
 | Engineer D | 13 / 485.71 = 0.027 | 23 / 20.86 = 1.103 | 41.20× |
@@ -610,16 +610,23 @@ git log --all --no-merges --format='%H %aI' --after=2025-06-19 \
 
 ```bash
 # R6.1 — Documentation-file creation events per calendar quarter
-# Baseline invocation:
-git log --all --diff-filter=A --name-only --format='=%aI' --before=2025-06-19 -- \
+# Dedup strategy: path-only sort -u (a file added once is counted once,
+# even if its add-event appears on multiple branches).
+# Extraction-timestamp ceiling: the After invocation bounds --before to the
+# recorded extraction timestamp so post-extraction commits (e.g., the report
+# itself committing) do not inflate the count on re-runs. Replace the pinned
+# timestamp below with the value recorded in §2 (Environment Verification).
+EXTRACT_TS='2026-04-22T00:50:25+00:00'
+# Baseline invocation (path-only dedup):
+git log --all --diff-filter=A --name-only --format= --before=2025-06-19 -- \
   ':(glob)**/*.md' ':(glob)**/*.mdx' ':(glob)**/*.rst' ':(glob)**/*.adoc' \
-  | awk '/^=/{d=$0; next} NF{print d" "$0}' \
+  | grep -v '^$' \
   | sort -u \
   | wc -l
-# After invocation:
-git log --all --diff-filter=A --name-only --format='=%aI' --after=2025-06-19 -- \
+# After invocation (path-only dedup + extraction-timestamp ceiling):
+git log --all --diff-filter=A --name-only --format= --after=2025-06-19 --before="${EXTRACT_TS}" -- \
   ':(glob)**/*.md' ':(glob)**/*.mdx' ':(glob)**/*.rst' ':(glob)**/*.adoc' \
-  | awk '/^=/{d=$0; next} NF{print d" "$0}' \
+  | grep -v '^$' \
   | sort -u \
   | wc -l
 ```
@@ -629,31 +636,34 @@ git log --all --diff-filter=A --name-only --format='=%aI' --after=2025-06-19 -- 
 ```bash
 # R7.1 — Fix-pattern commit ratio per period (Medium confidence)
 # Both bot-filtered and unfiltered ratios are reported per Rule 5.
+# --no-merges is applied to every invocation so the denominator counts only
+# human-authored non-merge commits, matching Decision D004 (Activity 6 scope)
+# and the per-activity counts reported in §4.6 and §5 (T7.1–T7.5).
 # Baseline invocation (non-bot):
-FIX_B=$(git log --all --format='%aI %ae %s' --before=2025-06-19 \
+FIX_B=$(git log --all --no-merges --format='%aI %ae %s' --before=2025-06-19 \
   | grep -v 'renovate\[bot\]' | grep -v 'dependabot\[bot\]' \
   | grep -v 'github-actions\[bot\]' | grep -v 'jenkins-release-bot' | grep -v 'release-bot' \
   | grep -iE '\b(fix|bugfix|hotfix|revert)\b' | wc -l)
-TOT_B=$(git log --all --format='%aI %ae' --before=2025-06-19 \
+TOT_B=$(git log --all --no-merges --format='%aI %ae' --before=2025-06-19 \
   | grep -v 'renovate\[bot\]' | grep -v 'dependabot\[bot\]' \
   | grep -v 'github-actions\[bot\]' | grep -v 'jenkins-release-bot' | grep -v 'release-bot' \
   | wc -l)
 python3 -c "print(f'{${FIX_B}/${TOT_B}:.4f}')"
 # After invocation (non-bot):
-FIX_A=$(git log --all --format='%aI %ae %s' --after=2025-06-19 \
+FIX_A=$(git log --all --no-merges --format='%aI %ae %s' --after=2025-06-19 \
   | grep -v 'renovate\[bot\]' | grep -v 'dependabot\[bot\]' \
   | grep -v 'github-actions\[bot\]' | grep -v 'jenkins-release-bot' | grep -v 'release-bot' \
   | grep -iE '\b(fix|bugfix|hotfix|revert)\b' | wc -l)
-TOT_A=$(git log --all --format='%aI %ae' --after=2025-06-19 \
+TOT_A=$(git log --all --no-merges --format='%aI %ae' --after=2025-06-19 \
   | grep -v 'renovate\[bot\]' | grep -v 'dependabot\[bot\]' \
   | grep -v 'github-actions\[bot\]' | grep -v 'jenkins-release-bot' | grep -v 'release-bot' \
   | wc -l)
 python3 -c "print(f'{${FIX_A}/${TOT_A}:.4f}')"
 # Unfiltered (no bot exclusion) — produced for Rule 5 consistency:
-git log --all --format='%s' --before=2025-06-19 | grep -iE '\b(fix|bugfix|hotfix|revert)\b' | wc -l
-git log --all --format='%s' --before=2025-06-19 | wc -l
-git log --all --format='%s' --after=2025-06-19 | grep -iE '\b(fix|bugfix|hotfix|revert)\b' | wc -l
-git log --all --format='%s' --after=2025-06-19 | wc -l
+git log --all --no-merges --format='%s' --before=2025-06-19 | grep -iE '\b(fix|bugfix|hotfix|revert)\b' | wc -l
+git log --all --no-merges --format='%s' --before=2025-06-19 | wc -l
+git log --all --no-merges --format='%s' --after=2025-06-19 | grep -iE '\b(fix|bugfix|hotfix|revert)\b' | wc -l
+git log --all --no-merges --format='%s' --after=2025-06-19 | wc -l
 ```
 
 ### Activity 7 — Commit Throughput (R8.1)
