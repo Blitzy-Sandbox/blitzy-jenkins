@@ -40,7 +40,7 @@ This section documents the execution environment before any metric extraction, s
 | Commit window | `2006-11-05T21:16:01+00:00` → `2026-04-06T23:09:56-04:00` (approximately 19.42 years) | R0.5, R0.6 |
 | Active branches | `6` (deviation from Agent Action Plan expected value of `4`; see §8.3) | R0.7 |
 | Submodule state | `no submodules` (empty `git submodule status` output) | R0.8 |
-| Extraction timestamp | `2026-04-22T00:50:25+00:00` (UTC, captured once at start of extraction and reused throughout) | R0.1 |
+| Extraction timestamp | `2026-04-22T00:50:25+00:00` (UTC, captured once at start of extraction and reused throughout per Decision D015) | R0.1 |
 
 **Deviation — active branch count**: The Agent Action Plan (AAP) recorded `4` for `git branch -a | wc -l` during reconnaissance; the extraction run during this report observed `6`. The difference is accounted for by branches visible at extraction time (`master`, local working branch `blitzy-dd6c20ca-a9a8-471c-9df6-5a502a812b8e`, remote tracking references including `origin/HEAD` symbolic, `origin/master`, `origin/blitzy-35697eee-*`, and `origin/blitzy-dd6c20ca-a9a8-471c-9df6-5a502a812b8e`). The deviation does not affect any per-activity metric because all per-activity queries operate against commit history rather than branch counts. The deviation is logged in §8.3 (Confounding Factors).
 
@@ -73,7 +73,7 @@ All extraction commands apply the Rule 5 parity constraint: before and after per
 | Activity | Confidence | Rationale |
 |----------|------------|-----------|
 | 1. Requirements Throughput | Medium | Heuristic pattern match (fallback rule applied because branch-naming primary returned zero) |
-| 2. Architecture & Design | — (Insufficient signal) | Glob pattern returned zero matches; no value derivable per Rule 2 |
+| 2. Architecture & Design | — (Insufficient signal) | Glob pattern returned zero matches; no value derivable per Rule 2 (literal rendering per Decision D009) |
 | 3. Code Generation | High | Direct merge-commit count |
 | 4. Test Creation | High | Direct file-creation count (with boundary condition on pattern scope, §4.4) |
 | 5. Documentation | High | Direct file-creation count |
@@ -95,17 +95,17 @@ Decision D010 (collapse Ramp-Up into Post-Introduction if fewer than 90 days of 
 
 ### 3.5 Window Alignment
 
-All 2-week windows are Monday-aligned per Decision D003. The alignment anchor is the Monday of the week containing the Tool Introduction Date (`2025-06-16T00:00:00+00:00`); every 2-week bucket in both Baseline and After periods is a half-open interval `[anchor + 14k days, anchor + 14(k+1) days)` for some integer `k`. Identical anchor logic is applied across the Baseline and After partitions to satisfy Rule 5. Activities 2 and 5 aggregate per calendar quarter (Q1 = Jan–Mar, Q2 = Apr–Jun, Q3 = Jul–Sep, Q4 = Oct–Dec); a quarter is counted as "touched" if any day of the phase overlaps it.
+All 2-week windows are Monday-aligned per Decision D003. The alignment anchor is the Monday of the week containing the Tool Introduction Date (`2025-06-16T00:00:00+00:00`); every 2-week bucket in both Baseline and After periods is a half-open interval `[anchor + 14k days, anchor + 14(k+1) days)` for some integer `k`. Identical anchor logic is applied across the Baseline and After partitions to satisfy Rule 5. Activities 2 and 5 aggregate per calendar quarter (Q1 = Jan–Mar, Q2 = Apr–Jun, Q3 = Jul–Sep, Q4 = Oct–Dec) per Decision D014; a quarter is counted as "touched" if any day of the phase overlaps it.
 
 ### 3.6 Known Biases and Confounders
 
 - **Bot activity**: Automation accounts (`renovate[bot]`, `dependabot[bot]`, `github-actions[bot]`, `jenkins-release-bot`, `release-bot`) produce commits at cadences unrelated to human engineering velocity. Bot authors are excluded from Activities 3, 6, and 7 per Decision D002. For Activity 6, the unfiltered ratio is also reported to expose the confounder effect.
 - **Repository age**: The earliest commit (`2006-11-05T21:16:01+00:00`) predates the introduction of common AI pair-programming tools by more than 15 years. The Baseline partition covers the full 18.6-year pre-introduction history, during which the team composition, branching conventions, CI/CD stack, and language surface have all changed materially. The Baseline therefore represents a composite average of many historical team-states rather than a clean pre-AI control.
-- **Branch rename history**: The repository's primary branch is `master` (confirmed by `git branch -a`); no rename to `main` has been detected. All Activity 3 and Activity 7 queries target `master`. If a rename has occurred that extraction time did not detect, Activity 3 merge counts could be understated.
+- **Branch rename history**: The repository's primary branch is `master` (confirmed by `git branch -a`); no rename to `main` has been detected. All Activity 3 and Activity 7 queries target `master` per Decision D011. If a rename has occurred that extraction time did not detect, Activity 3 merge counts could be understated.
 - **Partial 2-week buckets at window boundaries**: Buckets that straddle a phase boundary are attributed to whichever phase contains the bucket's start. This introduces up to ±14 days of attribution noise at phase edges; the effect is symmetric between Baseline and After and does not favor one partition.
 - **Heterogeneous feature-branch naming**: Activity 1 depends on branch naming conventions. Feature branches that were merged and deleted cannot be observed post-hoc from git refs alone; the fallback heuristic (merges with ≥3 non-merge commits on the merged-in branch) partially compensates.
 
-### 3.7 User Rules (Preserved Verbatim from the User Prompt)
+### 3.7 User Rules (Restated for Enforcement)
 
 The following 8 rules are the acceptance criteria for this report. Each rule is enforced and verified:
 
@@ -126,7 +126,7 @@ Each subsection below uses the same six-part internal skeleton: Baseline, After,
 
 ### 4.1 Requirements Throughput
 
-Measure: feature-branch-proxy merges per 2-week window. Primary heuristic (R2.1) — count branches matching `^(feature|feat)/` or `^JENKINS-[0-9]+` — returned zero surviving branches at extraction time; the fallback heuristic (R2.2) per Decision D005 counts merge commits on `master` whose merged-in branch has at least 3 non-merge commits.
+Measure: feature-branch-proxy merges per 2-week window. Primary heuristic (R2.1) — count branches matching `^(feature|feat)/` or `^JENKINS-[0-9]+` — returned zero surviving branches at extraction time; the fallback heuristic (R2.2) per Decision D005 counts merge commits on `master` (branch target per Decision D011) whose merged-in branch has at least 3 non-merge commits.
 
 - **Baseline**: 786 qualifying merges across 485.71 Monday-aligned 2-week buckets → **1.62 feature-proxy merges / 2wk** (R2.2 with date range `--before=2025-06-19`).
 - **After**: 19 qualifying merges across 20.86 Monday-aligned 2-week buckets → **0.91 feature-proxy merges / 2wk** (R2.2 with date range `--after=2025-06-19`).
@@ -154,7 +154,7 @@ Measure: new design-document files created per calendar quarter. Target file pat
 
 ### 4.3 Code Generation
 
-Measure: merge commits on `master` per 2-week window, bot authors excluded per Decision D002. Merge-commit counting follows Decision D004 (Activity 3 = merges, Activity 7 = non-merges).
+Measure: merge commits on `master` (branch target per Decision D011) per 2-week window, bot authors excluded per Decision D002. Merge-commit counting follows Decision D004 (Activity 3 = merges, Activity 7 = non-merges).
 
 - **Baseline**: 2659 non-bot merges across 485.71 2-week buckets → **5.47 merges / 2wk** (R4.1 with date range `--before=2025-06-19`).
 - **After**: 75 non-bot merges across 20.86 2-week buckets → **3.60 merges / 2wk** (R4.1 with date range `--after=2025-06-19`).
@@ -175,7 +175,7 @@ Measure: new test files per 2-week window via `git log --diff-filter=A` against 
 
 ### 4.5 Documentation
 
-Measure: new `.md`, `.mdx`, `.rst`, `.adoc` files per calendar quarter.
+Measure: new `.md`, `.mdx`, `.rst`, `.adoc` files per calendar quarter (taxonomy and quarter definition per Decision D014).
 
 - **Baseline**: 12 new documentation files across 75 calendar quarters → **0.16 docs / quarter** (R6.1 with date range `--before=2025-06-19`). Added files include `README.md`, `README.adoc`, `CONTRIBUTING.md`, `docs/MAINTAINERS.adoc`, `.github/PULL_REQUEST_TEMPLATE.md`, `core/src/site/markdown/index.md`, `core/src/main/resources/META-INF/upgrade/README.md`, `opensuse/README.md`, `osx/README.md`, and 3 per-module test-fixture READMEs.
 - **After**: 7 new documentation files across 5 calendar-quarter labels touched → **1.40 docs / quarter** (R6.1 with date range `--after=2025-06-19`). Added files include `docs/index.md`, `docs/project-guide.md`, `docs/technical-specifications.md`, `docs/functional-audit.md`, `docs/user-flows.md`, `blitzy/documentation/Project Guide.md`, and `blitzy/documentation/Technical Specifications.md`.
@@ -185,7 +185,7 @@ Measure: new `.md`, `.mdx`, `.rst`, `.adoc` files per calendar quarter.
 
 ### 4.6 Defect Response
 
-Measure: ratio of commit subjects matching `\b(fix|bugfix|hotfix|revert)\b` (case-insensitive) to total commits per period. Both bot-filtered and unfiltered ratios are reported per Rule 5 to expose the bot-activity confounder.
+Measure: ratio of commit subjects matching `\b(fix|bugfix|hotfix|revert)\b` (case-insensitive, regex scope per Decision D007) to total commits per period. Both bot-filtered and unfiltered ratios are reported per Rule 5 and Decision D012 to expose the bot-activity confounder.
 
 - **Baseline (non-bot)**: 2262 fix-pattern matches / 28961 non-bot commits → **7.81% fix ratio** (R7.1 with date range `--before=2025-06-19` and bot filter applied).
 - **After (non-bot)**: 56 fix-pattern matches / 485 non-bot commits → **11.55% fix ratio** (R7.1 with date range `--after=2025-06-19` and bot filter applied).
@@ -215,7 +215,7 @@ Measure: non-merge commits per active engineer per 2-week window, with bot autho
   - **Weighted rate**: 485 / 164 = **2.96 commits / engineer / 2wk** (R8.1 with date range `--after=2025-06-19`).
   - Simple-mean rate (supplementary): mean of bucket-level (commits / active-engineers) = 9.11 commits / engineer / 2wk.
 - **Multiplier (weighted, headline)**: `2.96 / 5.32 = 0.56×` (After / Baseline).
-- **Multiplier (simple-mean, supplementary)**: `9.11 / 7.75 = 1.18×`.
+- **Multiplier (simple-mean, supplementary)**: `9.11 / 7.75 = 1.18×` (dual reporting per Decision D013).
 - **Confidence**: High (direct non-merge commit count and direct unique-engineer count per bucket).
 - **Interpretation**: The weighted per-engineer-bucket rate (total non-merge commits divided by total engineer-bucket pairs) is 0.56× the Baseline value. The simple-mean variant (mean of bucket-level per-engineer rates) is 1.18×. The two values measure subtly different things: the weighted rate reports the average productivity per engineer-bucket pair; the simple-mean rate gives each 2-week bucket equal weight regardless of engineer count. Phase-segmented weighted rates (§7): Ramp-Up is 2.62 (0.49× Baseline); Steady State is 3.17 (0.60× Baseline). Per-engineer segmentation appears in §6.2.
 
@@ -277,7 +277,7 @@ Every metric appearing in §1, §4, §6, and §7 is represented by at least one 
 | T8.7 | Activity 7 — Ramp-Up weighted rate | R8.1 (date bounded) | `2.62 / eng / 2wk` | Complete | — |
 | T8.8 | Activity 7 — Steady State weighted rate | R8.1 (date bounded) | `3.17 / eng / 2wk` | Complete | — |
 | T9.1 | Bot author identification | R9.1 | `4 bot identities identified (renovate[bot], dependabot[bot], github-actions[bot], jenkins-release-bot); release-bot pattern retained in R9.1 filter as defense-in-depth but matches zero authors` | Complete | — |
-| T9.2 | Per-engineer volume ranking | R9.2 | `krisstern@outlook.com and mark.earl.waite@gmail.com for Activity 3; 10-engineer ranking for Activity 7` | Complete | — |
+| T9.2 | Per-engineer volume ranking | R9.2 | `2-engineer After-period merge ranking sorted by volume descending (see §6.1); 10-engineer After-period non-merge ranking (see §6.2); anonymization rule recorded in decision-log.md per Decision D008 — identities not stored in any deliverable` | Complete | — |
 
 Every Reproducibility Appendix command ID (R0.1, R0.2, R0.3, R0.4, R0.5, R0.6, R0.7, R0.8, R1.1, R1.2, R1.3, R2.1, R2.2, R3.1, R4.1, R5.1, R5.2, R6.1, R7.1, R8.1, R9.1, R9.2) is referenced by at least one row above. Rule 1 is satisfied: zero orphan requirements and zero orphan results.
 
@@ -304,7 +304,7 @@ Only 2 engineers produced at least one non-bot merge commit on `master` in the A
 
 ### 6.2 Activity 7 — Commit Throughput (Per-Engineer, non-merge commits / 2wk)
 
-Top 10 engineers by After-period non-bot non-merge commit volume. `Engineer A` is a first-time contributor in the After period (zero Baseline commits); the multiplier is rendered as `Insufficient signal — no Baseline commits (division by zero)` per Rule 2 because the denominator is zero. The real-identity mapping behind Engineer A (including author-category attribution) is recorded in `decision-log.md` per Decision D008, consistent with the Explainability rule that rationale belongs in the decision log rather than the primary report. `Range` and `Median` are computed over the subset of engineers with a valid (non-zero Baseline) multiplier, consistent with Rule 2.
+Top 10 engineers by After-period non-bot non-merge commit volume. `Engineer A` is a first-time contributor in the After period (zero Baseline commits); the multiplier is rendered as `Insufficient signal — no Baseline commits (division by zero)` per Rule 2 because the denominator is zero. The deterministic anonymization rule (sort non-bot authors by After-period non-merge commit volume descending; assign `Engineer A` to the highest-volume contributor, `Engineer B` to the next, and so on) is documented in `decision-log.md` per Decision D008; the rule is recorded, the real-identity mapping is not, consistent with the Explainability project rule. `Range` and `Median` are computed over the subset of engineers with a valid (non-zero Baseline) multiplier, consistent with Rule 2.
 
 | Engineer | Baseline (commits / 2wk) | After (commits / 2wk) | Multiplier |
 |----------|---------------------------|-------------------------|------------|
@@ -333,7 +333,7 @@ This section tabulates Baseline → Ramp-Up → Steady State values per activity
 Rates below use the same unit system as §4:
 
 - Activities 1, 3, 4, 7: per 2-week window (Monday-aligned).
-- Activities 2, 5: per calendar quarter (Q1 / Q2 / Q3 / Q4) measured by quarter-labels touched per phase.
+- Activities 2, 5: per calendar quarter (Q1 / Q2 / Q3 / Q4) measured by quarter-labels touched per phase, per Decision D014.
 - Activity 6: fix-commit ratio (%) per period.
 
 | Activity | Baseline | Ramp-Up | Steady State | Multiplier (Steady State ÷ Baseline) |
@@ -348,7 +348,7 @@ Rates below use the same unit system as §4:
 | 7 — Commit Throughput weighted (commits/engineer/2wk, High) | 5.32 | 2.62 | 3.17 | 0.60× |
 | 7 — Commit Throughput simple-mean (commits/engineer/2wk, High, supplementary) | 7.75 | 2.60 | 13.08 | 1.69× |
 
-Observations (factual-neutral): Activities 1 and 3 peak in Ramp-Up and decline in Steady State to values below their Baseline rates; Activities 4 and 5 are quiescent in Ramp-Up and concentrated in Steady State; Activity 6 (non-bot) is elevated throughout the After period relative to Baseline; Activity 7 (weighted) declines in both After phases relative to Baseline. Phase-level divergence from the overall After/Baseline multipliers (§4) is explained by bucket weighting: the overall After multiplier is computed across the full 20.86-bucket After window, while Steady State multipliers here use the 14.43-bucket Steady-State-only window.
+Observations (factual-neutral): Activities 1 and 3 peak in Ramp-Up and decline in Steady State to values below their Baseline rates; Activities 4 and 5 are quiescent in Ramp-Up and concentrated in Steady State; Activity 6 (non-bot) is elevated throughout the After period relative to Baseline; Activity 7 is reported under both weighted and simple-mean aggregation per Decision D013, with the weighted rate declining in both After phases relative to Baseline. Phase-level divergence from the overall After/Baseline multipliers (§4) is explained by bucket weighting: the overall After multiplier is computed across the full 20.86-bucket After window, while Steady State multipliers here use the 14.43-bucket Steady-State-only window.
 
 
 ---
@@ -378,6 +378,7 @@ No activity in this report is tagged Low confidence. The table below records the
 | Activity 4 pattern scope — Java `<Class>Test.java` files invisible to user-specified globs | High | 4 | Boundary condition documented in §4.4. The repository contains 608 Java JUnit test files that follow the `<ClassName>Test.java` convention and are not counted. The Baseline therefore reflects only JavaScript `.spec.js` creations (3 files in 2020), causing the multiplier to overstate the acceleration relative to the de-facto team test-writing rate. The user-specified pattern set is preserved literally per the Agent Action Plan. |
 | Repository age (earliest commit `2006-11-05`) | Low | All | The 6800-day Baseline averages across 18.6 years of team composition, branching practice, and language stack changes. Reported as a composite average per §3.6. |
 | Branch-naming heuristic — absence of `feature/`, `feat/`, or `JENKINS-<NNN>` prefix | Medium | 1 | Primary heuristic returned zero; fallback rule (merges with ≥3 non-merge commits) applied per Decision D005. |
+| Branch rename (`master` → `main`) not detected at extraction time | Low | 3, 7 | Primary branch is `master` per Decision D011; `git branch -a` confirms no rename; Activity 3 and Activity 7 queries target `master` literally. If a historical rename occurred without leaving a detectable artefact, merge and commit counts could be understated. |
 | Merge-author vs. PR-author distinction | Low | 3, 6.1 | Merge commits reflect the merger, not the contributor. Per-engineer Activity 3 view (§6.1) is a maintainer-activity proxy. |
 | Partial 2-week buckets at Baseline/Ramp-Up and Ramp-Up/Steady-State boundaries | Low | 1, 3, 4, 6, 7 | Phase boundaries are day-precise; buckets straddling a boundary are attributed to the phase containing the bucket start. The effect is symmetric across phases. |
 | Active branch count deviation (6 observed vs. AAP-recorded 4) | Low | None directly; metadata only | Accounted for by remote tracking refs and symbolic ref visible at extraction time; has no impact on per-activity commit-history queries. |
@@ -623,7 +624,7 @@ git log --all --diff-filter=A --name-only --format= --before=2025-06-19 -- \
   | grep -v '^$' \
   | sort -u \
   | wc -l
-# After invocation (path-only dedup + extraction-timestamp ceiling):
+# After invocation (path-only dedup + extraction-timestamp ceiling per Decision D015 — prevents counting report-generation commits):
 git log --all --diff-filter=A --name-only --format= --after=2025-06-19 --before="${EXTRACT_TS}" -- \
   ':(glob)**/*.md' ':(glob)**/*.mdx' ':(glob)**/*.rst' ':(glob)**/*.adoc' \
   | grep -v '^$' \
