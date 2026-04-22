@@ -17,7 +17,7 @@ Headline multipliers — ordered by magnitude of the After-period multiplier, st
 - Activity 4 — Test Creation: **535.62× After / Baseline** (Confidence: High; see §4.4) — see boundary condition on pattern scope
 - Activity 5 — Documentation: **8.75× After / Baseline** (Confidence: High; see §4.5)
 - Activity 6 — Defect Response (non-bot fix-commit ratio): **1.48× After / Baseline** (Confidence: Medium; see §4.6); unfiltered ratio: **0.79×** (Confidence: Medium)
-- Activity 7 — Commit Throughput (weighted per engineer per 2-week window): **0.56× After / Baseline** (Confidence: High; see §4.7); simple-mean alternative: **1.18×**
+- Activity 7 — Commit Throughput (weighted per engineer per 2-week window): **0.56× After / Baseline** (Confidence: High; see §4.7); simple-mean alternative: **1.18×** (Confidence: High)
 - Activity 3 — Code Generation (merges / 2-week window, non-bot): **0.66× After / Baseline** (Confidence: High; see §4.3)
 - Activity 1 — Requirements Throughput (feature-branch-proxy merges / 2-week window): **0.56× After / Baseline** (Confidence: Medium; see §4.1)
 - Activity 2 — Architecture & Design: **Insufficient signal — no files matched ARCHITECTURE.md, tech-spec*, adr-*, or design-* patterns across the repository lifetime** (see §4.2)
