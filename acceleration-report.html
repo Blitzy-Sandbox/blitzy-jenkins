@@ -252,7 +252,7 @@
       line-height: 1.05;
     }
 
-    /* Lucide replaces <i data-lucide="x" class="hero-icon"> with
+    /* Lucide replaces <i data-lucide="x" class="hero-icon" aria-hidden="true"> with
        <svg class="lucide lucide-x hero-icon">. Dimensions and color
        must be applied to the svg (with class hero-icon) directly. */
     .reveal .slide-divider .hero-icon {
@@ -622,6 +622,37 @@
       stroke-width: 2;
     }
 
+    /* ------------------- Mermaid container ------------------- */
+    /* Applied to the `<pre class="mermaid">` block on Slide 3 (Extraction
+       Methodology flowchart). Mermaid 11.4.0 replaces the Mermaid-rendered
+       SVG inside the element; the wrapper provides centering, neutral
+       background, and a minimum height so the slide layout does not shift
+       while Mermaid renders asynchronously. Theme variables for colors
+       and the explicit Inter font family are configured in the
+       `mermaid.initialize(...)` call below, which mitigates the prior
+       font-metric race concern documented in Decision D016. */
+    .mermaid {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0.5rem auto 0;
+      padding: 0.75rem 0;
+      font-family: var(--ff-body);
+      background: transparent;
+      font-size: 0.9375rem;
+      color: var(--blitzy-text);
+      line-height: 1.3;
+      min-height: 220px;
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    .mermaid svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
     /* ------------------- Methodology callout ------------------- */
     .callout {
       background: var(--blitzy-surface-2);
@@ -666,7 +697,7 @@
            ================================================================ -->
       <section class="slide-title">
         <div class="hero-icon-wrap">
-          <i data-lucide="activity"></i>
+          <i data-lucide="activity" aria-hidden="true"></i>
         </div>
         <div class="eyebrow">Acceleration Report</div>
         <h1>Jenkins Core Engineering Velocity</h1>
@@ -684,25 +715,25 @@
         <h2>Headline Multipliers</h2>
         <div class="kpi-grid">
           <div class="kpi-card">
-            <i class="kpi-icon" data-lucide="check-circle"></i>
+            <i class="kpi-icon" data-lucide="check-circle" aria-hidden="true"></i>
             <div class="kpi-value">535.62&times;</div>
             <div class="kpi-label">Activity 4 — Test Creation</div>
             <span class="kpi-confidence high">High</span>
           </div>
           <div class="kpi-card">
-            <i class="kpi-icon" data-lucide="file-text"></i>
+            <i class="kpi-icon" data-lucide="file-text" aria-hidden="true"></i>
             <div class="kpi-value">8.75&times;</div>
             <div class="kpi-label">Activity 5 — Documentation</div>
             <span class="kpi-confidence high">High</span>
           </div>
           <div class="kpi-card">
-            <i class="kpi-icon" data-lucide="bug"></i>
+            <i class="kpi-icon" data-lucide="bug" aria-hidden="true"></i>
             <div class="kpi-value">1.48&times;</div>
             <div class="kpi-label">Activity 6 — Defect Response (non-bot)</div>
             <span class="kpi-confidence medium">Medium</span>
           </div>
           <div class="kpi-card">
-            <i class="kpi-icon" data-lucide="git-commit"></i>
+            <i class="kpi-icon" data-lucide="git-commit" aria-hidden="true"></i>
             <div class="kpi-value">0.56&times;</div>
             <div class="kpi-label">Activity 7 — Commit Throughput (weighted)</div>
             <span class="kpi-confidence high">High</span>
@@ -712,52 +743,27 @@
       </section>
 
       <!-- ================================================================
-           Slide 3 — Methodology Overview (HTML/CSS flow diagram with Lucide)
+           Slide 3 — Methodology Overview (Mermaid 11.4.0 flowchart LR)
            ================================================================ -->
       <section>
         <div class="eyebrow">Read-only git history mining</div>
         <h2>Extraction Methodology</h2>
-        <div class="flow-diagram" aria-label="Extraction pipeline">
-          <div class="flow-step">
-            <i class="flow-step-icon" data-lucide="git-commit"></i>
-            <span class="flow-step-label">Raw Git History</span>
-          </div>
-          <div class="flow-arrow-wrap" aria-hidden="true">
-            <i class="flow-arrow" data-lucide="chevron-right"></i>
-          </div>
-          <div class="flow-step">
-            <i class="flow-step-icon" data-lucide="terminal"></i>
-            <span class="flow-step-label">Extraction Commands</span>
-          </div>
-          <div class="flow-arrow-wrap" aria-hidden="true">
-            <i class="flow-arrow" data-lucide="chevron-right"></i>
-          </div>
-          <div class="flow-step">
-            <i class="flow-step-icon" data-lucide="activity"></i>
-            <span class="flow-step-label">Per-Activity Values</span>
-          </div>
-          <div class="flow-arrow-wrap" aria-hidden="true">
-            <i class="flow-arrow" data-lucide="chevron-right"></i>
-          </div>
-          <div class="flow-step">
-            <i class="flow-step-icon" data-lucide="x"></i>
-            <span class="flow-step-label">Multipliers</span>
-          </div>
-          <div class="flow-arrow-wrap" aria-hidden="true">
-            <i class="flow-arrow" data-lucide="chevron-right"></i>
-          </div>
-          <div class="flow-step">
-            <i class="flow-step-icon" data-lucide="shield-check"></i>
-            <span class="flow-step-label">Confidence Tags</span>
-          </div>
-          <div class="flow-arrow-wrap" aria-hidden="true">
-            <i class="flow-arrow" data-lucide="chevron-right"></i>
-          </div>
-          <div class="flow-step">
-            <i class="flow-step-icon" data-lucide="file-text"></i>
-            <span class="flow-step-label">Report Sections</span>
-          </div>
-        </div>
+        <!-- Mermaid 11.4.0 flowchart (per AAP §0.4.3 "Methodology flow"
+             and §0.10.3 "Mermaid integration"). Raw Mermaid syntax lives
+             inside <pre class="mermaid">; Mermaid replaces the <pre> with
+             an inline <svg> after mermaid.run() is called by
+             renderVisuals(). Theme variables preserve the Blitzy palette
+             (primaryColor, primaryBorderColor, lineColor) and explicit
+             `fontFamily: 'Inter'` prevents the font-metric race that
+             originally motivated Decision D016's previous omission. -->
+        <pre class="mermaid" aria-label="Extraction pipeline flowchart">
+flowchart LR
+    A["Raw Git History"] --&gt; B["Extraction Commands"]
+    B --&gt; C["Per-Activity Values"]
+    C --&gt; D["Multipliers"]
+    D --&gt; E["Confidence Tags"]
+    E --&gt; F["Report Sections"]
+</pre>
         <div class="callout">
           <strong>Tool Introduction Date:</strong> 2025-06-19 &nbsp;&middot;&nbsp;
           Detection method per Decision <code>D001</code>: earliest
@@ -770,7 +776,7 @@
            Slide 4 — Section Divider: Per-Activity Results
            ================================================================ -->
       <section class="slide-divider">
-        <i class="hero-icon" data-lucide="layers"></i>
+        <i class="hero-icon" data-lucide="layers" aria-hidden="true"></i>
         <h2>Per-Activity Results</h2>
       </section>
 
@@ -784,19 +790,23 @@
         <h2>Activities 1 &mdash; 3</h2>
         <div class="kpi-grid">
           <div class="kpi-card">
-            <i class="kpi-icon" data-lucide="git-branch"></i>
+            <i class="kpi-icon" data-lucide="git-branch" aria-hidden="true"></i>
             <div class="kpi-value">0.56&times;</div>
             <div class="kpi-label">Activity 1 — Requirements Throughput</div>
             <span class="kpi-confidence medium">Medium</span>
           </div>
           <div class="kpi-card insufficient">
-            <i class="kpi-icon" data-lucide="layout-grid"></i>
-            <div class="kpi-value">Insufficient signal</div>
+            <i class="kpi-icon" data-lucide="layout-grid" aria-hidden="true"></i>
+            <!-- Rule 2 (AAP §0.10.1) literal format: `Insufficient signal — [specific reason]`.
+                 Brief reason rendered inline per Decision D009; full rationale (strict
+                 file-pattern scope) is expanded in the callout-note immediately below
+                 the KPI grid and matches `acceleration-report.md` §4.2 verbatim. -->
+            <div class="kpi-value">Insufficient signal &mdash; no matching files</div>
             <div class="kpi-label">Activity 2 — Architecture &amp; Design</div>
             <span class="kpi-confidence insufficient">Insufficient</span>
           </div>
           <div class="kpi-card">
-            <i class="kpi-icon" data-lucide="git-merge"></i>
+            <i class="kpi-icon" data-lucide="git-merge" aria-hidden="true"></i>
             <div class="kpi-value">0.66&times;</div>
             <div class="kpi-label">Activity 3 — Code Generation</div>
             <span class="kpi-confidence high">High</span>
@@ -818,25 +828,25 @@
         <h2>Activities 4 &mdash; 7</h2>
         <div class="kpi-grid">
           <div class="kpi-card">
-            <i class="kpi-icon" data-lucide="check-circle"></i>
+            <i class="kpi-icon" data-lucide="check-circle" aria-hidden="true"></i>
             <div class="kpi-value">535.62&times;</div>
             <div class="kpi-label">Activity 4 — Test Creation</div>
             <span class="kpi-confidence high">High</span>
           </div>
           <div class="kpi-card">
-            <i class="kpi-icon" data-lucide="file-text"></i>
+            <i class="kpi-icon" data-lucide="file-text" aria-hidden="true"></i>
             <div class="kpi-value">8.75&times;</div>
             <div class="kpi-label">Activity 5 — Documentation</div>
             <span class="kpi-confidence high">High</span>
           </div>
           <div class="kpi-card">
-            <i class="kpi-icon" data-lucide="bug"></i>
+            <i class="kpi-icon" data-lucide="bug" aria-hidden="true"></i>
             <div class="kpi-value">1.48&times;</div>
             <div class="kpi-label">Activity 6 — Defect Response (non-bot)</div>
             <span class="kpi-confidence medium">Medium</span>
           </div>
           <div class="kpi-card">
-            <i class="kpi-icon" data-lucide="git-commit"></i>
+            <i class="kpi-icon" data-lucide="git-commit" aria-hidden="true"></i>
             <div class="kpi-value">0.56&times;</div>
             <div class="kpi-label">Activity 7 — Commit Throughput (weighted)</div>
             <span class="kpi-confidence high">High</span>
@@ -849,7 +859,7 @@
            Slide 7 — Section Divider: Temporal Acceleration
            ================================================================ -->
       <section class="slide-divider">
-        <i class="hero-icon" data-lucide="trending-up"></i>
+        <i class="hero-icon" data-lucide="trending-up" aria-hidden="true"></i>
         <h2>Temporal Acceleration</h2>
       </section>
 
@@ -878,11 +888,18 @@
               <td class="cell-multiplier">0.17&times;</td>
             </tr>
             <tr>
+              <!-- Rule 2 (AAP §0.10.1) literal format rendered inline in every
+                   cell: `Insufficient signal — [specific reason]`. Brief reason
+                   matches the KPI card on Slide 4 and the Engineer A row on
+                   Slide 10 for internal consistency (Rule 8). Full rationale
+                   (no files matched ARCHITECTURE.md, tech-spec*, adr-*, or
+                   design-* patterns) is repeated in the tfoot annotation below
+                   and matches `acceleration-report.md` §4.2 and §7 verbatim. -->
               <td>2 — Arch &amp; Design <span class="kpi-confidence insufficient">Insufficient</span></td>
-              <td class="cell-insufficient">Insufficient signal</td>
-              <td class="cell-insufficient">Insufficient signal</td>
-              <td class="cell-insufficient">Insufficient signal</td>
-              <td class="cell-insufficient">Insufficient signal</td>
+              <td class="cell-insufficient">Insufficient signal &mdash; no matching files</td>
+              <td class="cell-insufficient">Insufficient signal &mdash; no matching files</td>
+              <td class="cell-insufficient">Insufficient signal &mdash; no matching files</td>
+              <td class="cell-insufficient">Insufficient signal &mdash; no matching files</td>
             </tr>
             <tr>
               <td>3 — Code Gen <span class="kpi-confidence high">High</span></td>
@@ -959,7 +976,7 @@
            Slide 9 — Section Divider: Per-Engineer View
            ================================================================ -->
       <section class="slide-divider">
-        <i class="hero-icon" data-lucide="users"></i>
+        <i class="hero-icon" data-lucide="users" aria-hidden="true"></i>
         <h2>Per-Engineer View</h2>
       </section>
 
@@ -1092,7 +1109,7 @@
            Slide 12 — Section Divider: Confidence & Risk
            ================================================================ -->
       <section class="slide-divider">
-        <i class="hero-icon" data-lucide="shield-alert"></i>
+        <i class="hero-icon" data-lucide="shield-alert" aria-hidden="true"></i>
         <h2>Confidence &amp; Risk</h2>
       </section>
 
@@ -1106,22 +1123,22 @@
         <h2>Confidence Distribution</h2>
         <div class="icon-row">
           <div class="icon-row-cell">
-            <i data-lucide="shield-check"></i>
+            <i data-lucide="shield-check" aria-hidden="true"></i>
             <div class="kpi-value">4</div>
             <div class="kpi-label">High</div>
           </div>
           <div class="icon-row-cell">
-            <i data-lucide="shield"></i>
+            <i data-lucide="shield" aria-hidden="true"></i>
             <div class="kpi-value">2</div>
             <div class="kpi-label">Medium</div>
           </div>
           <div class="icon-row-cell">
-            <i data-lucide="shield-alert"></i>
+            <i data-lucide="shield-alert" aria-hidden="true"></i>
             <div class="kpi-value">0</div>
             <div class="kpi-label">Low</div>
           </div>
           <div class="icon-row-cell">
-            <i data-lucide="minus-circle"></i>
+            <i data-lucide="minus-circle" aria-hidden="true"></i>
             <div class="kpi-value">1</div>
             <div class="kpi-label">Insufficient</div>
           </div>
@@ -1184,10 +1201,10 @@
         <div class="eyebrow">What this analysis cannot determine</div>
         <h2>Limitations</h2>
         <ul>
-          <li><i data-lucide="alert-octagon"></i>&nbsp; Git history is the sole input source</li>
-          <li><i data-lucide="info"></i>&nbsp; Heuristic activities carry boundary conditions</li>
-          <li><i data-lucide="help-circle"></i>&nbsp; Causation is out of scope; tone is factual-neutral</li>
-          <li><i data-lucide="check-circle"></i>&nbsp; Values are computed, never estimated or fabricated</li>
+          <li><i data-lucide="alert-octagon" aria-hidden="true"></i>&nbsp; Git history is the sole input source</li>
+          <li><i data-lucide="info" aria-hidden="true"></i>&nbsp; Heuristic activities carry boundary conditions</li>
+          <li><i data-lucide="help-circle" aria-hidden="true"></i>&nbsp; Causation is out of scope; tone is factual-neutral</li>
+          <li><i data-lucide="check-circle" aria-hidden="true"></i>&nbsp; Values are computed, never estimated or fabricated</li>
         </ul>
         <div class="brand-lockup">Blitzy · Blitzy-Sandbox/blitzy-jenkins</div>
       </section>
@@ -1197,7 +1214,7 @@
            ================================================================ -->
       <section class="slide-closing">
         <div class="closing-icon-wrap">
-          <i data-lucide="check"></i>
+          <i data-lucide="check" aria-hidden="true"></i>
         </div>
         <h2>Measured. Traced. Reproducible.</h2>
         <ul>
@@ -1213,12 +1230,20 @@
     </div><!-- /.slides -->
   </div><!-- /.reveal -->
 
-  <!-- CDN-pinned dependencies: reveal.js 5.1.0, lucide 0.460.0
-       (Mermaid 11.4.0 omitted per Decision D016: Slide 3 uses HTML/CSS
-       flow-diagram and Slide 8 uses a styled <table>, so no Mermaid
-       runtime is needed.)
+  <!-- CDN-pinned dependencies: reveal.js 5.1.0, mermaid 11.4.0, lucide 0.460.0
+       per AAP §0.6.1 and §0.10.3 (Executive Presentation project rule).
+       Mermaid 11.4.0 is loaded to drive the Slide 3 extraction-pipeline
+       flowchart (<pre class="mermaid">). Per Decision D016 (revised after
+       QA checkpoint 4 feedback), the Slide 8 Acceleration Curve continues
+       to render as a styled <table> under AAP §0.4.3 Option B. The
+       "commit velocity timeline" visualization listed in AAP §0.4.3 is
+       intentionally omitted; the equivalent temporal data is surfaced
+       on Slide 8 in the Acceleration Curve (see revised D016).
        Subresource Integrity (SRI) hashes pin each asset to its known
        byte content to mitigate CDN-side tampering risk. -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11.4.0/dist/mermaid.min.js"
+          integrity="sha384-Wm9qzEgq4j1jEnuFK2FxKTlwuhbV2QqtGhcchvjDoKxeJ7WWAW7fysBq+1s6myfX"
+          crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"
           integrity="sha384-M/JtqCVlLcK9lwVnBnMXP0V577CBULkjodKsR/PITOe4MSKNbbwqCemEyluOw0+5"
           crossorigin="anonymous"></script>
@@ -1227,6 +1252,38 @@
           crossorigin="anonymous"></script>
 
   <script>
+    // ----------------------------------------------------------------------
+    // Mermaid 11.4.0 initialization (AAP §0.10.3 "Mermaid integration")
+    // ----------------------------------------------------------------------
+    // `startOnLoad: false` — we defer to `mermaid.run()` inside
+    // renderVisuals() so the rendering pass occurs AFTER reveal.js
+    // signals `ready` and AFTER document.fonts.ready resolves. This
+    // ordering prevents the font-metric race that motivated Decision
+    // D016's original Mermaid omission and is now explicitly mitigated
+    // by the revised D016.
+    //
+    // Theme variables mirror the canonical Blitzy palette tokens
+    // (--blitzy-primary, --blitzy-primary-dark, --blitzy-text,
+    //  --blitzy-text-muted, --blitzy-surface-1, --blitzy-surface-2)
+    // to keep Slide 3 visually consistent with the rest of the deck.
+    // ----------------------------------------------------------------------
+    if (window.mermaid && typeof window.mermaid.initialize === 'function') {
+      window.mermaid.initialize({
+        startOnLoad: false,
+        theme: 'base',
+        securityLevel: 'strict',
+        themeVariables: {
+          primaryColor: '#F2F0FE',
+          primaryTextColor: '#333333',
+          primaryBorderColor: '#5B39F3',
+          lineColor: '#999999',
+          secondaryColor: '#F4EFF6',
+          tertiaryColor: '#F4EFF6',
+          fontFamily: "'Inter', system-ui, sans-serif"
+        }
+      });
+    }
+
     // ----------------------------------------------------------------------
     // Reveal.js initialization
     // ----------------------------------------------------------------------
@@ -1239,12 +1296,17 @@
     });
 
     // ----------------------------------------------------------------------
-    // Run Lucide on ready and on every slide change to materialize any
-    // <i data-lucide="..."> placeholders into inline SVGs. Visual elements
-    // on every slide (flow-diagram icons, KPI-card icons, hero icons,
-    // decorative chevrons) depend on this pass.
-    // We wait for document.fonts.ready so icon sizing stabilizes relative
-    // to the Inter/Space Grotesk font box metrics.
+    // Run Mermaid and Lucide on `ready` and on every slide change.
+    //   - Mermaid converts each <pre class="mermaid"> into an inline
+    //     <svg> flowchart (currently only Slide 3 uses this).
+    //   - Lucide materializes every <i data-lucide="..."> placeholder
+    //     into an inline <svg> icon (KPI-card icons, hero icons,
+    //     decorative chevrons on content/divider/closing slides).
+    //
+    // We wait for document.fonts.ready first so icon and Mermaid-node
+    // sizing stabilizes relative to the Inter/Space Grotesk font-box
+    // metrics — mitigating the font-metric race documented in the
+    // revised Decision D016.
     // ----------------------------------------------------------------------
     async function renderVisuals() {
       if (document.fonts && document.fonts.ready) {
@@ -1252,6 +1314,15 @@
           await document.fonts.ready;
         } catch (err) {
           // document.fonts.ready may reject on older engines — safe to ignore.
+        }
+      }
+      if (window.mermaid && typeof window.mermaid.run === 'function') {
+        try {
+          await window.mermaid.run();
+        } catch (err) {
+          // mermaid.run() can throw if no <pre class="mermaid"> is on the
+          // current slide or if it has already been processed — ignore
+          // gracefully so the Lucide pass below still executes.
         }
       }
       if (window.lucide && typeof window.lucide.createIcons === 'function') {
