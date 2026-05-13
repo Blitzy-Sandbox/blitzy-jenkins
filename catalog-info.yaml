@@ -2,11 +2,13 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: blitzy-jenkins
-  description: "Jenkins Core UI migration from Jelly/JS to React 19 + TypeScript with Vite 7 build pipeline"
+  description: Jenkins Core UI migration from Jelly/JS to React 19 + TypeScript with
+    Vite 7 build pipeline
   tags:
-    - java
-    - infrastructure
-    - refactor
+  - infrastructure
+  - java
+  - migration
+  - refactor
   labels:
     blitzy.com/language: java
   annotations:
@@ -14,14 +16,14 @@ metadata:
     github.com/project-slug: Blitzy-Sandbox/blitzy-jenkins
     backstage.io/source-location: url:https://github.com/Blitzy-Sandbox/blitzy-jenkins/tree/master/
   links:
-    - url: https://github.com/Blitzy-Sandbox/blitzy-jenkins
-      title: GitHub Repository
-    - url: https://github.com/Blitzy-Sandbox/blitzy-jenkins/pull/1
-      title: "PR #1: Jelly/JS to React 19 + TypeScript"
-      icon: github
-    - url: https://github.com/Blitzy-Sandbox/blitzy-jenkins/tree/master/blitzy/documentation
-      title: Blitzy Documentation
-      icon: docs
+  - url: https://github.com/Blitzy-Sandbox/blitzy-jenkins
+    title: GitHub Repository
+  - url: https://github.com/Blitzy-Sandbox/blitzy-jenkins/pull/1
+    title: 'PR #1: Jelly/JS to React 19 + TypeScript'
+    icon: github
+  - url: https://github.com/Blitzy-Sandbox/blitzy-jenkins/tree/master/blitzy/documentation
+    title: Blitzy Documentation
+    icon: docs
 spec:
   type: service
   lifecycle: experimental
