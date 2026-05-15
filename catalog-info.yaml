@@ -7,8 +7,11 @@ metadata:
   tags:
   - infrastructure
   - java
+  - javascript
   - migration
+  - modernization
   - refactor
+  - typescript
   labels:
     blitzy.com/language: java
   annotations:
